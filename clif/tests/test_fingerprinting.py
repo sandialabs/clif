@@ -51,3 +51,18 @@ class TestFingerprintClass(unittest.TestCase):
 		assert hasattr(fp,'V_'), "Fit function is not producing a component matrix."
 		assert hasattr(fp,'eofs_'), "Fit function is not producing an eofs matrix."
 		return
+
+# import xarray as xr
+# class TestFingerprintClassWithXarray(unittest.TestCase):
+# 	@classmethod
+# 	def setUpClass(self):
+# 		# load data sets
+# 		nc_file = relpath + '/tests/data/t2m_1991_monthly.nc'
+# 		self.xarray_dataset = xr.open_dataset(nc_file)
+# 	def test_xarray_input(self):
+# 		X = self.xarray_dataset
+# 		print(X)
+# 		print(X['t2m'])
+
+
+

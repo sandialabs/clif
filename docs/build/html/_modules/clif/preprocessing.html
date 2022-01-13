@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>clif.preprocessing &#8212; clif 1.0 documentation</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">clif 1.0 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption">
+ <span class="caption-text">
+  Usage Guide
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../introduction.html">
+   Main features
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  API
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../api_fingerprints.html">
+   Main API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../api_preprocessing.html">
+   Preprocessing API
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/kennychowdhary/clif"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <h1>Source code for clif.preprocessing</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+
+<div class="viewcode-block" id="remove_cyclical_trends"><a class="viewcode-back" href="../../api_preprocessing.html#clif.preprocessing.remove_cyclical_trends">[docs]</a><span class="k">def</span> <span class="nf">remove_cyclical_trends</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span><span class="n">new_variable_suffix</span><span class="o">=</span><span class="s1">&#39;denoised&#39;</span><span class="p">):</span> 
+	<span class="sd">&#39;&#39;&#39;Removes cyclical trends from xarray time-series data</span>
+<span class="sd">	</span>
+<span class="sd">	Computes the average values for ds[varname] by cycle, and removes these trends</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	data: xarray.DataArray</span>
+<span class="sd">		data array object holding the time-series data</span>
+<span class="sd">	variable: str</span>
+<span class="sd">		variable name for which we want trend removed. Must be in xarray dataset</span>
+<span class="sd">	cycle: str (hour, day, month=default)</span>
+<span class="sd">		scale at which we remove cyclical trend</span>
+<span class="sd">	inplace: bool (default=True)</span>
+<span class="sd">		return the same xarray data set with modified/ denoised variable</span>
+<span class="sd">		</span>
+<span class="sd">	Returns</span>
+<span class="sd">	--------</span>
+<span class="sd">	xarray.DataArray</span>
+<span class="sd">		xarray data set object holding both the varname and filtered version which holds the normalized data</span>
+
+<span class="sd">	To do</span>
+<span class="sd">	-----</span>
+<span class="sd">	* Need to add option to input xarray.DataArray in addition to Dataset object</span>
+
+<span class="sd">	Example Usage</span>
+<span class="sd">	-------------</span>
+<span class="sd">	&gt;&gt;&gt; xarray_ds = remove_cyclical_trends(</span>
+<span class="sd">				xarray_ds,&#39;t2m&#39;,cycle=&#39;month&#39;,new_variable_suffix=&#39;trend_removed&#39;)</span>
+<span class="sd">	&gt;&gt;&gt; xarray_ds[&#39;t2m_trend_removed&#39;]</span>
+
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Normalize by </span><span class="si">{0}</span><span class="s1"> cycles&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
+	<span class="n">newvarname</span><span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">new_variable_suffix</span><span class="p">)</span>
+	<span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">newvarname</span> <span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()}</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">data</span><span class="p">[</span><span class="s1">&#39;time.&#39;</span><span class="o">+</span><span class="n">cycle</span><span class="p">]</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Converting data-time to proper format...&quot;</span><span class="p">)</span>
+		<span class="n">data</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">decode_cf</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+	<span class="c1"># get indices by cycle</span>
+	<span class="n">cycle_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;time.&quot;</span><span class="o">+</span><span class="n">cycle</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removing </span><span class="si">{0}</span><span class="s2">ly cycles...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cycle</span><span class="p">))</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">cycle_values</span><span class="p">):</span>
+		<span class="n">cycle_i</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;time.&quot;</span><span class="o">+</span><span class="n">cycle</span><span class="p">]</span><span class="o">==</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">climo_for_cycle_i</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;time.&quot;</span><span class="o">+</span><span class="n">cycle</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span> 
+		<span class="n">anoms</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">variable</span><span class="p">][</span><span class="n">cycle_i</span><span class="p">]</span><span class="o">-</span><span class="n">climo_for_cycle_i</span>
+		<span class="c1"># Now put them in the right place in the array. </span>
+		<span class="nb">dict</span><span class="p">[</span><span class="n">newvarname</span><span class="p">][</span><span class="n">cycle_i</span><span class="p">]</span><span class="o">=</span><span class="n">anoms</span>
+	<span class="n">data_new</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span> <span class="c1"># creates a new xarray data set (different mem)</span>
+	<span class="k">return</span> <span class="n">data_new</span></div>
+
+</pre></div>
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By K. Chowdhary<br/>
+        
+            &copy; Copyright 2022, K. Chowdhary.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

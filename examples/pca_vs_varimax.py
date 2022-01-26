@@ -6,7 +6,7 @@ try:
 	from clif import fingerprints
 except:
 	import sys
-	sys.path.append("../")
+	sys.path.append("../clif/")
 	from eof import fingerprints
 
 

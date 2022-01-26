@@ -79,6 +79,14 @@ class fingerprints:
 			U_varimax_ = np.dot(X0,self.eofs_varimax_.T)
 			self.explained_variance_varimax_ = np.var(U_varimax_,axis=0)
 			self.explained_variance_ratio_varimax_ = self.explained_variance_varimax_/self.total_variance_
+			if "whiten" in self.method_opts:
+				if self.method_opts['whiten'] == True:
+					sigma = np.sqrt(self.explained_variance_varimax_)
+					# scale each column of the projection by the stdev if whiten == True (default)
+					U_varimax_ = np.dot(U_varimax_,np.diag(1./sigma))
+			else:
+				self.U_varimax_ = U_varimax_ # save projections
+			self.projections_varimax_ = U_varimax_
 
 	def _ortho_rotation(self,componentsT, method="varimax", tol=1e-8, max_iter=1000):
 		"""Return rotated components (transpose).

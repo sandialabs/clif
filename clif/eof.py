@@ -34,7 +34,7 @@ class fingerprints:
 
 	
 	'''
-	def __init__(self,n_eofs=2,varimax=False,method='pca',method_opts={'whiten':True}):
+	def __init__(self,n_eofs=2,varimax=False,method='pca',method_opts={'whiten':True,'svd_solver':'arpack'}):
 		self.n_eofs = n_eofs
 		self.method_opts = method_opts
 		self.varimax = varimax
@@ -49,7 +49,7 @@ class fingerprints:
 		'''
 		# perform a check on the data
 		assert X.ndim == 2, "Input data matrix is not 2 dimensional."
-		n_samples, n_dim = X.shape
+		self.n_samples, self.n_dim = X.shape
 		if self.method == 'pca':
 			self._fit_pca(X)
 
@@ -60,7 +60,7 @@ class fingerprints:
 		self.U_ = pca.fit_transform(X)
 		self.projections_ = self.U_	
 		# get EOFs (each row is an EOF n_eofs x n_dim)
-		self.eofs_ = pca.components_.T
+		self.eofs_ = pca.components_
 		self.V_ = pca.components_
 		# get singular values (square root of variances)
 		self.S_ = pca.singular_values_
@@ -68,32 +68,41 @@ class fingerprints:
 		self.explained_variance_ = pca.explained_variance_
 		self.explained_variance_ratio_ = pca.explained_variance_ratio_
 		self.cumulative_explained_variance_ratio_ = np.cumsum(pca.explained_variance_ratio_)
+		# compute total variance
+		self.total_variance_ = (pca.singular_values_[0]**2/self.n_samples)/pca.explained_variance_ratio_[0]
 
 		# compute varimax rotation is True
 		if self.varimax == True:
-			self.eofs_varimax_ = self._ortho_rotation(components=self.eofs_).T
+			self.eofs_varimax_ = self._ortho_rotation(componentsT=self.eofs_.T)
+			# also compute the explained variance
+			X0 = X - np.mean(X,axis=0)
+			U_varimax_ = np.dot(X0,self.eofs_varimax_.T)
+			self.explained_variance_varimax_ = np.var(U_varimax_,axis=0)
+			self.explained_variance_ratio_varimax_ = self.explained_variance_varimax_/self.total_variance_
 
-	def _ortho_rotation(self,components, method="varimax", tol=1e-8, max_iter=1000):
-		"""Return rotated components.
-		Here, components are the transpose of the PCA components
+	def _ortho_rotation(self,componentsT, method="varimax", tol=1e-8, max_iter=1000):
+		"""Return rotated components (transpose).
+		Here, componentsT are the transpose of the PCA components
 		"""
-		nrow, ncol = components.shape
+		assert componentsT.shape[1] == self.n_eofs, "Input shape must be the transpose of the pca components_ vector."
+		nrow, ncol = componentsT.shape
 		rotation_matrix = np.eye(ncol)
 		var = 0
 
 		for _ in range(max_iter):
-			comp_rot = np.dot(components, rotation_matrix)
+			comp_rot = np.dot(componentsT, rotation_matrix)
 			if method == "varimax":
 				tmp = comp_rot * np.transpose((comp_rot ** 2).sum(axis=0) / nrow)
 			elif method == "quartimax":
 				tmp = 0
-			u, s, v = np.linalg.svd(np.dot(components.T, comp_rot ** 3 - tmp))
+			u, s, v = np.linalg.svd(np.dot(componentsT.T, comp_rot ** 3 - tmp))
 			rotation_matrix = np.dot(u, v)
 			var_new = np.sum(s)
 			if var != 0 and var_new < var * (1 + tol):
 				break
 			var = var_new
-		print(max_iter)
 
-		return np.dot(components, rotation_matrix).T		
+		self.rotation_matrix = rotation_matrix
+
+		return np.dot(componentsT, rotation_matrix).T		
 	

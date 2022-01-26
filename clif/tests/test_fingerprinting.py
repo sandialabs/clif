@@ -33,13 +33,21 @@ class TestFingerprintClass(unittest.TestCase):
 		assert fp.U_.shape == (n_samples,n_components), "Projection matrix is not the right size"
 		assert fp.V_.shape == (n_components,n_dim), "Component matrix is not the right size"
 		return
+	def test_pca_fit_make_sure_eof_same_shape_as_component(self):
+		# default constructor
+		n_components = 8
+		fp = clif.fingerprints(n_eofs=n_components)
+		fp.fit(self.X)
+		n_samples, n_dim = self.X.shape
+		assert fp.pca.components_.shape == fp.eofs_.shape, "EOFs and PCA components must be the same shape"
+		return
 	def test_pca_fit_make_sure_eof_same_as_component(self):
 		# default constructor
 		n_components = 8
 		fp = clif.fingerprints(n_eofs=n_components)
 		fp.fit(self.X)
 		n_samples, n_dim = self.X.shape
-		assert np.sum((fp.V_ - fp.eofs_.T)**2) == 0, "EOFs should be n_dim by n_components"
+		assert np.sum((fp.V_ - fp.eofs_)**2) == 0, "EOFs should be n_dim by n_components"
 		return
 	def test_pca_fit(self):
 		# default constructor
@@ -51,6 +59,74 @@ class TestFingerprintClass(unittest.TestCase):
 		assert hasattr(fp,'V_'), "Fit function is not producing a component matrix."
 		assert hasattr(fp,'eofs_'), "Fit function is not producing an eofs matrix."
 		return
+	def test_pca_explained_variance(self):
+		n_samples, n_dim = self.X.shape
+		# obtain fingerprints
+		n_components = 8
+		fp = clif.fingerprints(n_eofs=n_components,varimax=True)
+		fp.fit(self.X)
+		V_pca = fp.eofs_ # retrieve EOFs
+
+		# calculate pca explained variance just to double check
+		X0 = self.X - np.mean(self.X,axis=0) # center data
+		assert X0.shape[1] == V_pca.shape[1], "eofs_ number of columns must be the same as X."
+		U_pca = np.dot(X0,V_pca.T) # project data
+		pca_explained_variance = np.sum(U_pca**2,axis=0)/(n_samples-1)
+		relerror = np.linalg.norm(pca_explained_variance - fp.explained_variance_)/np.linalg.norm(fp.explained_variance_)
+		assert relerror <= 1e-13, "PCA explained variance is not being incorrectly computed."
+		return
+	def test_varimax_rotation_matrix_size(self):
+		n_samples, n_dim = self.X.shape
+		# obtain fingerprints
+		n_components = 8
+		fp = clif.fingerprints(n_eofs=n_components,varimax=True)
+		fp.fit(self.X)
+		V_varimax = fp.eofs_varimax_ # retrieve EOFs
+		assert fp.rotation_matrix.shape == (n_components,n_components), "rotation matrix should a square matrix is size n_eofs x n_eofs. Make sure feed in the transpose of the pca.components_ into the _ortho_rotation function. "
+	def test_pca_varimax_explained_variance(self):
+		n_samples, n_dim = self.X.shape
+		# obtain fingerprints
+		n_components = 8
+		fp = clif.fingerprints(n_eofs=n_components,varimax=True)
+		fp.fit(self.X)
+		V_varimax = fp.eofs_varimax_ # retrieve EOFs
+
+		# calculate pca explained variance just to double check
+		X0 = self.X - np.mean(self.X,axis=0) # center data
+		assert X0.shape[1] == V_varimax.shape[1], "eofs_varimax_ number of columns must be the same as X."
+		U_varimax = np.dot(X0,V_varimax.T) # project data
+		varimax_explained_variance = np.var(U_varimax,axis=0)
+		relerror = np.linalg.norm(varimax_explained_variance - fp.explained_variance_varimax_)/np.linalg.norm(fp.explained_variance_varimax_)
+		assert relerror <= 1e-13, "PCA varimax explained variance is not being incorrectly computed."
+		return
+	def test_compare_pca_vs_varimax_explained_variance(self):
+		n_samples, n_dim = self.X.shape
+		# obtain fingerprints
+		n_components = 8
+		fp = clif.fingerprints(n_eofs=n_components,varimax=True)
+		fp.fit(self.X)
+		V_varimax = fp.eofs_varimax_ # retrieve EOFs
+		V_pca = fp.eofs_ # EOFs without varimax
+
+		# calculate pca explained variance just to double check
+		X0 = self.X - np.mean(self.X,axis=0) # center data
+		U_pca = np.dot(X0,V_pca.T) # project data
+		pca_explained_variance = np.sum(U_pca**2,axis=0)/(n_samples-1)
+		U_varimax = np.dot(X0,V_varimax.T) # project data
+		varimax_explained_variance = np.var(U_varimax,axis=0)
+		error = np.abs(np.sum(pca_explained_variance) -  np.sum(varimax_explained_variance))
+		assert error < 1.0, "varimax should close to pca explained variance."
+		return 
+	def test_compare_pca_vs_varimax_explained_variance_ratio(self):
+		n_samples, n_dim = self.X.shape
+		# obtain fingerprints
+		n_components = 8
+		fp = clif.fingerprints(n_eofs=n_components,varimax=True)
+		fp.fit(self.X)
+		
+		error = np.linalg.norm(np.sum(fp.explained_variance_ratio_varimax_) - np.sum(fp.explained_variance_ratio_))
+		assert error <= 1e-14, "Explained variance ratio should be more or less the same between varimax and pca since the rotation is orthogonal."
+		return 
 
 # import xarray as xr
 # class TestFingerprintClassWithXarray(unittest.TestCase):

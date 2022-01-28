@@ -54,3 +54,58 @@ def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='d
 	data_new = data.assign(dict) # creates a new xarray data set (different mem)
 	return data_new
 
+def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],detrend='month',lat_lon_weighting = True):
+    '''function to preprocess xarray to construct data matrix for fingerprinting
+    
+    performs the detrending of cyclical information and summing over coordinates not defined in the col_coord list
+
+	Notes:
+	------
+
+	Latitude and longitude are assumed to be labeled as 'lat' and 'lon' but will need to change that
+	
+    '''
+
+    # remove cyclical trend first
+    if detrend is not None:
+        dataset = remove_cyclical_trends(data=dataset,
+                                        variable=variable,
+                                        cycle=detrend,
+                                        new_variable_suffix='')
+
+    variable = variable + '_'
+    coords = row_coord + col_coord
+    data = dataset[variable] # creates a copy of the variables
+    all_coords = list(data.coords.dims)
+    marginal_coords = all_coords.copy()
+    for c in coords: 
+        marginal_coords.remove(c)
+
+    # get lat lon weights if possible
+    weights = dataset.area
+    weights /= np.sum(weights) # normalize
+    weights
+    weights_lon = weights.mean(dim='lat')
+    weights_lon /= np.sum(weights_lon)
+    weights_lat = weights.mean(dim='lon')
+    weights_lat /= np.sum(weights_lat)
+
+    # marginalize data array over marginal_coords
+    for c in marginal_coords:
+        if c == 'lat':
+            data = (data*weights_lat).sum(dim='lat')
+        else:
+            data = data.mean(dim=c)
+
+    assert len(data.shape) == len(col_coord)+1
+
+    if len(col_coord) > 1:
+        # need to stack variables
+        data = data.stack(dim=col_coord)
+
+    # extract numpy object
+    X_original = data.values
+
+    # filter out nan variables
+    col_index = np.sum(np.isnan(X_original),axis=0)
+    X_new = X_original[:,col_index == 0]

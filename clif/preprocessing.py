@@ -54,58 +54,104 @@ def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='d
 	data_new = data.assign(dict) # creates a new xarray data set (different mem)
 	return data_new
 
-def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],detrend='month',lat_lon_weighting = True):
-    '''function to preprocess xarray to construct data matrix for fingerprinting
-    
-    performs the detrending of cyclical information and summing over coordinates not defined in the col_coord list
+def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],detrend='month',removed_nans=True,lat_lon_weighting = False, return_np_array_only=False):
+	'''function to preprocess xarray to construct data matrix for fingerprinting
+	
+	performs the detrending of cyclical information and summing over coordinates not defined in the col_coord list
 
 	Notes:
 	------
 
 	Latitude and longitude are assumed to be labeled as 'lat' and 'lon' but will need to change that
 	
-    '''
+	'''
 
-    # remove cyclical trend first
-    if detrend is not None:
-        dataset = remove_cyclical_trends(data=dataset,
-                                        variable=variable,
-                                        cycle=detrend,
-                                        new_variable_suffix='')
+	# remove cyclical trend first
+	if detrend is not None:
+		dataset = remove_cyclical_trends(data=dataset,
+										variable=variable,
+										cycle=detrend,
+										new_variable_suffix='')
 
-    variable = variable + '_'
-    coords = row_coord + col_coord
-    data = dataset[variable] # creates a copy of the variables
-    all_coords = list(data.coords.dims)
-    marginal_coords = all_coords.copy()
-    for c in coords: 
-        marginal_coords.remove(c)
+	variable = variable + '_'
+	coords = row_coord + col_coord
+	data = dataset[variable] # creates a copy of the variables
+	all_coords = list(data.coords.dims)
+	marginal_coords = all_coords.copy()
+	for c in coords: 
+		marginal_coords.remove(c)
 
-    # get lat lon weights if possible
-    weights = dataset.area
-    weights /= np.sum(weights) # normalize
-    weights
-    weights_lon = weights.mean(dim='lat')
-    weights_lon /= np.sum(weights_lon)
-    weights_lat = weights.mean(dim='lon')
-    weights_lat /= np.sum(weights_lat)
+	# get lat lon weights if possible
+	weights = dataset.area
+	weights /= np.sum(weights) # normalize
+	weights
+	weights_lon = weights.mean(dim='lat')
+	weights_lon /= np.sum(weights_lon)
+	weights_lat = weights.mean(dim='lon')
+	weights_lat /= np.sum(weights_lat)
 
-    # marginalize data array over marginal_coords
-    for c in marginal_coords:
-        if c == 'lat':
-            data = (data*weights_lat).sum(dim='lat')
-        else:
-            data = data.mean(dim=c)
+	if lat_lon_weighting is True:
+		data = data * weights # weight data via area of lat lon grid
 
-    assert len(data.shape) == len(col_coord)+1
+	# marginalize data array over marginal_coords
+	for c in marginal_coords:
+		if lat_lon_weighting is True:
+			# no need for weighted sums is lat_lon_weighting is True
+			data = data.mean(dim=c)
+		else:
+			# if no lat_lon_weighting (default False), then only weight the latitude before summing over
+			if c == 'lat':
+				# must use area weighting if marginalizing over latitude
+				data = (data*weights_lat).sum(dim='lat')
+			else:
+				# uniform average weighting for all other coordinates, including longitude
+				data = data.mean(dim=c)
 
-    if len(col_coord) > 1:
-        # need to stack variables
-        data = data.stack(dim=col_coord)
+	assert len(data.shape) == len(col_coord)+1, "data shape must be of the same dimension (plus 1) as the column coordinates. The plus 1 dimension is for the row coordinate, e.g., time."
 
-    # extract numpy object
-    X_original = data.values
+	if len(col_coord) > 1:
+		# need to stack col_coord variables in order to produce a 2d matrix for use in PCA
+		data = data.stack(dim=col_coord)
 
-    # filter out nan variables
-    col_index = np.sum(np.isnan(X_original),axis=0)
-    X_new = X_original[:,col_index == 0]
+	# extract numpy object
+	X_np = data.values
+
+	if removed_nans:
+		# filter out nan variables by leaving out columsn with at least one nan variable. 
+		col_index = np.sum(np.isnan(X_np),axis=0)
+		X_np_nonan = X_np[:,col_index == 0]
+
+	if return_np_array_only:
+		return X_np_nonan
+	else:
+		# otherwise, return numpy array AND the xarray data object
+		# if filtering nans, data might be different than the numpy array
+		return X_np_nonan, data
+
+def add_trend_lines_to_eof(times,eof_time_series,change_point):
+	'''
+	Compute a simple linear regression with least squares fitting of a univariate time-series data, before and after change point event. 
+	'''
+	# get period before and after event, must be a datetime e.g. np.datetime or cftime object
+	before_event = times < change_point
+	after_event = times >= change_point
+	time_before = times[before_event]
+	time_after = times[after_event]
+	eof1_ts = eof_time_series
+	eof1_ts_before = eof1_ts[before_event]
+	eof1_ts_after = eof1_ts[after_event]
+	# fig, ax = plt.subplots(1,1,figsize=(6,4))
+	# ax.plot(time_before,eof1_ts_before,'b--')
+	# ax.plot(time_after,eof1_ts_after,'r*--')
+
+	from sklearn.linear_model import LinearRegression
+	times_np = np.arange(len(times)).astype(float)
+	times_np /= len(times_np)-1
+	X_before = times_np[before_event][:,np.newaxis]
+	X_after = times_np[after_event][:,np.newaxis]
+	linreg_before = LinearRegression().fit(X_before,eof1_ts_before).predict(X_before)
+	linreg_after = LinearRegression().fit(X_after,eof1_ts_after).predict(X_after)
+	# ax.plot(time_before,linreg_before,'b')
+	# ax.plot(time_after,linreg_after,'r')
+
+	return (time_before,linreg_before), (time_after,linreg_after)

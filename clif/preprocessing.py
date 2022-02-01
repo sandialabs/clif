@@ -2,7 +2,7 @@ from tqdm import tqdm
 import numpy as np
 import xarray
 
-def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='denoised'): 
+def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='denoised', use_groupby=True): 
 	'''Removes cyclical trends from xarray time-series data
 	
 	Computes the average values for ds[varname] by cycle, and removes these trends
@@ -45,16 +45,24 @@ def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='d
 	# get indices by cycle
 	cycle_values = np.sort(np.unique(data["time."+cycle].values))
 	print("Removing {0}ly cycles...".format(cycle))
-	for i in tqdm(cycle_values):
-		cycle_i=np.where(data["time."+cycle]==i)
-		climo_for_cycle_i = data[variable].groupby("time."+cycle)[i].mean(dim='time') 
-		anoms = data.variables[variable][cycle_i]-climo_for_cycle_i
-		# Now put them in the right place in the array. 
-		dict[newvarname][cycle_i]=anoms
-	data_new = data.assign(dict) # creates a new xarray data set (different mem)
+	if use_groupby:
+		# Much faster operation using the groupby feature which does array broadcasting and assignment very quickly
+		#compute means according to month
+		data_copy = data.copy(deep=True) # create deep copy so you don't overwrite existing data
+		mu_by_group = data_copy[variable].groupby("time."+cycle).mean(dim='time')
+		data_copy[newvarname] = data_copy[variable].groupby("time."+cycle) - mu_by_group
+		return data_copy
+	else:
+		for i in tqdm(cycle_values):
+			cycle_i=np.where(data["time."+cycle]==i)
+			climo_for_cycle_i = data[variable].groupby("time."+cycle)[i].mean(dim='time') 
+			anoms = data.variables[variable][cycle_i]-climo_for_cycle_i
+			# Now put them in the right place in the array. 
+			dict[newvarname][cycle_i]=anoms
+		data_new = data.assign(dict) # creates a new xarray data set (different mem)
 	return data_new
 
-def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],detrend='month',removed_nans=True,lat_lon_weighting = False, return_np_array_only=False):
+def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],detrend='month',removed_nans=True,lat_lon_weighting = False, return_np_array_only=False,use_groupby=True):
 	'''function to preprocess xarray to construct data matrix for fingerprinting
 	
 	performs the detrending of cyclical information and summing over coordinates not defined in the col_coord list
@@ -71,7 +79,8 @@ def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],
 		dataset = remove_cyclical_trends(data=dataset,
 										variable=variable,
 										cycle=detrend,
-										new_variable_suffix='')
+										new_variable_suffix='',
+										use_groupby=use_groupby)
 
 	variable = variable + '_'
 	coords = row_coord + col_coord

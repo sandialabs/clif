@@ -30,6 +30,8 @@ QOI_FILE_PATH = glob.glob(DATA_DIR + "/*{0}*".format(QOI))
 ds = xr.open_mfdataset(QOI_FILE_PATH, chunks={'time': 1})
 assert hasattr(ds,QOI), "Xarray dataset does NOT contain {0} variable.".format(QOI)
 
+raise SystemExit(0)
+
 # preprocess the data set using clif
 X,xr_data = clif.preprocessing.construct_data_matrix(dataset=ds,variable=QOI,row_coord=['time'],col_coord=['lat'],detrend='month',return_np_array_only=False)
 

@@ -16,7 +16,8 @@ setup(name='clif',
           'numpy',
           'sklearn',
           'tqdm',
-          'xarray'
+          'xarray',
+          'netCDF4'
       ],
       include_package_data=True,
       zip_safe=False)

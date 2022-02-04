@@ -21,8 +21,7 @@ class TransformerMixin(ABC):
 		'''
 		return self.fit(data,**fit_params).transform(data)
 
-
-class seasonal_detrending(TransformerMixin):
+class SeasonalDetrendTransform(TransformerMixin):
 	'''Removes cyclical trends from xarray time-series data
 
 
@@ -60,7 +59,7 @@ class seasonal_detrending(TransformerMixin):
 		assert hasattr(self,'mu_by_group_'), "Must run self.fit() first."
 		return data.groupby("time."+self.cycle) + self.mu_by_group_
 
-class clip(TransformerMixin):
+class ClipTransform(TransformerMixin):
     def __init__(self,dims,bounds,drop=True):
         self.dims = dims
         self.bounds = bounds
@@ -86,7 +85,7 @@ class clip(TransformerMixin):
         data_new = data.where(self.mask,drop=self.drop)
         return data_new
 
-class marginalize(TransformerMixin):
+class MarginalizeTransform(TransformerMixin):
     def __init__(self,coords,lat_lon_weighted=False,lat_lon_weights=None):
         self.coords = coords
         self.lat_lon_weighted = lat_lon_weighted
@@ -123,7 +122,7 @@ class marginalize(TransformerMixin):
                     data = data.mean(dim=c)
         return data
 
-class linear_detrending(TransformerMixin):
+class LinearDetrendTransform(TransformerMixin):
 	def __init__(self,degree=1,dim='time'):
 		self.degree = degree
 		self.dim = 'time'

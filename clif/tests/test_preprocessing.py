@@ -19,7 +19,9 @@ class TestPreprocessing(unittest.TestCase):
 	def setUpClass(self):
 		# load data sets
 		nc_file = relpath + '/tests/data/t2m_1991_monthly.nc'
+		nc_file2 = relpath + '/tests/data/AEROD_v_198501_199612.nc'
 		self.xarray_dataset = xr.open_dataset(nc_file)
+		self.ds = xr.open_mfdataset(nc_file2, chunks={'time': 1})
 	def test_removing_monthly_cylcal_trend(self):
 		# default constructor
 		from clif.preprocessing import remove_cyclical_trends
@@ -60,3 +62,31 @@ class TestPreprocessing(unittest.TestCase):
 		data_new['t2m'] *= 0.0
 		assert np.sum(data['t2m']).values > 0, "Variables in old xarray dataset are being shared with new ones. Could cause issues."
 		return
+
+class TestPreprocessing2(unittest.TestCase):
+	@classmethod
+	def setUpClass(self):
+		# load data sets
+		nc_file2 = relpath + '/tests/data/AEROD_v_198501_199612.nc'
+		self.ds = xr.open_mfdataset(nc_file2, chunks={'time': 1})
+		self.QOI = "AEROD_v" 
+		assert hasattr(self.ds,self.QOI), "Xarray dataset does NOT contain {0} variable.".format(QOI)
+	def test_remove_cyclical_trends_using_groupby_and_xarray_dataset_input(self):
+		ds, QOI, data = self.ds, self.QOI, self.ds[self.QOI]
+		ds_new = clif.preprocessing.remove_cyclical_trends( ds, QOI, cycle='month',new_variable_suffix='', use_groupby=True)
+		data1 = ds_new[QOI+'_']
+
+		ds_new = clif.preprocessing.remove_cyclical_trends( ds, QOI, cycle='month',new_variable_suffix='', use_groupby=False)
+		data2 = ds_new[QOI+'_']
+
+		# make sure both data sets are the same
+		assert np.nansum(data1.values - data2.values) == 0, "Groupby cyclical trends by month is not working the same as the old for loop method."
+	def test_remove_cyclical_trends_using_groupby_and_xarray_dataarray_input(self):
+		ds, QOI, data = self.ds, self.QOI, self.ds[self.QOI]
+		ds_new = clif.preprocessing.remove_cyclical_trends( ds, QOI, cycle='month',new_variable_suffix='', use_groupby=True)
+		data1 = ds_new[QOI+'_']
+
+		data_new = clif.preprocessing.remove_cyclical_trends( data, cycle='month',new_variable_suffix='', use_groupby=True)
+
+		# make sure both data sets are the same
+		assert np.nansum(data1.values - data_new.values) == 0, "Groupby cyclical trends by month is not working the same as the old for loop method."

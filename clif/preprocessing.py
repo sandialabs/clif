@@ -2,17 +2,19 @@ from tqdm import tqdm
 import numpy as np
 import xarray
 
-def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='denoised', use_groupby=True): 
+from .preprocessing_new import *
+
+def remove_cyclical_trends( data, variable=None, cycle='month',new_variable_suffix='denoised', use_groupby=True): 
 	'''Removes cyclical trends from xarray time-series data
 	
 	Computes the average values for ds[varname] by cycle, and removes these trends
 	
 	Parameters
 	----------
-	data: xarray.DataArray
+	data: xarray.DataArray or xarray.DataSet
 		data array object holding the time-series data
-	variable: str
-		variable name for which we want trend removed. Must be in xarray dataset
+	variable: None or str
+		variable name for which we want trend removed. Must be in xarray dataset if not None
 	cycle: str (hour, day, month=default)
 		scale at which we remove cyclical trend
 	inplace: bool (default=True)
@@ -35,32 +37,49 @@ def remove_cyclical_trends( data, variable, cycle='month',new_variable_suffix='d
 
 	'''
 	print( 'Normalize by {0} cycles'.format(cycle))
-	newvarname= '{0}_{1}'.format(variable, new_variable_suffix)
-	dict = {newvarname : data.variables[variable].copy()}
+	if variable is not None and isinstance(data,xarray.Dataset):
+		newvarname= '{0}_{1}'.format(variable, new_variable_suffix)
+		dict = {newvarname : data.variables[variable].copy()}
 	try:
 		data['time.'+cycle]
 	except:
-		print("Converting data-time to proper format...")
-		data = xarray.decode_cf(data)
+		if isinstance(data,xarray.Dataset):
+			print("Converting xarray Dataset data-time to proper format...")
+			data = xarray.decode_cf(data)
 	# get indices by cycle
 	cycle_values = np.sort(np.unique(data["time."+cycle].values))
 	print("Removing {0}ly cycles...".format(cycle))
 	if use_groupby:
 		# Much faster operation using the groupby feature which does array broadcasting and assignment very quickly
-		#compute means according to month
-		data_copy = data.copy(deep=True) # create deep copy so you don't overwrite existing data
-		mu_by_group = data_copy[variable].groupby("time."+cycle).mean(dim='time')
-		data_copy[newvarname] = data_copy[variable].groupby("time."+cycle) - mu_by_group
-		return data_copy
-	else:
-		for i in tqdm(cycle_values):
-			cycle_i=np.where(data["time."+cycle]==i)
-			climo_for_cycle_i = data[variable].groupby("time."+cycle)[i].mean(dim='time') 
-			anoms = data.variables[variable][cycle_i]-climo_for_cycle_i
-			# Now put them in the right place in the array. 
-			dict[newvarname][cycle_i]=anoms
-		data_new = data.assign(dict) # creates a new xarray data set (different mem)
-	return data_new
+		if isinstance(data,xarray.Dataset):
+			#compute means according to month
+			data_copy = data.copy(deep=True) # create deep copy so you don't overwrite existing data
+			mu_by_group = data_copy[variable].groupby("time."+cycle).mean(dim='time')
+			data_copy[newvarname] = data_copy[variable].groupby("time."+cycle) - mu_by_group
+			return data_copy
+		elif isinstance(data,xarray.DataArray):
+			mu_by_group = data.groupby("time."+cycle).mean(dim='time')
+			data_new = data.groupby("time."+cycle) - mu_by_group
+			return data_new
+	else: # will be deprecated
+		if isinstance(data,xarray.Dataset):
+			for i in tqdm(cycle_values):
+				cycle_i=np.where(data["time."+cycle]==i)
+				climo_for_cycle_i = data[variable].groupby("time."+cycle)[i].mean(dim='time') 
+				anoms = data.variables[variable][cycle_i]-climo_for_cycle_i
+				# Now put them in the right place in the array. 
+				dict[newvarname][cycle_i]=anoms
+			data_new = data.assign(dict) # creates a new xarray data set (different mem)
+			return data_new
+		elif isinstance(data,xarray.DataArray):
+			data_new = data.copy(deep=True)
+			for i in tqdm(cycle_values):
+				cycle_i=np.where(data["time."+cycle]==i)
+				climo_for_cycle_i = data.groupby("time."+cycle)[i].mean(dim='time') 
+				anoms = data[cycle_i]-climo_for_cycle_i
+				# Now put them in the right place in the array. 
+				data_new[cycle_i]=anoms
+			return data_new
 
 def construct_data_matrix(dataset,variable,row_coord=['time'],col_coord=['lat'],detrend='month',removed_nans=True,lat_lon_weighting = False, return_np_array_only=False,use_groupby=True):
 	'''function to preprocess xarray to construct data matrix for fingerprinting

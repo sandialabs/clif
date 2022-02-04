@@ -1,16 +1,26 @@
 from tqdm import tqdm
 import numpy as np
 import xarray
+from abc import ABC, abstractmethod
 
-class TransformerMixin:
+class TransformerMixin(ABC):
 	'''
 	Base class for preprocessing transforms
 	'''
+	@abstractmethod
+	def fit(self,data):
+		pass
+
+	@abstractmethod
+	def transform(self,data):
+		pass
+
 	def fit_transform(self,data,**fit_params):
 		'''
 		Runs the fit and transform methods in one call
 		'''
 		return self.fit(data,**fit_params).transform(data)
+
 
 class seasonal_detrending(TransformerMixin):
 	'''Removes cyclical trends from xarray time-series data

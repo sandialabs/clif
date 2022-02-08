@@ -158,6 +158,21 @@ class MarginalizeTransform(TransformerMixin):
         return data
 
 
+class FlattenSpatialData(TransformerMixin):
+    """[summary]
+    """
+
+    def fit(self, data):
+        self.size = 1
+        for dim in data.dims:
+            if dim != "time":
+                self.size *= len(data[dim].values)
+        return self
+
+    def transform(self, data):
+        return np.reshape(data.values, (data.values.shape[0], self.size))
+
+
 class LinearDetrendTransform(TransformerMixin):
     def __init__(self, degree=1, dim="time"):
         self.degree = degree

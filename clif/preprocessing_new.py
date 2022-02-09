@@ -3,7 +3,7 @@ import numpy as np
 import xarray
 from abc import ABC
 from abc import abstractmethod
-
+from numpy import linalg
 
 class TransformerMixin(ABC):
     """

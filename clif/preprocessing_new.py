@@ -159,18 +159,25 @@ class MarginalizeTransform(TransformerMixin):
 
 
 class FlattenSpatialData(TransformerMixin):
-    """[summary]
-    """
-
     def fit(self, data):
-        self.size = 1
+        """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time.
+        """
+        self.dims = []
         for dim in data.dims:
             if dim != "time":
-                self.size *= len(data[dim].values)
+                self.dims.append(dim)
         return self
 
     def transform(self, data):
-        return np.reshape(data.values, (data.values.shape[0], self.size))
+        """Flattens the given DataArray's spatial dimensions into a matrix.
+
+        Args:
+            data (xarray.DataArray): The xarray DataArray to flatten.
+
+        Returns:
+            xarray.DataArray: The flattened DataArray.
+        """
+        return data.stack(dim=self.dims)
 
 
 class LinearDetrendTransform(TransformerMixin):

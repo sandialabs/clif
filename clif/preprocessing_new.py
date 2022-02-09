@@ -5,6 +5,7 @@ from abc import ABC
 from abc import abstractmethod
 from numpy import linalg
 
+
 class TransformerMixin(ABC):
     """
     Base class for preprocessing transforms
@@ -92,12 +93,18 @@ class ClipTransform(TransformerMixin):
         self._check(data)
         bnds_index = [None] * len(self.dims)
         for i, bnds in enumerate(self.bounds):
-            bnds_index[i] = (data[self.dims[i]] > bnds[0]) & (
-                data[self.dims[i]] < bnds[1]
-            )
+            if isinstance(bnds, (int, float, complex)):
+                bnds_index[i] = data[self.dims[i]] == bnds
+            elif isinstance(bnds, tuple):
+                bnds_index[i] = (data[self.dims[i]] >= bnds[0]) & (
+                    data[self.dims[i]] < bnds[1]
+                )
+            else:
+                raise TypeError("bounds must be a list of numbers or tuples of size 2.")
         self.mask = bnds_index[0]
-        for i in range(1, len(self.dims) + 1):
-            self.mask = self.mask & bnds_index[1]
+        if len(bnds_index) > 1:
+            for i in range(1, len(self.dims) + 1):
+                self.mask = self.mask & bnds_index[1]
         return self
 
     def transform(self, data):

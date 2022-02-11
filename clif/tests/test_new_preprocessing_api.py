@@ -7,7 +7,7 @@ import datetime
 from time import time
 import unittest
 import clif
-import os
+import os, sys
 
 relpath = clif.__file__[:-11]  # ignore the __init__.py specification
 print("relpath:", relpath)

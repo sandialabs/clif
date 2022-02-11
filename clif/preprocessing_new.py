@@ -8,8 +8,8 @@ from statsmodels.tsa.stattools import kpss
 
 class TransformerMixin(ABC):
     """
-	Base class for preprocessing transforms
-	"""
+    Base class for preprocessing transforms
+    """
 
     @abstractmethod
     def fit(self, data):
@@ -26,7 +26,7 @@ class TransformerMixin(ABC):
         return self.fit(data, **fit_params).transform(data)
 
 
-class AnomalyTransform(TransformerMixin):
+class SeasonalAnomalyTransform(TransformerMixin):
     """Removes cyclical trends from xarray time-series data"""
 
     def __init__(self, cycle="month"):
@@ -112,18 +112,27 @@ class ClipTransform(TransformerMixin):
         return data_new
 
 
-class MarginalizeTransform(TransformerMixin):
-    def __init__(self, coords, lat_lon_weighted=False, lat_lon_weights=None):
+class MarginalizeOutTransform(TransformerMixin):
+    def __init__(self, coords, lat_lon_weights=None):
         self.coords = coords
-        self.lat_lon_weighted = lat_lon_weighted
         self.lat_lon_weights = lat_lon_weights
 
+    def _check_lat_lon_weights(self, data, lat_lon_weights):
+        assert set(lat_lon_weights.dims) < set(
+            data.dims
+        ), "Area weight dimensions are not a subset of the data dimensions"
+        assert (
+            len(set(data.dims).intersection(set(lat_lon_weights.dims))) == 2
+        ), "For now the lat lon weights must be 2 dimensional lat by lon. We internally marginalize to find the lon and lat weights respectively. No need to do it before hand."
+
     def fit(self, data):
+        assert isinstance(
+            data, xarray.DataArray
+        ), "Input must be an xarray DataArray object."
         # get lat lon weights if possible
-        if self.lat_lon_weighted is True:
-            assert (
-                self.lat_lon_weights is not None
-            ), "If weighted, you must provide the weights!"
+        if self.lat_lon_weights is not None:
+            # check lat lon weights
+            self._check_lat_lon_weights(data, self.lat_lon_weights)
             # get normalized weights
             self.weight_dims = self.lat_lon_weights.dims
             weights = self.lat_lon_weights.copy()
@@ -147,7 +156,7 @@ class MarginalizeTransform(TransformerMixin):
     def transform(self, data):
         # marginalize data array over marginal_coords
         for c in self.coords:
-            if self.lat_lon_weighted is False:
+            if self.lat_lon_weights is None:
                 # no need for weighted sums is lat_lon_weighting is True
                 data = data.mean(dim=c)
             else:
@@ -161,10 +170,14 @@ class MarginalizeTransform(TransformerMixin):
         return data
 
 
-class FlattenSpatialData(TransformerMixin):
+class FlattenData(TransformerMixin):
+    def __init__(self, row_dim=["time"], col_dim=None):
+        """Flatten data into a 2d tensor"""
+        self.row_dim = row_dim
+        self.col_dim = col_dim
+
     def fit(self, data):
-        """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time.
-        """
+        """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time."""
         self.dims = []
         for dim in data.dims:
             if dim != "time":
@@ -189,8 +202,7 @@ class LinearDetrendTransform(TransformerMixin):
         self.dim = "time"
 
     def fit(self, data):
-        """For each time series, learn a best fit line via least squares
-		"""
+        """For each time series, learn a best fit line via least squares"""
         reg = data.polyfit(dim="time", deg=1, full=True)
         self.coeff = reg.polyfit_coefficients
         self.lines = xarray.polyval(coord=data["time"], coeffs=self.coeff)
@@ -204,6 +216,7 @@ class LinearDetrendTransform(TransformerMixin):
         return data + self.lines
 
 
+# NOTE: Probably do not need a class and should just have this as separate namespace and functions
 class StationarityTesting:
     """A class containing functions for determining the stationarity of a given time series.
 
@@ -271,4 +284,3 @@ class StationarityTesting:
 """
 To do: signal detrending and removal of nan variables. 
 """
-

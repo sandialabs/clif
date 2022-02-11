@@ -6,6 +6,7 @@ __pycache__/
 .vscode/
 .pytest_cache/
 _build/
+build/
 
 # Setuptools distribution folder.
 /dist/

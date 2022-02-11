@@ -18,11 +18,13 @@ class TestSeasonalDetrending(unittest.TestCase):
     def setUpClass(self):
         # load data sets
         AERO_FILE = os.path.join(relpath, "tests/data/AEROD_v_198501_199612.nc")
-        QRL_FILE = os.path.join(relpath, "tests/data/QRL_198501_199612.nc")
-        T_FILE = os.path.join(relpath, "tests/data/T_198501_199612.nc")
+        QRL_FILE = os.path.join(relpath, "tests/data/QRL.nc")
+        T_FILE = os.path.join(relpath, "tests/data/Temp.nc")
+        AREA_FILE = os.path.join(relpath, "tests/data/area_weights.nc")
         self.ds_AERO = xr.open_dataset(AERO_FILE, chunks={"time": 1})
         self.ds_QRL = xr.open_dataset(QRL_FILE, chunks={"time": 1})
         self.ds_T = xr.open_dataset(T_FILE, chunks={"time": 1})
+        self.area_weights = xr.open_dataset(AREA_FILE)["area"]
 
     def test_seasonal_anomaly_detrending_fails_for_xarray_datasets(self):
         sat = clif.preprocessing.SeasonalAnomalyTransform(cycle="month")
@@ -87,11 +89,13 @@ class TestMarginalizeTransform(unittest.TestCase):
     def setUpClass(self):
         # load data sets
         AERO_FILE = os.path.join(relpath, "tests/data/AEROD_v_198501_199612.nc")
-        QRL_FILE = os.path.join(relpath, "tests/data/QRL_198501_199612.nc")
-        T_FILE = os.path.join(relpath, "tests/data/T_198501_199612.nc")
+        QRL_FILE = os.path.join(relpath, "tests/data/QRL.nc")
+        T_FILE = os.path.join(relpath, "tests/data/Temp.nc")
+        AREA_FILE = os.path.join(relpath, "tests/data/area_weights.nc")
         self.ds_AERO = xr.open_dataset(AERO_FILE, chunks={"time": 1})
         self.ds_QRL = xr.open_dataset(QRL_FILE, chunks={"time": 1})
         self.ds_T = xr.open_dataset(T_FILE, chunks={"time": 1})
+        self.area_weights = xr.open_dataset(AREA_FILE)["area"]
 
     def test_marginalize_fails_for_xarray_datasets(self):
         mot = clif.preprocessing.MarginalizeOutTransform(coords=["lon"])
@@ -140,7 +144,7 @@ class TestMarginalizeTransform(unittest.TestCase):
 
     def test_marginalize_out_weighted_check_lat_lon_without_normalization(self):
         data = self.ds_T["T"]
-        area_weight = self.ds_T.area
+        area_weight = self.area_weights
         area_weight_norm = area_weight.copy(deep=True)
         area_weight /= np.sum(area_weight)
         mot = clif.preprocessing.MarginalizeOutTransform(
@@ -156,7 +160,7 @@ class TestMarginalizeTransform(unittest.TestCase):
 
     def test_marginalize_out_weighted_check_lat_lon(self):
         data = self.ds_T["T"]
-        area_weight = self.ds_T.area
+        area_weight = self.area_weights
         area_weight /= np.sum(area_weight)
         mot = clif.preprocessing.MarginalizeOutTransform(
             coords=["lat", "lon"], lat_lon_weights=area_weight
@@ -171,7 +175,7 @@ class TestMarginalizeTransform(unittest.TestCase):
 
     def test_marginalize_out_weighted_check_lat_only(self):
         data = self.ds_T["T"]
-        area_weight = self.ds_T.area
+        area_weight = self.area_weights
         area_weight /= np.sum(area_weight)
         area_weight_lat = area_weight.mean(dim=["lon"])
         area_weight_lat /= np.sum(area_weight_lat)
@@ -189,7 +193,7 @@ class TestMarginalizeTransform(unittest.TestCase):
     def test_marginalize_out_weighted_check_lon_only(self):
         """Should just be equivalent to mean even if weighted"""
         data = self.ds_T["T"]
-        area_weight = self.ds_T.area
+        area_weight = self.area_weights
         area_weight /= np.sum(area_weight)
         area_weight_lon = area_weight.mean(dim=["lat"])
         area_weight_lon /= np.sum(area_weight_lon)
@@ -208,7 +212,7 @@ class TestMarginalizeTransform(unittest.TestCase):
     def test_marginalize_out_weights_dims_must_be_length_2(self):
         """Should just be equivalent to mean even if weighted"""
         data = self.ds_T["T"]
-        area_weight = self.ds_T.area
+        area_weight = self.area_weights
         area_weight /= np.sum(area_weight)
         area_weight_lon = area_weight.mean(dim=["lat"])
         area_weight_lon /= np.sum(area_weight_lon)
@@ -221,7 +225,7 @@ class TestMarginalizeTransform(unittest.TestCase):
     def test_marginalize_out_weights_dims_must_be_subset_of_data_dims(self):
         """Should just be equivalent to mean even if weighted"""
         data = self.ds_T["T"]
-        area_weight = self.ds_T.area
+        area_weight = self.area_weights
         area_weight = area_weight.rename({"lat": "latitude", "lon": "longitude"})
         mot = clif.preprocessing.MarginalizeOutTransform(
             coords=["lon"], lat_lon_weights=area_weight

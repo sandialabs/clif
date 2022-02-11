@@ -6,7 +6,6 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.stattools import kpss
 
 
-
 class TransformerMixin(ABC):
     """
 	Base class for preprocessing transforms
@@ -227,6 +226,8 @@ class StationarityTesting:
         Case 3: KPSS indicates stationarity and ADF indicates non-stationarity - The series is trend stationary. Trend needs to be removed to make series strict stationary. The detrended series is checked for stationarity.
         Case 4: KPSS indicates non-stationarity and ADF indicates stationarity - The series is difference stationary. Differencing is to be used to make series stationary. The differenced series is checked for stationarity.
 
+        Trend stationary: The mean trend is deterministic. Once the trend is estimated and removed from the data, the residual series is a stationary stochastic process.
+        Difference stationary: The mean trend is stochastic. Differencing the series D times yields a stationary stochastic process.
 
         Args:
             time_series (numpy:array_like, 1d): The data to be tested.

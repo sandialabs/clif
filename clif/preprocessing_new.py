@@ -69,6 +69,8 @@ class AnomalyTransform(TransformerMixin):
 
 
 class ClipTransform(TransformerMixin):
+    """Clips a dimension according to a specific range or value from xarray time series data"""
+
     def __init__(self, dims, bounds, drop=True):
         self.dims = dims
         self.bounds = bounds
@@ -89,6 +91,12 @@ class ClipTransform(TransformerMixin):
             )
 
     def fit(self, data):
+        """
+        Parameters
+        ----------
+        data: xarray.DataArray
+                data array object holding the time-series data
+        """
         # check data to make sure dimensions are in there
         self._check(data)
         bnds_index = [None] * len(self.dims)
@@ -108,6 +116,12 @@ class ClipTransform(TransformerMixin):
         return self
 
     def transform(self, data):
+        """
+        Parameters
+        ----------
+        data: xarray.DataArray
+                data array object holding the time-series data
+        """
         data_new = data.where(self.mask, drop=self.drop)
         return data_new
 
@@ -162,6 +176,8 @@ class MarginalizeTransform(TransformerMixin):
 
 
 class FlattenSpatialData(TransformerMixin):
+    """Flattens a time series xarray.DataArray into a matrix of dimensions time x (spatial grid cells)."""
+
     def fit(self, data):
         """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time.
         """
@@ -174,11 +190,15 @@ class FlattenSpatialData(TransformerMixin):
     def transform(self, data):
         """Flattens the given DataArray's spatial dimensions into a matrix.
 
-        Args:
-            data (xarray.DataArray): The xarray DataArray to flatten.
+        Parameters
+        ----------
+        data : xarray.DataArray
+            The xarray DataArray to flatten.
 
-        Returns:
-            xarray.DataArray: The flattened DataArray.
+        Returns
+        -------
+        xarray.DataArray
+            The flattened DataArray.
         """
         return data.stack(dim=self.dims)
 
@@ -229,13 +249,19 @@ class StationarityTesting:
         Trend stationary: The mean trend is deterministic. Once the trend is estimated and removed from the data, the residual series is a stationary stochastic process.
         Difference stationary: The mean trend is stochastic. Differencing the series D times yields a stationary stochastic process.
 
-        Args:
-            time_series (numpy:array_like, 1d): The data to be tested.
-            p_value_threshold (float): The hypothesis test threshold for the returned p-values.
-            verbosity (int) (default=1): Determines the level of verbosity. 1 explains the results and 2 print the ADF and KPSS p-values.
+        Parameters
+        ----------
+        time_series : numpy:array_like, 1d
+            The data to be tested.
+        p_value_threshold : float
+            The hypothesis test threshold for the returned p-values.
+        verbosity : int, optional
+            Determines the level of verbosity. 1 explains the results and 2 print the ADF and KPSS p-values, by default 1
 
-        Returns:
-            tuple: A pair of booleans (adf_stationary, kpss_stationary) corresponding to whether the ADF test returns stationary or the KPSS test returns stationary, respectively.
+        Returns
+        -------
+        tuple
+            A pair of booleans (adf_stationary, kpss_stationary) corresponding to whether the ADF test returns stationary or the KPSS test returns stationary, respectively.
         """
 
         adf_p_val = adfuller(time_series, autolag="AIC")[1]

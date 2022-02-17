@@ -98,6 +98,11 @@
    Preprocessing
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../api_statistics.html">
+   Main API
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -239,6 +244,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">varimax</span> <span class="o">=</span> <span class="n">varimax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
 
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">projections_</span>
+
 <div class="viewcode-block" id="fingerprints.fit"><a class="viewcode-back" href="../../api_fingerprints.html#clif.fingerprints.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Perform EOF decomposition for a numpy array</span>
 
@@ -276,29 +285,36 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cumulative_explained_variance_ratio_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span>
             <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
         <span class="p">)</span>
-        <span class="c1"># compute total variance</span>
+        <span class="c1"># compute total variance by reconstruction from sklearn&#39;s pca</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_variance_</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">pca</span><span class="o">.</span><span class="n">singular_values_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span>
         <span class="p">)</span> <span class="o">/</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># compute varimax rotation is True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">varimax</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">eofs_varimax_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ortho_rotation</span><span class="p">(</span><span class="n">componentsT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eofs_</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-            <span class="c1"># also compute the explained variance</span>
-            <span class="n">X0</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">U_varimax_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eofs_varimax_</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_varimax_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">U_varimax_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_ratio_varimax_</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_varimax_</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_variance_</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;whiten&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_opts</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_opts</span><span class="p">[</span><span class="s2">&quot;whiten&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_varimax_</span><span class="p">)</span>
-                    <span class="c1"># scale each column of the projection by the stdev if whiten == True (default)</span>
-                    <span class="n">U_varimax_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U_varimax_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">U_varimax_</span> <span class="o">=</span> <span class="n">U_varimax_</span>  <span class="c1"># save projections</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">projections_varimax_</span> <span class="o">=</span> <span class="n">U_varimax_</span>
+            <span class="c1"># this will overwrite what pca does so be careful</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_varimax</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_fit_varimax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="c1"># fit using varimax AFTER we fit using PCA.</span>
+        <span class="c1"># compute varimax rotation is True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eofs_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ortho_rotation</span><span class="p">(</span><span class="n">componentsT</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eofs_</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eofs_</span>
+        <span class="c1"># also compute the explained variance</span>
+        <span class="n">X0</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># recompute the projections and overwrite that of PCA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">U_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eofs_</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projections_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">U_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">U_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_ratio_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_variance_</span>
+        <span class="k">if</span> <span class="s2">&quot;whiten&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_opts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_opts</span><span class="p">[</span><span class="s2">&quot;whiten&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span><span class="p">)</span>
+                <span class="c1"># scale each column of the projection by the stdev if whiten == True (default)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">U_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">U_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">projections_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">U_</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># use projection computed above</span>
 
     <span class="k">def</span> <span class="nf">_ortho_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">componentsT</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;varimax&quot;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return rotated components (transpose).</span>

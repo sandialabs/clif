@@ -1,10 +1,7 @@
 ..  _api_fp:
 
-Main API
-========
-
-clif fingerprint class
-----------------------
+EOF Class
+=========
 
 .. autoclass:: clif.fingerprints
 	:members:

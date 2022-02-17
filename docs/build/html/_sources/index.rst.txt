@@ -51,6 +51,7 @@ Once you have successfully installed clif, you can compute EOFs of data (as a nu
    
    api_fingerprints
    api_preprocessing
+   api_statistics
 
 
 
@@ -60,7 +61,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-.. [#] Python 3+ is required and clif has only been tested for 
-         3.7.6 so far. 

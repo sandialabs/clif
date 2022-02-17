@@ -1,13 +1,23 @@
-..  _api_pp:
+Preprocessing
+=============
 
-Preprocessing API
-=================
+Here's a summary of the available transforms in clif. You can find the complete transform descriptions :ref:`here <preprocessing_transforms_api>`.  
 
-removing cyclical trends
--------------------------
+.. list-table:: Title
+   :widths: 100 100
+   :header-rows: 1
 
-.. automodule:: clif.preprocessing
-	:members:
-
-
-
+   * - Name
+     - Brief description  
+   * - :ref:`SeasonalAnomalyTransform<Removing cyclical trends>`
+     - Remove cyclical mean trends from xarray DataArrays
+   * - :ref:`ClipTransform<Clipping the data>`
+     - Taking slices or subsets of the xarray DataArrays
+   * - :ref:`MarginalizeOutTransform<Marginalizing>`
+     - Marginalizing out dimensions of the data
+   * - :ref:`Transpose<Transposing>`
+     - Transpose the data to custom order of dimensions
+   * - :ref:`FlattenData<Flattening the data>`
+     - Flattening or stacking dimensions of the data
+   * - :ref:`LinearDetrendTransform<Linear De-trending>`
+     - Removing linear time-series trends for each grid point

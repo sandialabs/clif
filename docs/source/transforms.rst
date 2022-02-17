@@ -1,5 +1,8 @@
 ..  _preprocessing_transforms_api:
 
+Transforms 
+========================
+
 Removing cyclical trends
 ------------------------
 
@@ -37,4 +40,8 @@ Linear De-trending
 .. autoclass:: clif.preprocessing.LinearDetrendTransform
 	:members:
 
+Custom Transform
+------------------
 
+.. autoclass:: clif.preprocessing.TransformerMixin
+	:members:

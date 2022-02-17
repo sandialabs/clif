@@ -3,5 +3,5 @@
 Statistical Tests
 =================
 
-.. automodule:: clif.statistics
+.. autoclass:: clif.statistics.StationarityTest
 	:members:

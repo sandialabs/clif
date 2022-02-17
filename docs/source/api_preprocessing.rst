@@ -21,3 +21,12 @@ Here's a summary of the available transforms in clif. You can find the complete 
      - Flattening or stacking dimensions of the data
    * - :ref:`LinearDetrendTransform<Linear De-trending>`
      - Removing linear time-series trends for each grid point
+   * - :ref:`TransformerMixin<Custom Transform>`
+     - Template for creating your own custom preprocessing transform.
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Transforms
+   
+   transforms

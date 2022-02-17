@@ -54,7 +54,6 @@ Once you have successfully installed clif, you can compute EOFs of data (as a nu
    api_statistics
 
 
-
 Indices and tables
 ==================
 

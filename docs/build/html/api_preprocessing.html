@@ -34,7 +34,7 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Statistical Tests" href="api_statistics.html" />
+    <link rel="next" title="Transforms" href="transforms.html" />
     <link rel="prev" title="EOF Class" href="api_fingerprints.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -95,10 +95,22 @@
    EOF Class
   </a>
  </li>
- <li class="toctree-l1 current active">
+ <li class="toctree-l1 current active has-children">
   <a class="current reference internal" href="#">
    Preprocessing
   </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="transforms.html">
+     Transforms
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="api_statistics.html">
@@ -204,7 +216,7 @@
                 
   <div class="section" id="preprocessing">
 <h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
-<p>Here’s a summary of the available transforms in clif. You can find the complete transform descriptions <a class="reference internal" href="apis/transforms.html#preprocessing-transforms-api"><span class="std std-ref">here</span></a>.</p>
+<p>Here’s a summary of the available transforms in clif. You can find the complete transform descriptions <a class="reference internal" href="transforms.html#preprocessing-transforms-api"><span class="std std-ref">here</span></a>.</p>
 <table class="colwidths-given table" id="id1">
 <caption><span class="caption-text">Title</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
@@ -217,26 +229,35 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="apis/transforms.html#removing-cyclical-trends"><span class="std std-ref">SeasonalAnomalyTransform</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="transforms.html#removing-cyclical-trends"><span class="std std-ref">SeasonalAnomalyTransform</span></a></p></td>
 <td><p>Remove cyclical mean trends from xarray DataArrays</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="apis/transforms.html#clipping-the-data"><span class="std std-ref">ClipTransform</span></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="transforms.html#clipping-the-data"><span class="std std-ref">ClipTransform</span></a></p></td>
 <td><p>Taking slices or subsets of the xarray DataArrays</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="apis/transforms.html#marginalizing"><span class="std std-ref">MarginalizeOutTransform</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="transforms.html#marginalizing"><span class="std std-ref">MarginalizeOutTransform</span></a></p></td>
 <td><p>Marginalizing out dimensions of the data</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="apis/transforms.html#transposing"><span class="std std-ref">Transpose</span></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="transforms.html#transposing"><span class="std std-ref">Transpose</span></a></p></td>
 <td><p>Transpose the data to custom order of dimensions</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="apis/transforms.html#flattening-the-data"><span class="std std-ref">FlattenData</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="transforms.html#flattening-the-data"><span class="std std-ref">FlattenData</span></a></p></td>
 <td><p>Flattening or stacking dimensions of the data</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="apis/transforms.html#linear-de-trending"><span class="std std-ref">LinearDetrendTransform</span></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="transforms.html#linear-de-trending"><span class="std std-ref">LinearDetrendTransform</span></a></p></td>
 <td><p>Removing linear time-series trends for each grid point</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="transforms.html#custom-transform"><span class="std std-ref">TransformerMixin</span></a></p></td>
+<td><p>Template for creating your own custom preprocessing transform.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Transforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="transforms.html">Transforms</a></li>
+</ul>
+</div>
 </div>
 
 
@@ -252,10 +273,10 @@
             <p class="prev-next-title">EOF Class</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="api_statistics.html" title="next page">
+    <a class='right-next' id="next-link" href="transforms.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Statistical Tests</p>
+        <p class="prev-next-title">Transforms</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

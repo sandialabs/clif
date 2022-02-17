@@ -15,19 +15,49 @@ class TransformerMixin(ABC):
 
     Templated base class for all transformers used herein. Users must define a fit and transform method only and the rest is done by the base class.
 
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
     """
 
     @abstractmethod
     def fit(self, data):
+        """User defined fit function (required).
+
+        Parameters
+        ----------
+        data : xarray.DataArray
+
+        Returns
+        -------
+        self: object
+            Returns self oject
+
+        """
         pass
 
     @abstractmethod
     def transform(self, data):
+        """User defined transform function (required).
+
+        Parameters
+        ----------
+        data : xarray.DataArray
+
+        Returns
+        -------
+        data_new: xarray.DataArray
+            returns new data array possibly of different size and dimensions.
+
+        """
         pass
 
     def fit_transform(self, data, **fit_params):
         """
-        Runs the fit and transform methods in one call
+        Runs the fit and transform methods in one call (not required)
         """
         return self.fit(data, **fit_params).transform(data)
 
@@ -38,8 +68,14 @@ class SeasonalAnomalyTransform(TransformerMixin):
     Parameters
     ----------
     cycle: {'day', 'month', 'year'}, default='month'
-        De-trending cycle to remove.
+        De-trending cycle resolution used to mean center the data.
 
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
 
     Examples
     --------
@@ -95,6 +131,13 @@ class ClipTransform(TransformerMixin):
     """Clips a dimension according to a specific range or value from xarray time series data
 
     Transform to extract slices or subsets of the data
+
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
 
     Parameters
     ----------
@@ -180,6 +223,13 @@ class MarginalizeOutTransform(TransformerMixin):
     lat_lon_weights: None (default) or xarray.DataArray
         weights corresponding to lat/ lon grid. Must match the input data array coordinates.
 
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
+
     Examples
     --------
     >>> import xarray
@@ -261,6 +311,13 @@ class Transpose(TransformerMixin):
     dims: list(str)
         list of strings corresponding to the dimensions that you want returned, in that particular order.
 
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
+
     Examples
     --------
     >>> import xarray
@@ -293,6 +350,13 @@ class FlattenData(TransformerMixin):
     ----------
     dims: list(str)
         Dimensions to stack or flatten together.
+
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
 
     Examples
     --------
@@ -344,6 +408,13 @@ class LinearDetrendTransform(TransformerMixin):
 
     dim: str, default='time'
         Dimension of the x-axis for computing the linear trend, i.e., dependent variable.
+
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
 
     Examples
     --------

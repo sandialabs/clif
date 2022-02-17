@@ -22,6 +22,13 @@ class fingerprints:
 
             Perform Varimax rotation after PCA is perform to obtain sparse entries
 
+    Methods
+    -------
+    fit:
+        Perform the SVD/ PCA for the given data matrix.
+    transform:
+        Project the data onto the components/ EOFs
+
     Examples
     --------
     >>> import xarray

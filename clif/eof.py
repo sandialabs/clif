@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.decomposition import PCA
+import xarray as xr
 
 
 class fingerprints:
@@ -56,6 +57,12 @@ class fingerprints:
         * Allow for xarray data set (n,lat,lon)
         * allow for list of data X = [X1,X2,...] for multivariate fingerprinting
         """
+        # allow input as xarray dataarray object type
+        if type(X) == xr.DataArray:
+            assert (
+                X.ndim == 2
+            ), "data array object must only have 2 dimensions otherwise EOF calculation is ambiguous."
+            X = X.values  # convert to numpy array
         # perform a check on the data
         assert X.ndim == 2, "Input data matrix is not 2 dimensional."
         self.n_samples, self.n_dim = X.shape

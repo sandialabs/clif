@@ -246,3 +246,108 @@ class TestMarginalizeTransform(unittest.TestCase):
 
 # mt = clif.preprocessing.marginalize(coords=['lon'],lat_lon_weighted=True,lat_lon_weights=ds.area)
 # data_new = mt.fit_transform(data)
+
+
+class TestEOFSnapshot(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        # load data sets
+        T_FILE = os.path.join(relpath, "tests/data/regression_test/Temperature.nc")
+        T_FILE_REF = os.path.join(
+            relpath, "tests/data/regression_test/Temperature_transformed.nc"
+        )
+        AREA_FILE = os.path.join(
+            relpath, "tests/data/regression_test/lat_lon_weights.nc"
+        )
+        self.T = xr.open_dataarray(T_FILE)
+        self.T_ref = xr.open_dataarray(T_FILE_REF)
+        self.area_weights = xr.open_dataarray(AREA_FILE)
+
+    def test_full_preprocessing_transforms(self):
+        data = self.T
+        data_transformed = self.T_ref
+        lat_lon_weights = self.area_weights
+
+        # clip latitude only for use in lat lon weighting
+        clipLatT = clif.preprocessing.ClipTransform(
+            dims=["lat"], bounds=[(-60.0, 60.0)]
+        )
+        lat_lon_weights_new = clipLatT.fit_transform(lat_lon_weights)
+
+        # First clip the data
+        clipT = clif.preprocessing.ClipTransform(
+            dims=["lat", "plev"], bounds=[(-60.0, 60.0), (5000.0, np.inf)]
+        )
+        data_new = clipT.fit_transform(data)
+        data_new_shape_true = (18, 15, 8, 24)
+        assert (
+            data_new.shape == data_new_shape_true
+        ), "Clip transformed may have changed expected behavior."
+
+        # detrend by month
+        monthlydetrend = clif.preprocessing.SeasonalAnomalyTransform(cycle="month")
+        data_new = monthlydetrend.fit_transform(data_new)
+
+        # marginalize out lat and lon variables
+        intoutT = clif.preprocessing.MarginalizeOutTransform(
+            coords=["lat", "lon"], lat_lon_weights=lat_lon_weights_new
+        )
+        data_new = intoutT.fit_transform(data_new)
+        assert (
+            data_new.shape == data_new_shape_true[:2]
+        ), "Marginal transform may have changed."
+
+        # linear detrend by time
+        lindetrendT = clif.preprocessing.LinearDetrendTransform()
+        data_new = lindetrendT.fit_transform(data_new)
+
+        # flatten data for EOF analysis
+        flattenT = clif.preprocessing.FlattenData(dims=["plev"])
+        data_new = flattenT.fit_transform(data_new)
+
+        # return data in specific order using the Transpose transform
+        transformT = clif.preprocessing.Transpose(dims=["time", "plev"])
+        data_new = transformT.fit_transform(data_new)
+        error = np.sum((data_new.values - data_transformed.values) ** 2)
+        assert (
+            error == 0.0
+        ), "Transform operations may have changed so snapshot tests do not align. Doesn't mean it's wrong though."
+
+    def test_full_eof_analysis_with_preprocessing_transforms(self):
+        data = self.T
+        data_transformed = self.T_ref
+        lat_lon_weights = self.area_weights
+
+        X = data_transformed.values
+
+        # Now we can begin calculating the EOFs
+        # obtain fingerprints
+        n_components = 8
+        fp = clif.fingerprints(n_eofs=n_components, varimax=False)
+        fp.fit(X)
+
+        # extract pca fingerprints and convergence diagnostics
+        eofs_pca = fp.eofs_
+        explained_variance_ratio = fp.explained_variance_ratio_
+
+        evr_ref = np.array(
+            [
+                7.79464367e-01,
+                1.81064479e-01,
+                2.09833878e-02,
+                1.07164463e-02,
+                5.28720247e-03,
+                1.81034729e-03,
+                2.94594213e-04,
+                2.19518543e-04,
+            ]
+        )
+
+        error = np.sqrt(
+            np.sum((explained_variance_ratio - evr_ref) ** 2)
+            / np.sum((explained_variance_ratio) ** 2)
+        )
+        print(error)
+        assert (
+            error <= 1e-9
+        ), "explained variance ratio relative error may have changed for regression test. "

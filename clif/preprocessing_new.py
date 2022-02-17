@@ -5,10 +5,16 @@ from abc import ABC, abstractmethod
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.stattools import kpss
 
+"""
+To do: signal detrending and removal of nan variables. 
+"""
+
 
 class TransformerMixin(ABC):
-    """
-    Base class for preprocessing transforms
+    """Abstract base class for all transformers
+
+    Templated base class for all transformers used herein. Users must define a fit and transform method only and the rest is done by the base class.
+
     """
 
     @abstractmethod
@@ -124,6 +130,10 @@ class MarginalizeOutTransform(TransformerMixin):
         assert (
             len(set(data.dims).intersection(set(lat_lon_weights.dims))) == 2
         ), "For now the lat lon weights must be 2 dimensional lat by lon. We internally marginalize to find the lon and lat weights respectively. No need to do it before hand."
+        for dim, size in lat_lon_weights.sizes.items():
+            assert (
+                data.sizes[dim] == size
+            ), "lat and lon area weights must be the same size as the data lat lon sizes. names must also match."
 
     def fit(self, data):
         assert isinstance(
@@ -170,18 +180,28 @@ class MarginalizeOutTransform(TransformerMixin):
         return data
 
 
+class Transpose(TransformerMixin):
+    def __init__(self, dims):
+        self.dims = dims  # order of dimensions you want to return
+
+    def fit(self, data):
+        assert len(data.dims) == len(
+            self.dims
+        ), "Order of dimensions must be the same as the total dimensions."
+        return self
+
+    def transform(self, data):
+        return data.transpose(*self.dims)
+
+
 class FlattenData(TransformerMixin):
-    def __init__(self, row_dim=["time"], col_dim=None):
-        """Flatten data into a 2d tensor"""
-        self.row_dim = row_dim
-        self.col_dim = col_dim
+    def __init__(self, dims=None):
+        """Flatten data"""
+        self.dims = dims  # must be a list
 
     def fit(self, data):
         """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time."""
-        self.dims = []
-        for dim in data.dims:
-            if dim != "time":
-                self.dims.append(dim)
+        self.new_dim_name = "_".join(self.dims)
         return self
 
     def transform(self, data):
@@ -193,7 +213,10 @@ class FlattenData(TransformerMixin):
         Returns:
             xarray.DataArray: The flattened DataArray.
         """
-        return data.stack(dim=self.dims)
+        if len(self.dims) == 1:
+            return data
+        else:
+            return data.stack({self.new_dim_name: self.dims})
 
 
 class LinearDetrendTransform(TransformerMixin):
@@ -279,8 +302,3 @@ class StationarityTesting:
                 print("Series is not stationary.")
 
         return adf_stationary, kpss_stationary
-
-
-"""
-To do: signal detrending and removal of nan variables. 
-"""

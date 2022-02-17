@@ -98,13 +98,13 @@ class TestMarginalizeTransform(unittest.TestCase):
         self.area_weights = xr.open_dataset(AREA_FILE)["area"]
 
     def test_marginalize_fails_for_xarray_datasets(self):
-        mot = clif.preprocessing.MarginalizeOutTransform(coords=["lon"])
+        mot = clif.preprocessing.MarginalizeOutTransform(dims=["lon"])
         data = self.ds_T["T"]
         with self.assertRaises(AssertionError):
             mot.fit(self.ds_T)
 
     def test_marginalize_out_unweighted_make_sure_coord_is_removed(self):
-        mot = clif.preprocessing.MarginalizeOutTransform(coords=["lon"])
+        mot = clif.preprocessing.MarginalizeOutTransform(dims=["lon"])
         data = self.ds_T["T"]
         data_transformed = mot.fit_transform(data)
         print(data_transformed.dims)
@@ -113,7 +113,7 @@ class TestMarginalizeTransform(unittest.TestCase):
                 data_transformed[key]
 
     def test_marginalize_out_unweighted_check_lon(self):
-        mot = clif.preprocessing.MarginalizeOutTransform(coords=["lon"])
+        mot = clif.preprocessing.MarginalizeOutTransform(dims=["lon"])
         data = self.ds_T["T"]
         data_transformed = mot.fit_transform(data)
         error = data_transformed.values - data.mean(dim="lon").values
@@ -122,7 +122,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         ), "marginalization over longitude, unweighted not working."
 
     def test_marginalize_out_unweighted_check_lat(self):
-        mot = clif.preprocessing.MarginalizeOutTransform(coords=["lat"])
+        mot = clif.preprocessing.MarginalizeOutTransform(dims=["lat"])
         data = self.ds_T["T"]
         data_transformed = mot.fit_transform(data)
         error = data_transformed.values - data.mean(dim="lat").values
@@ -131,7 +131,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         ), "marginalization over latitude, unweighted not working."
 
     def test_marginalize_out_unweighted_check_lat_lon(self):
-        mot = clif.preprocessing.MarginalizeOutTransform(coords=["lat", "lon"])
+        mot = clif.preprocessing.MarginalizeOutTransform(dims=["lat", "lon"])
         data = self.ds_T["T"]
         data_transformed = mot.fit_transform(data)
         error = data_transformed.values - data.mean(dim=["lat", "lon"]).values
@@ -148,7 +148,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         area_weight_norm = area_weight.copy(deep=True)
         area_weight /= np.sum(area_weight)
         mot = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lat", "lon"], lat_lon_weights=area_weight
+            dims=["lat", "lon"], lat_lon_weights=area_weight
         )
         data_transformed = mot.fit_transform(data)
         ref = (data * area_weight_norm).sum(dim=["lat", "lon"])
@@ -163,7 +163,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         area_weight = self.area_weights
         area_weight /= np.sum(area_weight)
         mot = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lat", "lon"], lat_lon_weights=area_weight
+            dims=["lat", "lon"], lat_lon_weights=area_weight
         )
         data_transformed = mot.fit_transform(data)
         ref = (data * area_weight).sum(dim=["lat", "lon"])
@@ -180,7 +180,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         area_weight_lat = area_weight.mean(dim=["lon"])
         area_weight_lat /= np.sum(area_weight_lat)
         mot = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lat"], lat_lon_weights=area_weight
+            dims=["lat"], lat_lon_weights=area_weight
         )
         data_t = mot.fit_transform(data)
         ref = (data * area_weight_lat).sum(dim=["lat"])
@@ -198,7 +198,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         area_weight_lon = area_weight.mean(dim=["lat"])
         area_weight_lon /= np.sum(area_weight_lon)
         mot = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lon"], lat_lon_weights=area_weight
+            dims=["lon"], lat_lon_weights=area_weight
         )
         data_t = mot.fit_transform(data)
         ref = data.mean(dim=["lon"])
@@ -217,7 +217,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         area_weight_lon = area_weight.mean(dim=["lat"])
         area_weight_lon /= np.sum(area_weight_lon)
         mot = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lon"], lat_lon_weights=area_weight_lon
+            dims=["lon"], lat_lon_weights=area_weight_lon
         )
         with self.assertRaises(AssertionError):
             mot.fit(data)
@@ -228,7 +228,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         area_weight = self.area_weights
         area_weight = area_weight.rename({"lat": "latitude", "lon": "longitude"})
         mot = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lon"], lat_lon_weights=area_weight
+            dims=["lon"], lat_lon_weights=area_weight
         )
         with self.assertRaises(AssertionError):
             mot.fit(data)
@@ -244,7 +244,7 @@ class TestMarginalizeTransform(unittest.TestCase):
 # data_new = clipT.fit_transform(data)
 # print(data_new.values.shape)
 
-# mt = clif.preprocessing.marginalize(coords=['lon'],lat_lon_weighted=True,lat_lon_weights=ds.area)
+# mt = clif.preprocessing.marginalize(dims=['lon'],lat_lon_weighted=True,lat_lon_weights=ds.area)
 # data_new = mt.fit_transform(data)
 
 
@@ -290,7 +290,7 @@ class TestEOFSnapshot(unittest.TestCase):
 
         # marginalize out lat and lon variables
         intoutT = clif.preprocessing.MarginalizeOutTransform(
-            coords=["lat", "lon"], lat_lon_weights=lat_lon_weights_new
+            dims=["lat", "lon"], lat_lon_weights=lat_lon_weights_new
         )
         data_new = intoutT.fit_transform(data_new)
         assert (

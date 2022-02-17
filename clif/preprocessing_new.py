@@ -33,7 +33,24 @@ class TransformerMixin(ABC):
 
 
 class SeasonalAnomalyTransform(TransformerMixin):
-    """Removes cyclical trends from xarray time-series data"""
+    """Removes cyclical trends from xarray time-series data
+
+    Parameters
+    ----------
+    cycle: {'day', 'month', 'year'}, default='month'
+        De-trending cycle to remove.
+
+
+    Examples
+    --------
+    >>> import xarray
+    >>> from clif.preprocessing import SeasonalAnomalyTransform
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> anomalyT = SeasonalAnomalyTransform(cycle='month')
+    >>> anomalyT.fit(X)
+    >>> X_transformed = anomalyT.transform(X)
+
+    """
 
     def __init__(self, cycle="month"):
         """
@@ -75,7 +92,27 @@ class SeasonalAnomalyTransform(TransformerMixin):
 
 
 class ClipTransform(TransformerMixin):
-    """Clips a dimension according to a specific range or value from xarray time series data"""
+    """Clips a dimension according to a specific range or value from xarray time series data
+
+    Transform to extract slices or subsets of the data
+
+    Parameters
+    ----------
+    dims: list(str)
+        List of dimensions to clip or slice, e.g., dims=['lat','lon']
+
+    bounds: list(tuples)
+        List of 2-length tuples corresponding to each dimension, e.g., bounds=[(-60,60),(0,180)]
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import ClipTransform
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> clipT = ClipTransform(dims=['lat','plev'],bounds=[(-60,60),(5000,np.inf)])
+    >>> X_transformed = clipT.fit_transform(X)
+    """
 
     def __init__(self, dims, bounds, drop=True):
         self.dims = dims
@@ -133,8 +170,28 @@ class ClipTransform(TransformerMixin):
 
 
 class MarginalizeOutTransform(TransformerMixin):
-    def __init__(self, coords, lat_lon_weights=None):
-        self.coords = coords
+    """Integrate out or marginalize over dimensions to average over effect
+
+    Parameters
+    ----------
+    coords: list(str)
+        list of strings corresponding to the dimensions
+
+    lat_lon_weights: None (default) or xarray.DataArray
+        weights corresponding to lat/ lon grid. Must match the input data array coordinates.
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import MarginalizeOutTransform
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> marginalizeT = MarginalizeOutTransform(dims=['lat','lon']])
+    >>> X_transformed = marginalizeT.fit_transform(X)
+    """
+
+    def __init__(self, dims, lat_lon_weights=None):
+        self.coords = dims
         self.lat_lon_weights = lat_lon_weights
 
     def _check_lat_lon_weights(self, data, lat_lon_weights):
@@ -195,9 +252,28 @@ class MarginalizeOutTransform(TransformerMixin):
 
 
 class Transpose(TransformerMixin):
+    """Simple wrapper to transpose the data array
+
+    This transform allows the user to return the data array in any order of dimensions that is specified.
+
+    Parameters
+    ----------
+    dims: list(str)
+        list of strings corresponding to the dimensions that you want returned, in that particular order.
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import Transpose
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> transpose = Transpose(dims=['time','plev','lat','lon']])
+    >>> X_transformed = transpose.fit_transform(X)
+    """
+
     def __init__(self, dims):
         self.dims = dims  # order of dimensions you want to return
-        
+
     def fit(self, data):
         assert len(data.dims) == len(
             self.dims
@@ -209,7 +285,26 @@ class Transpose(TransformerMixin):
 
 
 class FlattenData(TransformerMixin):
-    def __init__(self, dims=None):
+    """Flatten or stack dimensions together
+
+    Stacking or flattening of user-specified dimensions. The stacked dimension name is the concatenated name of the dimensions.
+
+    Parameters
+    ----------
+    dims: list(str)
+        Dimensions to stack or flatten together.
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import FlattenData
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> flattenT = FlattenData(dims=['lat','lon']])
+    >>> X_transformed = flattenT.fit_transform(X)
+    """
+
+    def __init__(self, dims):
         """Flatten data"""
         self.dims = dims  # must be a list
 
@@ -238,6 +333,28 @@ class FlattenData(TransformerMixin):
 
 
 class LinearDetrendTransform(TransformerMixin):
+    """Remove linear trend for every grid point
+
+    For every grid point we compute a linear time-series trend and subtract from the signal.
+
+    Parameters
+    ----------
+    degree: int, default=1
+        Degree of polynomial used in de-trending. Each grid point is fit with a monomial.
+
+    dim: str, default='time'
+        Dimension of the x-axis for computing the linear trend, i.e., dependent variable.
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import LinearDetrendTransform
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> lindetrendT = LinearDetrendTransform()
+    >>> X_transformed = lindetrendT.fit_transform(X)
+    """
+
     def __init__(self, degree=1, dim="time"):
         self.degree = degree
         self.dim = "time"
@@ -257,72 +374,4 @@ class LinearDetrendTransform(TransformerMixin):
         return data + self.lines
 
 
-# NOTE: Probably do not need a class and should just have this as separate namespace and functions
-class StationarityTesting:
-    """A class containing functions for determining the stationarity of a given time series.
-
-    Stationarity means that the statistical properties of a time series i.e. mean, variance and covariance do not change over time.
-    Many statistical models require the series to be stationary to make effective and precise predictions.
-
-    Two statistical tests are used to check the stationarity of a time series - Augmented Dickey Fuller (“ADF”) test and Kwiatkowski-Phillips-Schmidt-Shin (“KPSS”) test.
-    """
-
-    def test_stationarity(time_series, p_value_threshold, verbosity=1):
-        """Tests whether the given time series is stationary with respect to the given p-value threshold.
-
-        This uses both the Augmented Dickey Fuller (“ADF”) test and Kwiatkowski-Phillips-Schmidt-Shin (“KPSS”) test to determine stationarity. These are hypothsis tests in which the null and alternate hypotheses are opposites.
-        If the ADF test fails to reject the null hypothesis, this may provide evidence that the series is non-stationary.
-        If the KPSS test fails to reject the null hypothesis, this may provide evidence that the series is stationary.
-
-        There are four cases of stationarity in this test:
-        Case 1: Both tests conclude that the series is not stationary - The series is not stationary
-        Case 2: Both tests conclude that the series is stationary - The series is stationary
-        Case 3: KPSS indicates stationarity and ADF indicates non-stationarity - The series is trend stationary. Trend needs to be removed to make series strict stationary. The detrended series is checked for stationarity.
-        Case 4: KPSS indicates non-stationarity and ADF indicates stationarity - The series is difference stationary. Differencing is to be used to make series stationary. The differenced series is checked for stationarity.
-
-        Trend stationary: The mean trend is deterministic. Once the trend is estimated and removed from the data, the residual series is a stationary stochastic process.
-        Difference stationary: The mean trend is stochastic. Differencing the series D times yields a stationary stochastic process.
-
-        Parameters
-        ----------
-        time_series : numpy:array_like, 1d
-            The data to be tested.
-        p_value_threshold : float
-            The hypothesis test threshold for the returned p-values.
-        verbosity : int, optional
-            Determines the level of verbosity. 1 explains the results and 2 print the ADF and KPSS p-values, by default 1
-
-        Returns
-        -------
-        tuple
-            A pair of booleans (adf_stationary, kpss_stationary) corresponding to whether the ADF test returns stationary or the KPSS test returns stationary, respectively.
-        """
-
-        adf_p_val = adfuller(time_series, autolag="AIC")[1]
-        kpss_p_val = kpss(time_series, regression="c", nlags="auto")[1]
-
-        # adf_reject means stationary
-        # kpss_reject means not stationary
-        adf_reject = adf_p_val <= p_value_threshold
-        kpss_reject = kpss_p_val <= p_value_threshold
-        adf_stationary = adf_reject
-        kpss_stationary = ~kpss_reject
-
-        if verbosity > 0:
-            if verbosity > 1:
-                print("ADF p-value:", adf_p_val)
-                print("KPSS p-value:", kpss_p_val)
-            if adf_stationary and kpss_stationary:
-                print("Series is stationary.")
-            elif not adf_stationary and kpss_stationary:
-                print(
-                    "Series is trend stationary only. Trend needs to be removed to make the time series fully stationary."
-                )
-            elif adf_stationary and not kpss_stationary:
-                print(
-                    "Series is difference stationary only. Seasonal differencing can be used to make the time series fully stationary. "
-                )
-            else:
-                print("Series is not stationary.")
-
-        return adf_stationary, kpss_stationary
+# ********* Moved StationarityTesting to statistics.py module

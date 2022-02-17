@@ -22,6 +22,15 @@ class fingerprints:
 
             Perform Varimax rotation after PCA is perform to obtain sparse entries
 
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif import fingerprints
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> fp = fingerprints(n_eofs=8,whiten=True,varimax=False)
+    >>> fp.fit(X)
+    >>> print(fp.eofs_, fp.projections_, fp.explained_variance_ratio_)
 
     Notes
     -----
@@ -48,6 +57,10 @@ class fingerprints:
         self.method_opts = method_opts
         self.varimax = varimax
         self.method = method
+
+    def fit_transform(self, X):
+        self.fit(X)
+        return self.projections_
 
     def fit(self, X):
         """Perform EOF decomposition for a numpy array
@@ -86,29 +99,36 @@ class fingerprints:
         self.cumulative_explained_variance_ratio_ = np.cumsum(
             pca.explained_variance_ratio_
         )
-        # compute total variance
+        # compute total variance by reconstruction from sklearn's pca
         self.total_variance_ = (
             pca.singular_values_[0] ** 2 / self.n_samples
         ) / pca.explained_variance_ratio_[0]
 
         # compute varimax rotation is True
         if self.varimax == True:
-            self.eofs_varimax_ = self._ortho_rotation(componentsT=self.eofs_.T)
-            # also compute the explained variance
-            X0 = X - np.mean(X, axis=0)
-            U_varimax_ = np.dot(X0, self.eofs_varimax_.T)
-            self.explained_variance_varimax_ = np.var(U_varimax_, axis=0)
-            self.explained_variance_ratio_varimax_ = (
-                self.explained_variance_varimax_ / self.total_variance_
-            )
-            if "whiten" in self.method_opts:
-                if self.method_opts["whiten"] == True:
-                    sigma = np.sqrt(self.explained_variance_varimax_)
-                    # scale each column of the projection by the stdev if whiten == True (default)
-                    U_varimax_ = np.dot(U_varimax_, np.diag(1.0 / sigma))
-            else:
-                self.U_varimax_ = U_varimax_  # save projections
-            self.projections_varimax_ = U_varimax_
+            # this will overwrite what pca does so be careful
+            self._fit_varimax(X)
+
+    def _fit_varimax(self, X):
+        # fit using varimax AFTER we fit using PCA.
+        # compute varimax rotation is True
+        self.eofs_ = self._ortho_rotation(componentsT=self.eofs_.T)
+        self.V_ = self.eofs_
+        # also compute the explained variance
+        X0 = X - np.mean(X, axis=0)
+        # recompute the projections and overwrite that of PCA
+        self.U_ = np.dot(X0, self.eofs_.T)
+        self.projections_ = self.U_
+        self.explained_variance_ = np.var(self.U_, axis=0)
+        self.explained_variance_ratio_ = self.explained_variance_ / self.total_variance_
+        if "whiten" in self.method_opts:
+            if self.method_opts["whiten"] == True:
+                sigma = np.sqrt(self.explained_variance_)
+                # scale each column of the projection by the stdev if whiten == True (default)
+                self.U_ = np.dot(self.U_, np.diag(1.0 / sigma))
+                self.projections_ = self.U_
+        else:
+            pass  # use projection computed above
 
     def _ortho_rotation(self, componentsT, method="varimax", tol=1e-8, max_iter=1000):
         """Return rotated components (transpose).

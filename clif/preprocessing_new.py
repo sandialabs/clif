@@ -5,11 +5,17 @@ from abc import ABC, abstractmethod
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.stattools import kpss
 
+"""
+To do: signal detrending and removal of nan variables. 
+"""
+
 
 class TransformerMixin(ABC):
+    """Abstract base class for all transformers
+
+    Templated base class for all transformers used herein. Users must define a fit and transform method only and the rest is done by the base class.
+
     """
-	Base class for preprocessing transforms
-	"""
 
     @abstractmethod
     def fit(self, data):
@@ -26,7 +32,7 @@ class TransformerMixin(ABC):
         return self.fit(data, **fit_params).transform(data)
 
 
-class AnomalyTransform(TransformerMixin):
+class SeasonalAnomalyTransform(TransformerMixin):
     """Removes cyclical trends from xarray time-series data"""
 
     def __init__(self, cycle="month"):
@@ -126,18 +132,31 @@ class ClipTransform(TransformerMixin):
         return data_new
 
 
-class MarginalizeTransform(TransformerMixin):
-    def __init__(self, coords, lat_lon_weighted=False, lat_lon_weights=None):
+class MarginalizeOutTransform(TransformerMixin):
+    def __init__(self, coords, lat_lon_weights=None):
         self.coords = coords
-        self.lat_lon_weighted = lat_lon_weighted
         self.lat_lon_weights = lat_lon_weights
 
-    def fit(self, data):
-        # get lat lon weights if possible
-        if self.lat_lon_weighted is True:
+    def _check_lat_lon_weights(self, data, lat_lon_weights):
+        assert set(lat_lon_weights.dims) < set(
+            data.dims
+        ), "Area weight dimensions are not a subset of the data dimensions"
+        assert (
+            len(set(data.dims).intersection(set(lat_lon_weights.dims))) == 2
+        ), "For now the lat lon weights must be 2 dimensional lat by lon. We internally marginalize to find the lon and lat weights respectively. No need to do it before hand."
+        for dim, size in lat_lon_weights.sizes.items():
             assert (
-                self.lat_lon_weights is not None
-            ), "If weighted, you must provide the weights!"
+                data.sizes[dim] == size
+            ), "lat and lon area weights must be the same size as the data lat lon sizes. names must also match."
+
+    def fit(self, data):
+        assert isinstance(
+            data, xarray.DataArray
+        ), "Input must be an xarray DataArray object."
+        # get lat lon weights if possible
+        if self.lat_lon_weights is not None:
+            # check lat lon weights
+            self._check_lat_lon_weights(data, self.lat_lon_weights)
             # get normalized weights
             self.weight_dims = self.lat_lon_weights.dims
             weights = self.lat_lon_weights.copy()
@@ -161,7 +180,7 @@ class MarginalizeTransform(TransformerMixin):
     def transform(self, data):
         # marginalize data array over marginal_coords
         for c in self.coords:
-            if self.lat_lon_weighted is False:
+            if self.lat_lon_weights is None:
                 # no need for weighted sums is lat_lon_weighting is True
                 data = data.mean(dim=c)
             else:
@@ -175,16 +194,28 @@ class MarginalizeTransform(TransformerMixin):
         return data
 
 
-class FlattenSpatialData(TransformerMixin):
-    """Flattens a time series xarray.DataArray into a matrix of dimensions time x (spatial grid cells)."""
+class Transpose(TransformerMixin):
+    def __init__(self, dims):
+        self.dims = dims  # order of dimensions you want to return
+        
+    def fit(self, data):
+        assert len(data.dims) == len(
+            self.dims
+        ), "Order of dimensions must be the same as the total dimensions."
+        return self
+
+    def transform(self, data):
+        return data.transpose(*self.dims)
+
+
+class FlattenData(TransformerMixin):
+    def __init__(self, dims=None):
+        """Flatten data"""
+        self.dims = dims  # must be a list
 
     def fit(self, data):
-        """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time.
-        """
-        self.dims = []
-        for dim in data.dims:
-            if dim != "time":
-                self.dims.append(dim)
+        """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time."""
+        self.new_dim_name = "_".join(self.dims)
         return self
 
     def transform(self, data):
@@ -200,7 +231,10 @@ class FlattenSpatialData(TransformerMixin):
         xarray.DataArray
             The flattened DataArray.
         """
-        return data.stack(dim=self.dims)
+        if len(self.dims) == 1:
+            return data
+        else:
+            return data.stack({self.new_dim_name: self.dims})
 
 
 class LinearDetrendTransform(TransformerMixin):
@@ -209,8 +243,7 @@ class LinearDetrendTransform(TransformerMixin):
         self.dim = "time"
 
     def fit(self, data):
-        """For each time series, learn a best fit line via least squares
-		"""
+        """For each time series, learn a best fit line via least squares"""
         reg = data.polyfit(dim="time", deg=1, full=True)
         self.coeff = reg.polyfit_coefficients
         self.lines = xarray.polyval(coord=data["time"], coeffs=self.coeff)
@@ -224,6 +257,7 @@ class LinearDetrendTransform(TransformerMixin):
         return data + self.lines
 
 
+# NOTE: Probably do not need a class and should just have this as separate namespace and functions
 class StationarityTesting:
     """A class containing functions for determining the stationarity of a given time series.
 
@@ -292,9 +326,3 @@ class StationarityTesting:
                 print("Series is not stationary.")
 
         return adf_stationary, kpss_stationary
-
-
-"""
-To do: signal detrending and removal of nan variables. 
-"""
-

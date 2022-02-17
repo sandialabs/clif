@@ -24,7 +24,7 @@ class TransformerMixin(ABC):
     """
 
     @abstractmethod
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         """User defined fit function (required).
 
         Parameters
@@ -55,7 +55,7 @@ class TransformerMixin(ABC):
         """
         pass
 
-    def fit_transform(self, data, **fit_params):
+    def fit_transform(self, data, y=None, **fit_params):
         """
         Runs the fit and transform methods in one call (not required)
         """
@@ -97,7 +97,7 @@ class SeasonalAnomalyTransform(TransformerMixin):
         """
         self.cycle = cycle
 
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         """
         Parameters
         ----------
@@ -176,7 +176,7 @@ class ClipTransform(TransformerMixin):
                 dim
             )
 
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         """
         Parameters
         ----------
@@ -256,7 +256,7 @@ class MarginalizeOutTransform(TransformerMixin):
                 data.sizes[dim] == size
             ), "lat and lon area weights must be the same size as the data lat lon sizes. names must also match."
 
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         assert isinstance(
             data, xarray.DataArray
         ), "Input must be an xarray DataArray object."
@@ -331,7 +331,7 @@ class Transpose(TransformerMixin):
     def __init__(self, dims):
         self.dims = dims  # order of dimensions you want to return
 
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         assert len(data.dims) == len(
             self.dims
         ), "Order of dimensions must be the same as the total dimensions."
@@ -372,7 +372,7 @@ class FlattenData(TransformerMixin):
         """Flatten data"""
         self.dims = dims  # must be a list
 
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         """Gets the list of spatial dimensions, i.e. the given DataArray's dimensions without time."""
         self.new_dim_name = "_".join(self.dims)
         return self
@@ -430,7 +430,7 @@ class LinearDetrendTransform(TransformerMixin):
         self.degree = degree
         self.dim = "time"
 
-    def fit(self, data):
+    def fit(self, data, y=None, **fit_params):
         """For each time series, learn a best fit line via least squares"""
         reg = data.polyfit(dim="time", deg=1, full=True)
         self.coeff = reg.polyfit_coefficients

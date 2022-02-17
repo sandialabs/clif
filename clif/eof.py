@@ -65,11 +65,11 @@ class fingerprints:
         self.varimax = varimax
         self.method = method
 
-    def fit_transform(self, X):
+    def fit_transform(self, X, y=None, **fit_params):
         self.fit(X)
         return self.projections_
 
-    def fit(self, X):
+    def fit(self, X, y=None, **fit_params):
         """Perform EOF decomposition for a numpy array
 
         To do

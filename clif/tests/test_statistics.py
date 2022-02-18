@@ -17,7 +17,7 @@ class TestStationarityTests(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.n = 1000
-        self.pvalue = 0.01
+        self.alpha = 0.01
         self.rn = np.random.RandomState(2342)
         # stocastic_data[:, 0] is a stocastic gaussian process. This should always be stationary.
         self.stochastic_data = self.rn.randn(self.n, 3)
@@ -41,68 +41,74 @@ class TestStationarityTests(unittest.TestCase):
         self.sun_data = sm.datasets.sunspots.load_pandas().data["SUNACTIVITY"].values
 
     def test_stationarity_for_simple_linear_trend(self):
-        time_series = 1 + 0.1 * np.sort(self.rn.rand(self.n))
-        pvalue = self.pvalue
-        stest_adfuller = clif.statistics.StationarityTest(
-            test="adfuller", pvalue=pvalue
-        )
-        stest_adfuller.fit(time_series)
-        assert (
-            stest_adfuller.is_stationary is False
-        ), "linear time-series should not be stationary using the adfuller test."
-        stest_kpss = clif.statistics.StationarityTest(test="kpss", pvalue=pvalue)
-        stest_kpss.fit(time_series)
-        assert (
-            stest_kpss.is_stationary is False
-        ), "linear time-series should not be stationary using the kpss test."
-
-    def test_stationarity_for_simple_random_trend(self):
-        time_series = 1 + 0.1 * (self.rn.rand(self.n))
-        pvalue = self.pvalue
-        stest_adfuller = clif.statistics.StationarityTest(
-            test="adfuller", pvalue=pvalue
-        )
+        time_series = self.trend_series
+        alpha = self.alpha
+        stest_adfuller = clif.statistics.StationarityTest(tests="adfuller", alpha=alpha)
         stest_adfuller.fit(time_series)
         assert (
             stest_adfuller.is_stationary is True
-        ), "linear time-series should be stationary using the adfuller test."
-        stest_kpss = clif.statistics.StationarityTest(test="kpss", pvalue=pvalue)
-        stest_kpss.fit(time_series)
-        assert (
-            stest_kpss.is_stationary is True
-        ), "linear time-series should be stationary using the kpss test."
-
-    def test_stationarity_for_sun_spot_data(self):
-        time_series = self.sun_data
-        pvalue = self.pvalue
-        stest_adfuller = clif.statistics.StationarityTest(
-            test="adfuller", pvalue=pvalue
-        )
-        stest_adfuller.fit(time_series)
-        assert (
-            stest_adfuller.is_stationary is False
-        ), "linear time-series should be not be stationary using the adfuller test."
-        stest_kpss = clif.statistics.StationarityTest(test="kpss", pvalue=pvalue)
-        stest_kpss.fit(time_series)
-        assert (
-            stest_kpss.is_stationary is True
-        ), "linear time-series should be stationary using the kpss test."
-
-    def test_stationarity_for_artificial_stochastic_process(self):
-        time_series = self.stochastic_data[:, 2]
-        pvalue = self.pvalue
-        stest_adfuller = clif.statistics.StationarityTest(
-            test="adfuller", pvalue=pvalue
-        )
-        stest_adfuller.fit(time_series)
-        assert (
-            stest_adfuller.is_stationary is False
-        ), "linear time-series should be not be stationary using the adfuller test."
-        stest_kpss = clif.statistics.StationarityTest(test="kpss", pvalue=pvalue)
+        ), "linear time-series should not be stationary using the adfuller test."
+        stest_kpss = clif.statistics.StationarityTest(tests="kpss", alpha=alpha)
         stest_kpss.fit(time_series)
         assert (
             stest_kpss.is_stationary is False
         ), "linear time-series should not be stationary using the kpss test."
+
+    def test_stationarity_for_simple_random_linear_trend(self):
+        time_series = 1 + 0.1 * np.sort(self.rn.rand(self.n))
+        alpha = self.alpha
+        stest_adfuller = clif.statistics.StationarityTest(tests="adfuller", alpha=alpha)
+        stest_adfuller.fit(time_series)
+        assert (
+            stest_adfuller.is_stationary is False
+        ), "linear time-series should be stationary using the adfuller test."
+        stest_kpss = clif.statistics.StationarityTest(tests="kpss", alpha=alpha)
+        stest_kpss.fit(time_series)
+        assert (
+            stest_kpss.is_stationary is False
+        ), "linear time-series should not be stationary using the kpss test."
+
+    def test_stationarity_for_simple_random_process(self):
+        time_series = self.stochastic_data[:, 0]
+        alpha = self.alpha
+        stest_adfuller = clif.statistics.StationarityTest(tests="adfuller", alpha=alpha)
+        stest_adfuller.fit(time_series)
+        assert (
+            stest_adfuller.is_stationary is True
+        ), "random time-series should be stationary using the adfuller test."
+        stest_kpss = clif.statistics.StationarityTest(tests="kpss", alpha=alpha)
+        stest_kpss.fit(time_series)
+        assert (
+            stest_kpss.is_stationary is True
+        ), "random time-series should be stationary using the kpss test."
+
+    def test_stationarity_for_sun_spot_data(self):
+        time_series = self.sun_data
+        alpha = self.alpha
+        stest_adfuller = clif.statistics.StationarityTest(tests="adfuller", alpha=alpha)
+        stest_adfuller.fit(time_series)
+        assert (
+            stest_adfuller.is_stationary is False
+        ), "sun spot time-series should be not be stationary using the adfuller test."
+        stest_kpss = clif.statistics.StationarityTest(tests="kpss", alpha=alpha)
+        stest_kpss.fit(time_series)
+        assert (
+            stest_kpss.is_stationary is True
+        ), "sun spot time-series should be stationary using the kpss test."
+
+    def test_stationarity_for_additive_stochastic_process(self):
+        time_series = self.stochastic_data[:, 2]
+        alpha = self.alpha
+        stest_adfuller = clif.statistics.StationarityTest(tests="adfuller", alpha=alpha)
+        stest_adfuller.fit(time_series)
+        assert (
+            stest_adfuller.is_stationary is False
+        ), "stochastic seasonal time-series should be not be stationary using the adfuller test."
+        stest_kpss = clif.statistics.StationarityTest(tests="kpss", alpha=alpha)
+        stest_kpss.fit(time_series)
+        assert (
+            stest_kpss.is_stationary is False
+        ), "stochastic seasonal time-series should not be stationary using the kpss test."
 
     # def test_stationarity_for_heteraskedastic_time_series(self):
     #     # Not implemented:

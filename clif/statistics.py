@@ -115,9 +115,13 @@ class StationarityTest:
         return is_stationary
 
     def interpreted_stationarity_tests(self, time_series):
-        """Tests whether the given time series is stationary with respect to the given alpha threshold.
+        """Provides an interpreted stationarity testing result of the given time series.t
 
-        This uses both the Augmented Dickey Fuller (“ADF”) test and Kwiatkowski-Phillips-Schmidt-Shin (“KPSS”) test to determine stationarity. These are hypothsis tests in which the null and alternate hypotheses are opposites.
+        Interpretation is mainly derived from these sources:
+        https://www.statsmodels.org/stable/examples/notebooks/generated/stationarity_detrending_adf_kpss.html
+        https://stats.stackexchange.com/a/235916/240083
+
+        This uses the Augmented Dickey Fuller (“ADF”) test and Kwiatkowski-Phillips-Schmidt-Shin (“KPSS”) test to determine stationarity. These are hypothsis tests in which the null and alternate hypotheses are opposites.
         If the ADF test fails to reject the null hypothesis, this may provide evidence that the series is non-stationary.
         If the KPSS test fails to reject the null hypothesis, this may provide evidence that the series is stationary.
 

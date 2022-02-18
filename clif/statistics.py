@@ -19,7 +19,7 @@ class StationarityTest:
 
     Parameters
     ----------
-    test: {'adfuller','kpss'}, default = 'adfuller'
+    test: str or list of: {'adfuller','kpss'}, default = 'adfuller'
         Test type for stationarity
 
     pvalue: float, default=.01
@@ -27,37 +27,61 @@ class StationarityTest:
 
     Examples
     --------
-    >>> import numpy as np
     >>> from clif.statistics import StationarityTest
-    >>> time_series = 1 + .01*np.sort(np.random.rand(100))
-    >>> stest = StationarityTest()
-    >>> stest.fit(time_series)
-    >>> print(stest.is_stationary)
+    >>> import numpy as np
+    >>> rn = np.random.RandomState(2342)
+    >>> n = 1000
+    >>> time_series = 1 + 0.1 * np.sort(rn.rand(n))
+    >>> print(StationarityTest(tests="adfuller").fit(time_series).is_stationary)
+    >>> print(StationarityTest(tests=["adfuller", "kpss"]).fit(time_series).is_stationary)
 
     """
 
-    def __init__(self, test="adfuller", pvalue=0.01, params=None):
-        self.test = test
+    def __init__(self, tests="adfuller", pvalue=0.01, params=None):
+        self.tests = tests
         self.pvalue = pvalue
         self.params = params
+        self.is_stationary = []
 
     def _set_default_params(self):
         # use default parameters is params is None
         if self.params is None:
-            if self.test == "adfuller":
-                self.params = {"regression": "c", "autolag": "AIC"}
-            elif self.test == "kpss":
-                self.params = {"regression": "c", "nlags": "auto"}
+            if isinstance(self.tests, str):
+                if self.tests == "adfuller":
+                    self.params = {"regression": "c", "autolag": "AIC"}
+                elif self.tests == "kpss":
+                    self.params = {"regression": "c", "nlags": "auto"}
+            elif isinstance(self.tests, list):
+                self.params = []
+                for t in self.tests:
+                    if t == "adfuller":
+                        self.params.append({"regression": "c", "autolag": "AIC"})
+                    elif t == "kpss":
+                        self.params.append({"regression": "c", "nlags": "auto"})
 
     def fit(self, time_series):
         self._set_default_params()
-        if self.test == "adfuller":
-            self._fit_adfuller(time_series)
-        if self.test == "kpss":
-            self._fit_kpss(time_series)
-        return self
+        if isinstance(self.tests, str):
+            if self.tests == "adfuller":
+                self.is_stationary = self._fit_adfuller(time_series, params=self.params)
+            elif self.tests == "kpss":
+                self.is_stationary = self._fit_kpss(time_series, params=self.params)
+            return self
+        elif isinstance(self.tests, list):
+            for i, t in enumerate(self.test):
+                if t == "adfuller":
+                    self.is_stationary.append(
+                        self._fit_adfuller(time_series, params=self.params[i])
+                    )
+                elif t == "kpss":
+                    self.is_stationary.append(
+                        self._fit_kpss(time_series, params=self.params[i])
+                    )
+            return self
+        else:
+            raise TypeError("test param must be a string or a list of strings.")
 
-    def _fit_adfuller(self, time_series):
+    def _fit_adfuller(self, time_series, params=None):
         """
         Returns boolean to indicate whether series is stationary (True) or non-stationary (False)
 
@@ -66,14 +90,14 @@ class StationarityTest:
         p-value <= 0.01: Reject the null hypothesis (H0), the data is stationary.
 
         """
-        adfuller_test = adfuller(time_series, **self.params)
+        adfuller_test = adfuller(time_series, **params)
         adfuller_p_statistic = adfuller_test[1]
-        self.is_stationary = False  # Null hypothesis
+        is_stationary = False  # Null hypothesis
         if adfuller_p_statistic <= self.pvalue:
-            self.is_stationary = True
-        return self
+            is_stationary = True
+        return is_stationary
 
-    def _fit_kpss(self, time_series):
+    def _fit_kpss(self, time_series, params=None):
         """
         Returns boolean to indicate whether series is stationary (True) or non-stationary (False)
 
@@ -81,12 +105,12 @@ class StationarityTest:
         p-value > 0.01: Accept the null hypothesis (H0), the data is stationary.
         p-value <= 0.01: Reject the null hypothesis (H0), the data is non-stationary.
         """
-        kpss_test = kpss(time_series, **self.params)
+        kpss_test = kpss(time_series, **params)
         kpss_p_statistic = kpss_test[1]
-        self.is_stationary = True  # Null hypothesis
+        is_stationary = True  # Null hypothesis
         if kpss_p_statistic <= self.pvalue:
-            self.is_stationary = False
-        return self
+            is_stationary = False
+        return is_stationary
 
 
 def StationarityTestOld(time_series, p_value_threshold, verbosity=1):

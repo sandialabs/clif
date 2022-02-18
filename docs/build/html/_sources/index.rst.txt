@@ -1,9 +1,9 @@
 ..  _main:
 
-**clif**
+clif
 ============
 
-**clif** is a CLImate Fingerprinting library that calculates empirical orthogonal functions for mainly climate data.  
+*clif* is a CLImate Fingerprinting library that calculates empirical orthogonal functions for mainly climate data.  
 
 Installation
 ------------
@@ -25,7 +25,7 @@ You can also run a suite of unit tests and regression tests before installation 
 to check that the library works. That's it! Now you are ready to use **clif**. 
 
 Quickstart
-----------------
+-----------
 
 Once you have successfully installed clif, you can compute EOFs of data (as a numpy array for now) as follows.[#]_
 
@@ -38,6 +38,16 @@ Once you have successfully installed clif, you can compute EOFs of data (as a nu
    fp = fingerprints(n_eofs=8)
    fp.fit(X)
    EOFs = fp.eofs_
+
+clif also has a bunch of **preprocessing** transforms useful for manipulating xarray DataArrays. To see more information from the documentation, go to the `docs/` folder and open `index.html`. All transforms are templated and use the following pseudo code interface. 
+
+.. code-block:: python
+
+    from clif import preprocessing
+
+    X = load_xarray_data()
+    xarrayTransform = preprocessing.TransformName(**init_params)))
+    X_transformed = xarrayTransform.fit_transform(X)
 
 .. toctree::
    :maxdepth: 2

@@ -46,7 +46,7 @@ class TestStationarityTests(unittest.TestCase):
         stest_adfuller = clif.statistics.StationarityTest(tests="adfuller", alpha=alpha)
         stest_adfuller.fit(time_series)
         assert (
-            stest_adfuller.is_stationary is True
+            stest_adfuller.is_stationary is False
         ), "linear time-series should not be stationary using the adfuller test."
         stest_kpss = clif.statistics.StationarityTest(tests="kpss", alpha=alpha)
         stest_kpss.fit(time_series)

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Main features &#8212; clif 1.0 documentation</title>
+    <title>Index &#8212; clif 1.0 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -24,7 +24,6 @@
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     
   <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
@@ -32,13 +31,9 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="EOF Class" href="api_fingerprints.html" />
-    <link rel="prev" title="clif" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -80,9 +75,9 @@
   Usage Guide
  </span>
 </p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
    Main features
   </a>
  </li>
@@ -95,7 +90,7 @@
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="api_fingerprints.html">
-   EOF Class
+   Main API
   </a>
  </li>
  <li class="toctree-l1 has-children">
@@ -109,16 +104,11 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="transforms.html">
-     Transforms
+    <a class="reference internal" href="apis/transforms.html">
+     Preprocessing API
     </a>
    </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="api_statistics.html">
-   Statistical Tests
-  </a>
  </li>
 </ul>
 
@@ -153,23 +143,6 @@
                 
             </div>
             
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/introduction.rst.txt"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.rst</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
             <!-- Source interaction buttons -->
 
 <div class="dropdown-buttons-trigger">
@@ -206,7 +179,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Main features</h1>
+                <h1></h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -217,37 +190,56 @@
             
               <div>
                 
-  <div class="section" id="main-features">
-<span id="intro"></span><h1>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h1>
-<p><em>clif</em> contains code to perform climate fingerprinting, i.e. principal component analysis of climate data, and a collection of preprocessing scripts for xarray DataArrays. We use a templated OOP approach so that all classes can be seemlessly integrated with the transform operator in scikit-learn. <a class="footnote-reference brackets" href="#id2" id="id1">1</a></p>
-<p>For a guide on how to use the EOF class and the preprocessing transforms see the <a class="reference internal" href="api_fingerprints.html#api-fp"><span class="std std-ref">EOF API</span></a> and <a class="reference internal" href="api_preprocessing.html#preprocessing-transforms-table"><span class="std std-ref">Preprocessing API</span></a></p>
-<dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.</p>
-</dd>
-</dl>
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#F"><strong>F</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ 
 </div>
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_fingerprints.html#clif.fingerprints">fingerprints (class in clif)</a>
+</li>
+      <li><a href="api_fingerprints.html#clif.fingerprints.fit">fit() (clif.fingerprints method)</a>
+
+      <ul>
+        <li><a href="apis/transforms.html#clif.preprocessing.SeasonalAnomalyTransform.fit">(clif.preprocessing.SeasonalAnomalyTransform method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apis/transforms.html#clif.preprocessing.SeasonalAnomalyTransform.fit_transform">fit_transform() (clif.preprocessing.SeasonalAnomalyTransform method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apis/transforms.html#clif.preprocessing.SeasonalAnomalyTransform">SeasonalAnomalyTransform (class in clif.preprocessing)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apis/transforms.html#clif.preprocessing.SeasonalAnomalyTransform.transform">transform() (clif.preprocessing.SeasonalAnomalyTransform method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 
 
               </div>
               
             
                 <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">clif</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="api_fingerprints.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">EOF Class</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+<div class='prev-next-area'>
 </div>
             
         </div>

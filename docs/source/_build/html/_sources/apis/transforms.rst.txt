@@ -1,0 +1,13 @@
+..  _preprocessing_transforms:
+
+Preprocessing API
+=================
+
+removing cyclical trends
+-------------------------
+
+.. autoclass:: clif.preprocessing.SeasonalAnomalyTransform
+	:members:
+
+
+

@@ -1,0 +1,20 @@
+Preprocessing
+=====================
+
+Here's a summary of 
+
+.. list-table:: Title
+   :widths: 100 100
+   :header-rows: 1
+
+   * - Name
+     - Brief description  
+   * - SeasonalAnomalyTransform
+     - Remove cyclical mean trends from xarray DataArrays
+
+  
+.. toctree::
+   :maxdepth: 2
+   :caption: Preprocessing API
+   
+   apis/transforms

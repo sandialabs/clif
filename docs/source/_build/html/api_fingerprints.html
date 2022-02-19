@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Main features &#8212; clif 1.0 documentation</title>
+    <title>Main API &#8212; clif 1.0 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -24,7 +24,6 @@
     
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     
   <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
 
@@ -32,13 +31,11 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="EOF Class" href="api_fingerprints.html" />
-    <link rel="prev" title="clif" href="index.html" />
+    <link rel="next" title="Preprocessing" href="api_preprocessing.html" />
+    <link rel="prev" title="Main features" href="introduction.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -80,9 +77,9 @@
   Usage Guide
  </span>
 </p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
    Main features
   </a>
  </li>
@@ -92,10 +89,10 @@
   API
  </span>
 </p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="api_fingerprints.html">
-   EOF Class
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Main API
   </a>
  </li>
  <li class="toctree-l1 has-children">
@@ -109,16 +106,11 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="transforms.html">
-     Transforms
+    <a class="reference internal" href="apis/transform1.html">
+     Preprocessing API
     </a>
    </li>
   </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="api_statistics.html">
-   Statistical Tests
-  </a>
  </li>
 </ul>
 
@@ -161,7 +153,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/introduction.rst.txt"><button type="button"
+        <a class="dropdown-buttons" href="_sources/api_fingerprints.rst.txt"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.rst</button></a>
         <!-- Download PDF via print -->
@@ -199,6 +191,19 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show noprint">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clif-fingerprint-class">
+   clif fingerprint class
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -206,26 +211,74 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Main features</h1>
+                <h1>Main API</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clif-fingerprint-class">
+   clif fingerprint class
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
             
               <div>
                 
-  <div class="section" id="main-features">
-<span id="intro"></span><h1>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h1>
-<p><em>clif</em> contains code to perform climate fingerprinting, i.e. principal component analysis of climate data, and a collection of preprocessing scripts for xarray DataArrays. We use a templated OOP approach so that all classes can be seemlessly integrated with the transform operator in scikit-learn. <a class="footnote-reference brackets" href="#id2" id="id1">1</a></p>
-<p>For a guide on how to use the EOF class and the preprocessing transforms see the <a class="reference internal" href="api_fingerprints.html#api-fp"><span class="std std-ref">EOF API</span></a> and <a class="reference internal" href="api_preprocessing.html#preprocessing-transforms-table"><span class="std std-ref">Preprocessing API</span></a></p>
-<dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.</p>
+  <div class="section" id="main-api">
+<span id="api-fp"></span><h1>Main API<a class="headerlink" href="#main-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="clif-fingerprint-class">
+<h2>clif fingerprint class<a class="headerlink" href="#clif-fingerprint-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="clif.fingerprints">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clif.</span></span><span class="sig-name descname"><span class="pre">fingerprints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_eofs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varimax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'svd_solver':</span> <span class="pre">'arpack',</span> <span class="pre">'whiten':</span> <span class="pre">True}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/eof.html#fingerprints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.fingerprints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for fingerprinting and computing Empircal Orthogonal Functions (EOFs) from data</p>
+<p>Given a 2d data set we perform PCA and return the empirical orthogonal functions. The data set should be in form (n_samples, latitude x longitude), so that the second dimension is a combination of all latitude and longitude points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n_eofs</strong><span class="classifier">str, default = 2</span></dt><dd><p>Number of empirical orthogonal functions to return, i.e. number of principal components</p>
+</dd>
+<dt><strong>whiten</strong><span class="classifier">bool, default = False</span></dt><dd><p>Whether to normalize the projection coefficients of the EOFs.</p>
+</dd>
+<dt><strong>varimax</strong><span class="classifier">bool, default = False</span></dt><dd><p>Perform Varimax rotation after PCA is perform to obtain sparse entries</p>
 </dd>
 </dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For now, the PCA will use an automatic solver, with default parameters in sklearn’s PCA. In general, we allow the user to specify a different method.</p>
+<p class="rubric">Methods</p>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#clif.fingerprints.fit" title="clif.fingerprints.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(X)</p></td>
+<td><p>Perform EOF decomposition for a numpy array</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.fingerprints.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/eof.html#fingerprints.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.fingerprints.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform EOF decomposition for a numpy array</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -234,17 +287,17 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="introduction.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">clif</p>
+            <p class="prev-next-title">Main features</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="api_fingerprints.html" title="next page">
+    <a class='right-next' id="next-link" href="api_preprocessing.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">EOF Class</p>
+        <p class="prev-next-title">Preprocessing</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

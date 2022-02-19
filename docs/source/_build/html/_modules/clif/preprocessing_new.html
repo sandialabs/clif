@@ -1,0 +1,550 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>clif.preprocessing_new &#8212; clif 1.0 documentation</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">clif 1.0 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Usage Guide
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../introduction.html">
+   Main features
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../api_fingerprints.html">
+   Main API
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../api_preprocessing.html">
+   Preprocessing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../apis/transform1.html">
+     Preprocessing API
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+                
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+                
+            </div>
+            
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/kennychowdhary/clif"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <h1>Source code for clif.preprocessing_new</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">adfuller</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">kpss</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">To do: signal detrending and removal of nan variables. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">TransformerMixin</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base class for all transformers</span>
+
+<span class="sd">    Templated base class for all transformers used herein. Users must define a fit and transform method only and the rest is done by the base class.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the fit and transform methods in one call</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SeasonalAnomalyTransform"><a class="viewcode-back" href="../../apis/transform1.html#clif.preprocessing.SeasonalAnomalyTransform">[docs]</a><span class="k">class</span> <span class="nc">SeasonalAnomalyTransform</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Removes cyclical trends from xarray time-series data&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="o">=</span><span class="s2">&quot;month&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cycle: str (default = &#39;month&#39;)</span>
+<span class="sd">                string representing the seasonal detrending resolution, e.g., month, day, hour, year, etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cycle</span> <span class="o">=</span> <span class="n">cycle</span>
+
+<div class="viewcode-block" id="SeasonalAnomalyTransform.fit"><a class="viewcode-back" href="../../apis/transform1.html#clif.preprocessing.SeasonalAnomalyTransform.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: xarray.DataArray</span>
+<span class="sd">                data array object holding the time-series data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span>
+        <span class="p">),</span> <span class="s2">&quot;Input must be an xarray DataArray object.&quot;</span>
+        <span class="c1"># Compute the mean by grouping times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_by_group_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;time.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="SeasonalAnomalyTransform.transform"><a class="viewcode-back" href="../../apis/transform1.html#clif.preprocessing.SeasonalAnomalyTransform.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: xarray.DataArray</span>
+<span class="sd">                data array object holding the time-series data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;mu_by_group_&quot;</span><span class="p">),</span> <span class="s2">&quot;Must run self.fit() first.&quot;</span>
+        <span class="n">data_new</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;time.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_by_group_</span>
+        <span class="k">return</span> <span class="n">data_new</span></div>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;mu_by_group_&quot;</span><span class="p">),</span> <span class="s2">&quot;Must run self.fit() first.&quot;</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;time.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_by_group_</span></div>
+
+
+<span class="k">class</span> <span class="nc">ClipTransform</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clips a dimension according to a specific range or value from xarray time series data&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop</span> <span class="o">=</span> <span class="n">drop</span>
+
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># check to make sure dimensions are indeed in the data array</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">),</span> <span class="s2">&quot;Input must be a data array&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="nb">list</span>
+        <span class="p">),</span> <span class="s2">&quot;dimensions must be provided as a list of strings&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="p">),</span> <span class="s2">&quot;List of dimensions and bounds must match in length.&quot;</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="s2">&quot;DataArray does not have </span><span class="si">{0}</span><span class="s2"> dimension&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">dim</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: xarray.DataArray</span>
+<span class="sd">                data array object holding the time-series data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check data to make sure dimensions are in there</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">bnds_index</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bnds</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bnds</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)):</span>
+                <span class="n">bnds_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">==</span> <span class="n">bnds</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bnds</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">bnds_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">bnds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span>
+                    <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">bnds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;bounds must be a list of numbers or tuples of size 2.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">bnds_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bnds_index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">&amp;</span> <span class="n">bnds_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: xarray.DataArray</span>
+<span class="sd">                data array object holding the time-series data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_new</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drop</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data_new</span>
+
+
+<span class="k">class</span> <span class="nc">MarginalizeOutTransform</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">lat_lon_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span> <span class="o">=</span> <span class="n">lat_lon_weights</span>
+
+    <span class="k">def</span> <span class="nf">_check_lat_lon_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lat_lon_weights</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">dims</span>
+        <span class="p">),</span> <span class="s2">&quot;Area weight dimensions are not a subset of the data dimensions&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">dims</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="p">),</span> <span class="s2">&quot;For now the lat lon weights must be 2 dimensional lat by lon. We internally marginalize to find the lon and lat weights respectively. No need to do it before hand.&quot;</span>
+        <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">sizes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">==</span> <span class="n">size</span>
+            <span class="p">),</span> <span class="s2">&quot;lat and lon area weights must be the same size as the data lat lon sizes. names must also match.&quot;</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span>
+        <span class="p">),</span> <span class="s2">&quot;Input must be an xarray DataArray object.&quot;</span>
+        <span class="c1"># get lat lon weights if possible</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># check lat lon weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_lat_lon_weights</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span><span class="p">)</span>
+            <span class="c1"># get normalized weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">dims</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>  <span class="c1"># normalize</span>
+
+            <span class="c1"># weight dims are lat and lon, but not necessarily by that name</span>
+            <span class="n">weights_d1</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># latitude weights (non-uniform)</span>
+            <span class="n">weights_d1</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights_d1</span><span class="p">)</span>
+            <span class="n">weights_d2</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># longitude weights (uniform)</span>
+            <span class="n">weights_d2</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights_d2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">weights_d1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">weights_d2</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># marginalize data array over marginal_coords</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># no need for weighted sums is lat_lon_weighting is True</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if lat_lon_weighting (default False), then only weight the latitude before summing over</span>
+                <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span><span class="p">:</span>
+                    <span class="c1"># must use area weighting if marginalizing over latitude</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_dict</span><span class="p">[</span><span class="n">c</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># uniform average weighting for all other coordinates, including longitude</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">class</span> <span class="nc">Transpose</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span>  <span class="c1"># order of dimensions you want to return</span>
+        
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dims</span>
+        <span class="p">),</span> <span class="s2">&quot;Order of dimensions must be the same as the total dimensions.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FlattenData</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flatten data&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span>  <span class="c1"># must be a list</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the list of spatial dimensions, i.e. the given DataArray&#39;s dimensions without time.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_dim_name</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flattens the given DataArray&#39;s spatial dimensions into a matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : xarray.DataArray</span>
+<span class="sd">            The xarray DataArray to flatten.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        xarray.DataArray</span>
+<span class="sd">            The flattened DataArray.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">stack</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">new_dim_name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">})</span>
+
+
+<span class="k">class</span> <span class="nc">LinearDetrendTransform</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="n">degree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For each time series, learn a best fit line via least squares&quot;&quot;&quot;</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">polyfit_coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">coord</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">],</span> <span class="n">coeffs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;lines&quot;</span><span class="p">),</span> <span class="s2">&quot;Must run fit first!&quot;</span>
+        <span class="k">return</span> <span class="n">data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lines</span>
+
+
+<span class="c1"># NOTE: Probably do not need a class and should just have this as separate namespace and functions</span>
+<span class="k">class</span> <span class="nc">StationarityTesting</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A class containing functions for determining the stationarity of a given time series.</span>
+
+<span class="sd">    Stationarity means that the statistical properties of a time series i.e. mean, variance and covariance do not change over time.</span>
+<span class="sd">    Many statistical models require the series to be stationary to make effective and precise predictions.</span>
+
+<span class="sd">    Two statistical tests are used to check the stationarity of a time series - Augmented Dickey Fuller (“ADF”) test and Kwiatkowski-Phillips-Schmidt-Shin (“KPSS”) test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">test_stationarity</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">p_value_threshold</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tests whether the given time series is stationary with respect to the given p-value threshold.</span>
+
+<span class="sd">        This uses both the Augmented Dickey Fuller (“ADF”) test and Kwiatkowski-Phillips-Schmidt-Shin (“KPSS”) test to determine stationarity. These are hypothsis tests in which the null and alternate hypotheses are opposites.</span>
+<span class="sd">        If the ADF test fails to reject the null hypothesis, this may provide evidence that the series is non-stationary.</span>
+<span class="sd">        If the KPSS test fails to reject the null hypothesis, this may provide evidence that the series is stationary.</span>
+
+<span class="sd">        There are four cases of stationarity in this test:</span>
+<span class="sd">        Case 1: Both tests conclude that the series is not stationary - The series is not stationary</span>
+<span class="sd">        Case 2: Both tests conclude that the series is stationary - The series is stationary</span>
+<span class="sd">        Case 3: KPSS indicates stationarity and ADF indicates non-stationarity - The series is trend stationary. Trend needs to be removed to make series strict stationary. The detrended series is checked for stationarity.</span>
+<span class="sd">        Case 4: KPSS indicates non-stationarity and ADF indicates stationarity - The series is difference stationary. Differencing is to be used to make series stationary. The differenced series is checked for stationarity.</span>
+
+<span class="sd">        Trend stationary: The mean trend is deterministic. Once the trend is estimated and removed from the data, the residual series is a stationary stochastic process.</span>
+<span class="sd">        Difference stationary: The mean trend is stochastic. Differencing the series D times yields a stationary stochastic process.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time_series : numpy:array_like, 1d</span>
+<span class="sd">            The data to be tested.</span>
+<span class="sd">        p_value_threshold : float</span>
+<span class="sd">            The hypothesis test threshold for the returned p-values.</span>
+<span class="sd">        verbosity : int, optional</span>
+<span class="sd">            Determines the level of verbosity. 1 explains the results and 2 print the ADF and KPSS p-values, by default 1</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A pair of booleans (adf_stationary, kpss_stationary) corresponding to whether the ADF test returns stationary or the KPSS test returns stationary, respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">adf_p_val</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">autolag</span><span class="o">=</span><span class="s2">&quot;AIC&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">kpss_p_val</span> <span class="o">=</span> <span class="n">kpss</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">regression</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># adf_reject means stationary</span>
+        <span class="c1"># kpss_reject means not stationary</span>
+        <span class="n">adf_reject</span> <span class="o">=</span> <span class="n">adf_p_val</span> <span class="o">&lt;=</span> <span class="n">p_value_threshold</span>
+        <span class="n">kpss_reject</span> <span class="o">=</span> <span class="n">kpss_p_val</span> <span class="o">&lt;=</span> <span class="n">p_value_threshold</span>
+        <span class="n">adf_stationary</span> <span class="o">=</span> <span class="n">adf_reject</span>
+        <span class="n">kpss_stationary</span> <span class="o">=</span> <span class="o">~</span><span class="n">kpss_reject</span>
+
+        <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ADF p-value:&quot;</span><span class="p">,</span> <span class="n">adf_p_val</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KPSS p-value:&quot;</span><span class="p">,</span> <span class="n">kpss_p_val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">adf_stationary</span> <span class="ow">and</span> <span class="n">kpss_stationary</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Series is stationary.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">adf_stationary</span> <span class="ow">and</span> <span class="n">kpss_stationary</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Series is trend stationary only. Trend needs to be removed to make the time series fully stationary.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">adf_stationary</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kpss_stationary</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Series is difference stationary only. Seasonal differencing can be used to make the time series fully stationary. &quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Series is not stationary.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">adf_stationary</span><span class="p">,</span> <span class="n">kpss_stationary</span>
+</pre></div>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By K. Chowdhary<br/>
+    
+        &copy; Copyright 2022, K. Chowdhary.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

@@ -6,6 +6,7 @@ __pycache__/
 .vscode/
 .pytest_cache/
 /build/
+/*egg-info
 
 # Setuptools distribution folder.
 /dist/

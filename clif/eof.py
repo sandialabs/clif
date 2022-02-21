@@ -141,12 +141,12 @@ def plot_EOF_field(
     eof_to_print: int,
     lats: list,
     lons: list,
-    cmap: matplotlib.pyplot.cmap = plt.get_cmap("jet"),
-    ax: matplotlib.pyplot.axes=None,
-    title: str="",
-    grid: bool=False,
-    colorbar_title: bool="",
-    grid_kwargs: dict={},
+    cmap: matplotlib.colors.Colormap = plt.get_cmap("jet"),
+    ax: matplotlib.pyplot.axes = None,
+    title: str = "",
+    grid: bool = False,
+    colorbar_title: bool = "",
+    grid_kwargs: dict = {},
 ) -> tuple:
     """Plots a given fingerprint's EOFs as a 2-dimensional field on a latitude by longitude grid.
 

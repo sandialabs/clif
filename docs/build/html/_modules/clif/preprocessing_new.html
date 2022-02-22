@@ -659,8 +659,8 @@
 <span class="sd">    dims : list(str), default = None</span>
 <span class="sd">        List of dimensions. If None, all dimensions are combined to perform scaling.</span>
 
-<span class="sd">    scale_type = {&quot;variance&quot;, &quot;minmax&quot;, &quot;standard&quot;}, default = &quot;variance&quot;</span>
-<span class="sd">        Type of scaling.</span>
+<span class="sd">    scale_type = {&quot;variance&quot;, &quot;minmax&quot;, &quot;standard&quot;, &quot;fixed&quot;}, default = &quot;variance&quot;</span>
+<span class="sd">        Type of scaling. Fixed means user specifies the mean and variance to scale the data.</span>
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
@@ -679,9 +679,11 @@
 <span class="sd">    &gt;&gt;&gt; X_transformed = scaleT.fit_transform(X)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_type</span><span class="o">=</span><span class="s2">&quot;variance&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_type</span><span class="o">=</span><span class="s2">&quot;variance&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">=</span> <span class="n">scale_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">var</span>
 
 <div class="viewcode-block" id="ScalerTransform.fit"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.ScalerTransform.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -692,9 +694,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_fit_minmax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">==</span> <span class="s2">&quot;standard&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fit_standard</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">==</span> <span class="s2">&quot;fixed&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_fixed</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="ne">NotImplementedError</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_fit_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_fit_standard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Mean center and scale by stnd deviation&quot;&quot;&quot;</span>

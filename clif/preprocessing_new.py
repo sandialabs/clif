@@ -458,8 +458,8 @@ class ScalerTransform(TransformerMixin):
     dims : list(str), default = None
         List of dimensions. If None, all dimensions are combined to perform scaling.
 
-    scale_type = {"variance", "minmax", "standard"}, default = "variance"
-        Type of scaling.
+    scale_type = {"variance", "minmax", "standard", "fixed"}, default = "variance"
+        Type of scaling. Fixed means user specifies the mean and variance to scale the data.
 
     Methods
     -------
@@ -478,9 +478,11 @@ class ScalerTransform(TransformerMixin):
     >>> X_transformed = scaleT.fit_transform(X)
     """
 
-    def __init__(self, dims=None, scale_type="variance"):
+    def __init__(self, dims=None, scale_type="variance", mu=0.0, var=1.0):
         self.scale_type = scale_type
         self.dims = dims
+        self.mu = mu
+        self.var = var
 
     def fit(self, data, y=None, **fit_params):
         if self.dims is None:
@@ -491,9 +493,14 @@ class ScalerTransform(TransformerMixin):
             self._fit_minmax(data)
         elif self.scale_type == "standard":
             self._fit_standard(data)
+        elif self.scale_type == "fixed":
+            self._fit_fixed(data)
         else:
             return NotImplementedError
         return self
+
+    def _fit_fixed(self, data):
+        self.mu_, self.sigma_ = self.mu, np.sqrt(self.var)
 
     def _fit_standard(self, data):
         """Mean center and scale by stnd deviation"""

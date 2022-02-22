@@ -40,8 +40,22 @@ Linear De-trending
 .. autoclass:: clif.preprocessing.LinearDetrendTransform
 	:members:
 
+Scaler Transform
+-----------------
+
+.. autoclass:: clif.preprocessing.ScalerTransform
+	:members:
+
+Variable Select Transform
+--------------------------
+
+.. autoclass:: clif.preprocessing.SingleVariableSelector
+	:members:
+
 Custom Transform
 ------------------
 
 .. autoclass:: clif.preprocessing.TransformerMixin
 	:members:
+
+	

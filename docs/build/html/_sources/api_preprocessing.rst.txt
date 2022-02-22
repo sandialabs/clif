@@ -23,6 +23,10 @@ Here's a summary of the available transforms in clif. You can find the complete 
      - Flattening or stacking dimensions of the data
    * - :ref:`LinearDetrendTransform<Linear De-trending>`
      - Removing linear time-series trends for each grid point
+   * - :ref:`ScalerTransform<Scaler Transform>`
+     - Scaling the data (helpful when combining different units)
+   * - :ref:`Variable Selection Transform<Variable Select Transform>`
+     - Selecting single variable from an xarray DataSet. Helpful for combining outputs. 
    * - :ref:`TransformerMixin<Custom Transform>`
      - Template for creating your own custom preprocessing transform.
 

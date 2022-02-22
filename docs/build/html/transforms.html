@@ -235,6 +235,16 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaler-transform">
+   Scaler Transform
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#variable-select-transform">
+   Variable Select Transform
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#custom-transform">
    Custom Transform
   </a>
@@ -287,6 +297,16 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#linear-de-trending">
    Linear De-trending
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaler-transform">
+   Scaler Transform
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#variable-select-transform">
+   Variable Select Transform
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -770,6 +790,180 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="clif.preprocessing.LinearDetrendTransform.fit_transform">
 <span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clif.preprocessing.LinearDetrendTransform.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the fit and transform methods in one call (not required)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="scaler-transform">
+<h2>Scaler Transform<a class="headerlink" href="#scaler-transform" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="clif.preprocessing.ScalerTransform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clif.preprocessing.</span></span><span class="sig-name descname"><span class="pre">ScalerTransform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'variance'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/preprocessing_new.html#ScalerTransform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.preprocessing.ScalerTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scaling transforms for data array object</p>
+<p>This transform scales the user-specified dimensions using different strategies. By default, the dimensions are none so that the scaling is done across all dimensions using a single scalar value. The three different options are scaling by the variance/ standard deviation, scaling to the unit cube (minmax), and standard scaler, which mean centers and scales by the standard deviation. All transforms are invertible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dims</strong><span class="classifier">list(str), default = None</span></dt><dd><p>List of dimensions. If None, all dimensions are combined to perform scaling.</p>
+</dd>
+<dt><strong>scale_type = {“variance”, “minmax”, “standard”}, default = “variance”</strong></dt><dd><p>Type of scaling.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">xarray</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clif.preprocessing</span> <span class="kn">import</span> <span class="n">ScalerTransform</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataarray</span><span class="p">(</span><span class="s1">&#39;Temperature.nc&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scaleT</span> <span class="o">=</span> <span class="n">ScalerTransform</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_transformed</span> <span class="o">=</span> <span class="n">scaleT</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<table class="table">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 83%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>fit:</strong></p></td>
+<td><p>Perform calculations for the preprocessing, e.g. mean computation.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>transform:</strong></p></td>
+<td><p>transform the data</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.preprocessing.ScalerTransform.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/preprocessing_new.html#ScalerTransform.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.preprocessing.ScalerTransform.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>User defined fit function (required).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>data</strong><span class="classifier">xarray.DataArray</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>self: object</dt><dd><p>Returns self oject</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.preprocessing.ScalerTransform.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/preprocessing_new.html#ScalerTransform.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.preprocessing.ScalerTransform.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>User defined transform function (required).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>data</strong><span class="classifier">xarray.DataArray</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>data_new: xarray.DataArray</dt><dd><p>returns new data array possibly of different size and dimensions.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.preprocessing.ScalerTransform.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clif.preprocessing.ScalerTransform.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the fit and transform methods in one call (not required)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="variable-select-transform">
+<h2>Variable Select Transform<a class="headerlink" href="#variable-select-transform" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="clif.preprocessing.SingleVariableSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clif.preprocessing.</span></span><span class="sig-name descname"><span class="pre">SingleVariableSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/preprocessing_new.html#SingleVariableSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.preprocessing.SingleVariableSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a single “Column” or variable form a data set input</p>
+<p>This is a transformer wrapping of selecting a single variable from an xarray data set. This is useful if you want to perform feature unions or combining different transforms in a single operation. This essentially selects a particular variable from the data set object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>variable</strong><span class="classifier">str</span></dt><dd><p>Must specify a single variable that is included in the list of variables of the dataset.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">xarray</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">clif.preprocessing</span> <span class="kn">import</span> <span class="n">SingleVariableSelector</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s2">&quot;some_dataset_file.nc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colselectT</span> <span class="o">=</span> <span class="n">SingleVariableSelector</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">colselectT</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<table class="table">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 83%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>fit:</strong></p></td>
+<td><p>Perform calculations for the preprocessing, e.g. mean computation.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>transform:</strong></p></td>
+<td><p>transform the data</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.preprocessing.SingleVariableSelector.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/preprocessing_new.html#SingleVariableSelector.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.preprocessing.SingleVariableSelector.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>User defined fit function (required).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>data</strong><span class="classifier">xarray.DataArray</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>self: object</dt><dd><p>Returns self oject</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.preprocessing.SingleVariableSelector.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clif/preprocessing_new.html#SingleVariableSelector.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.preprocessing.SingleVariableSelector.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>User defined transform function (required).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>data</strong><span class="classifier">xarray.DataArray</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>data_new: xarray.DataArray</dt><dd><p>returns new data array possibly of different size and dimensions.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.preprocessing.SingleVariableSelector.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">fit_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#clif.preprocessing.SingleVariableSelector.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the fit and transform methods in one call (not required)</p>
 </dd></dl>
 

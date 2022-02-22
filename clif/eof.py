@@ -1,4 +1,8 @@
+import cartopy.crs as ccrs
+import matplotlib
 import numpy as np
+from cartopy.util import add_cyclic_point
+from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import xarray as xr
@@ -152,10 +156,10 @@ class fingerprints:
         for _ in range(max_iter):
             comp_rot = np.dot(componentsT, rotation_matrix)
             if method == "varimax":
-                tmp = comp_rot * np.transpose((comp_rot**2).sum(axis=0) / nrow)
+                tmp = comp_rot * np.transpose((comp_rot ** 2).sum(axis=0) / nrow)
             elif method == "quartimax":
                 tmp = 0
-            u, s, v = np.linalg.svd(np.dot(componentsT.T, comp_rot**3 - tmp))
+            u, s, v = np.linalg.svd(np.dot(componentsT.T, comp_rot ** 3 - tmp))
             rotation_matrix = np.dot(u, v)
             var_new = np.sum(s)
             if var != 0 and var_new < var * (1 + tol):
@@ -172,8 +176,8 @@ def plot_EOF_field(
     eof_to_print: int,
     lats: list,
     lons: list,
-    cmap: plt.cm = plt.get_cmap("jet"),
-    ax: plt.axes = None,
+    cmap: matplotlib.colors.Colormap = plt.get_cmap("cividis"),
+    ax: matplotlib.pyplot.axes = None,
     title: str = "",
     grid: bool = False,
     colorbar_title: bool = "",

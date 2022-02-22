@@ -446,3 +446,118 @@ class LinearDetrendTransform(TransformerMixin):
 
 
 # ********* Moved StationarityTesting to statistics.py module
+
+
+class ScalerTransform(TransformerMixin):
+    """Scaling transforms for data array object
+
+    This transform scales the user-specified dimensions using different strategies. By default, the dimensions are none so that the scaling is done across all dimensions using a single scalar value. The three different options are scaling by the variance/ standard deviation, scaling to the unit cube (minmax), and standard scaler, which mean centers and scales by the standard deviation. All transforms are invertible.
+
+    Parameters
+    ----------
+    dims : list(str), default = None
+        List of dimensions. If None, all dimensions are combined to perform scaling.
+
+    scale_type = {"variance", "minmax", "standard"}, default = "variance"
+        Type of scaling.
+
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import ScalerTransform
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> scaleT = ScalerTransform()
+    >>> X_transformed = scaleT.fit_transform(X)
+    """
+
+    def __init__(self, dims=None, scale_type="variance"):
+        self.scale_type = scale_type
+        self.dims = dims
+
+    def fit(self, data, y=None, **fit_params):
+        if self.dims is None:
+            self.dims = data.dims
+        if self.scale_type == "variance":
+            self._fit_variance(data)
+        elif self.scale_type == "minmax":
+            self._fit_minmax(data)
+        elif self.scale_type == "standard":
+            self._fit_standard(data)
+        else:
+            return NotImplementedError
+        return self
+
+    def _fit_standard(self, data):
+        """Mean center and scale by stnd deviation"""
+        self.mu_ = data.mean(dim=self.dims)
+        self.sigma_ = np.sqrt(data.var(dim=self.dims))
+
+    def _fit_variance(self, data):
+        """Rescale by variance"""
+        self.sigma_ = np.sqrt(data.var(dim=self.dims))
+        self.mu_ = 0.0
+
+    def _fit_minmax(self, data):
+        """Rescale to [0,1]"""
+        m = data.min(dim=self.dims)
+        M = data.max(dim=self.dims)
+        self.mu_ = m.copy()
+        self.sigma_ = M - m
+
+    def transform(self, data):
+        data_new = (data - self.mu_) / self.sigma_
+        return data_new
+
+    def inverse_transform(self, data):
+        data_original = self.sigma_ * data + self.mu_
+        return data_original
+
+
+class SingleVariableSelector(TransformerMixin):
+    """Select a single "Column" or variable form a data set input
+
+    This is a transformer wrapping of selecting a single variable from an xarray data set. This is useful if you want to perform feature unions or combining different transforms in a single operation. This essentially selects a particular variable from the data set object.
+
+    Parameters
+    ----------
+    variable : str
+        Must specify a single variable that is included in the list of variables of the dataset.
+
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
+
+    Examples
+    --------
+    >>> import xarray
+    >>> import numpy as np
+    >>> from clif.preprocessing import SingleVariableSelector
+    >>> ds = xarray.open_dataset("some_dataset_file.nc")
+    >>> colselectT = SingleVariableSelector(variable="T")
+    >>> data = colselectT.fit_transform(ds)
+    """
+
+    def __init__(self, variable):
+        self.variable = variable
+
+    def fit(self, dataset, y=None, **fit_params):
+        assert self.variable in dataset.variables, "Variable is not in data set. "
+        return self
+
+    def transform(self, dataset):
+        data = dataset[self.variable]
+        assert isinstance(
+            data, xarray.DataArray
+        ), "Must be a single variable in order to return a data array object. "
+        return data

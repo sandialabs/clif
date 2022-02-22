@@ -647,6 +647,121 @@
 
 
 <span class="c1"># ********* Moved StationarityTesting to statistics.py module</span>
+
+
+<div class="viewcode-block" id="ScalerTransform"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.ScalerTransform">[docs]</a><span class="k">class</span> <span class="nc">ScalerTransform</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Scaling transforms for data array object</span>
+
+<span class="sd">    This transform scales the user-specified dimensions using different strategies. By default, the dimensions are none so that the scaling is done across all dimensions using a single scalar value. The three different options are scaling by the variance/ standard deviation, scaling to the unit cube (minmax), and standard scaler, which mean centers and scales by the standard deviation. All transforms are invertible.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dims : list(str), default = None</span>
+<span class="sd">        List of dimensions. If None, all dimensions are combined to perform scaling.</span>
+
+<span class="sd">    scale_type = {&quot;variance&quot;, &quot;minmax&quot;, &quot;standard&quot;}, default = &quot;variance&quot;</span>
+<span class="sd">        Type of scaling.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit:</span>
+<span class="sd">        Perform calculations for the preprocessing, e.g. mean computation.</span>
+<span class="sd">    transform:</span>
+<span class="sd">        transform the data</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import xarray</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from clif.preprocessing import ScalerTransform</span>
+<span class="sd">    &gt;&gt;&gt; X = xarray.open_dataarray(&#39;Temperature.nc&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; scaleT = ScalerTransform()</span>
+<span class="sd">    &gt;&gt;&gt; X_transformed = scaleT.fit_transform(X)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_type</span><span class="o">=</span><span class="s2">&quot;variance&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">=</span> <span class="n">scale_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span>
+
+<div class="viewcode-block" id="ScalerTransform.fit"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.ScalerTransform.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dims</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">==</span> <span class="s2">&quot;variance&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_variance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">==</span> <span class="s2">&quot;minmax&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_minmax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_type</span> <span class="o">==</span> <span class="s2">&quot;standard&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_standard</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="ne">NotImplementedError</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_fit_standard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Mean center and scale by stnd deviation&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_fit_variance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rescale by variance&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span> <span class="nf">_fit_minmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rescale to [0,1]&quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma_</span> <span class="o">=</span> <span class="n">M</span> <span class="o">-</span> <span class="n">m</span>
+
+<div class="viewcode-block" id="ScalerTransform.transform"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.ScalerTransform.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">data_new</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_</span>
+        <span class="k">return</span> <span class="n">data_new</span></div>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">data_original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_</span> <span class="o">*</span> <span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_</span>
+        <span class="k">return</span> <span class="n">data_original</span></div>
+
+
+<div class="viewcode-block" id="SingleVariableSelector"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.SingleVariableSelector">[docs]</a><span class="k">class</span> <span class="nc">SingleVariableSelector</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Select a single &quot;Column&quot; or variable form a data set input</span>
+
+<span class="sd">    This is a transformer wrapping of selecting a single variable from an xarray data set. This is useful if you want to perform feature unions or combining different transforms in a single operation. This essentially selects a particular variable from the data set object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    variable : str</span>
+<span class="sd">        Must specify a single variable that is included in the list of variables of the dataset.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit:</span>
+<span class="sd">        Perform calculations for the preprocessing, e.g. mean computation.</span>
+<span class="sd">    transform:</span>
+<span class="sd">        transform the data</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import xarray</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from clif.preprocessing import SingleVariableSelector</span>
+<span class="sd">    &gt;&gt;&gt; ds = xarray.open_dataset(&quot;some_dataset_file.nc&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; colselectT = SingleVariableSelector(variable=&quot;T&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; data = colselectT.fit_transform(ds)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable</span> <span class="o">=</span> <span class="n">variable</span>
+
+<div class="viewcode-block" id="SingleVariableSelector.fit"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.SingleVariableSelector.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="s2">&quot;Variable is not in data set. &quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="SingleVariableSelector.transform"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.SingleVariableSelector.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variable</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span>
+        <span class="p">),</span> <span class="s2">&quot;Must be a single variable in order to return a data array object. &quot;</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
 </pre></div>
 
               </div>

@@ -141,7 +141,7 @@ def plot_EOF_field(
     eof_to_print: int,
     lats: list,
     lons: list,
-    cmap: matplotlib.colors.Colormap = plt.get_cmap("jet"),
+    cmap: matplotlib.colors.Colormap = plt.get_cmap("cividis"),
     ax: matplotlib.pyplot.axes = None,
     title: str = "",
     grid: bool = False,

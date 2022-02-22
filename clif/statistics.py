@@ -139,10 +139,6 @@ class StationarityTest:
         ----------
         time_series : numpy:array_like, 1d
             The data to be tested.
-        p_value_threshold : float
-            The hypothesis test threshold for the returned p-values.
-        verbosity : int, optional
-            Determines the level of verbosity. 1 explains the results and 2 print the ADF and KPSS p-values, by default 1
 
         Returns
         -------

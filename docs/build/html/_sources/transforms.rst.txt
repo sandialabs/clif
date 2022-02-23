@@ -52,6 +52,12 @@ Variable Select Transform
 .. autoclass:: clif.preprocessing.SingleVariableSelector
 	:members:
 
+Combining DataArrays
+--------------------
+
+.. autoclass:: clif.preprocessing.CombineDataArrays
+	:members:
+
 Custom Transform
 ------------------
 

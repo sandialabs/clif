@@ -199,7 +199,10 @@
               <div>
                 
   <h1>Source code for clif.preprocessing_new</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span></span><span class="kn">from</span> <span class="nn">attr</span> <span class="kn">import</span> <span class="n">has</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">Stack</span>
+<span class="kn">from</span> <span class="nn">pyproj</span> <span class="kn">import</span> <span class="n">transform</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
@@ -456,6 +459,29 @@
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="n">data</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">==</span> <span class="n">size</span>
             <span class="p">),</span> <span class="s2">&quot;lat and lon area weights must be the same size as the data lat lon sizes. names must also match.&quot;</span>
+
+<div class="viewcode-block" id="MarginalizeOutTransform.fit_lat_only_weights"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.MarginalizeOutTransform.fit_lat_only_weights">[docs]</a>    <span class="k">def</span> <span class="nf">fit_lat_only_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For fitting only the latitude weights. Not integrated with fit_transform</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : _type_</span>
+<span class="sd">            _description_</span>
+<span class="sd">        y : _type_, optional</span>
+<span class="sd">            _description_, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># self._check_lat_lon_weights(data, self.lat_lon_weights)</span>
+            <span class="c1"># get normalized weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">dims</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_lon_weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>  <span class="c1"># normalize</span>
+
+            <span class="c1"># only one dimension</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weight_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">weights</span><span class="p">,</span>
+            <span class="p">}</span></div>
 
 <div class="viewcode-block" id="MarginalizeOutTransform.fit"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.MarginalizeOutTransform.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -756,11 +782,13 @@
 <span class="sd">    &gt;&gt;&gt; data = colselectT.fit_transform(ds)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variable</span> <span class="o">=</span> <span class="n">variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inverse</span> <span class="o">=</span> <span class="n">inverse</span>  <span class="c1"># store ds for inversion</span>
 
 <div class="viewcode-block" id="SingleVariableSelector.fit"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.SingleVariableSelector.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="s2">&quot;Variable is not in data set. &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ds_original</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="SingleVariableSelector.transform"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.SingleVariableSelector.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
@@ -768,7 +796,179 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span>
         <span class="p">),</span> <span class="s2">&quot;Must be a single variable in order to return a data array object. &quot;</span>
-        <span class="k">return</span> <span class="n">data</span></div></div>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="SingleVariableSelector.inverse_transform"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.SingleVariableSelector.inverse_transform">[docs]</a>    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gives us back the data set&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;ds_original&quot;</span>
+        <span class="p">),</span> <span class="s2">&quot;Choose inverse=True to save the original dataset. &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ds_original</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds_original</span></div></div>
+
+
+<div class="viewcode-block" id="CombineDataArrays"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.CombineDataArrays">[docs]</a><span class="k">class</span> <span class="nc">CombineDataArrays</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combines or stacks data horizontally assuming that the first dimension of all arrays are the same</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keep_meta</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep_meta</span> <span class="o">=</span> <span class="n">keep_meta</span>  <span class="c1"># store data arrays</span>
+
+    <span class="k">def</span> <span class="nf">_check_array_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataarrays</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataarrays</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;For now, each data array must be two dimensional&quot;</span>
+        <span class="n">row_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataarrays</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">rs</span> <span class="o">==</span> <span class="n">row_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">rs</span> <span class="ow">in</span> <span class="n">row_sizes</span><span class="p">]</span>
+        <span class="p">),</span> <span class="s2">&quot;The first dimension of each data array must be the same, since we stack relative to this axis.&quot;</span>
+
+<div class="viewcode-block" id="CombineDataArrays.fit"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.CombineDataArrays.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataarrays</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndata</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataarrays</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_array_sizes</span><span class="p">(</span><span class="n">dataarrays</span><span class="p">)</span>
+        <span class="n">col_sizes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataarrays</span><span class="p">])</span>
+
+        <span class="n">split_indices</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col_sizes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">col_cumsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">col_sizes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">split</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_indices</span><span class="p">):</span>
+            <span class="n">split_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">col_cumsum</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">split_indices</span> <span class="o">=</span> <span class="n">split_indices</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_meta</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataarrays_</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataarrays</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">data_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataarrays_</span><span class="p">:</span>
+                <span class="n">data_</span><span class="o">.</span><span class="n">values</span> <span class="o">*=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="CombineDataArrays.transform"><a class="viewcode-back" href="../../transforms.html#clif.preprocessing.CombineDataArrays.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataarrays</span><span class="p">):</span>
+        <span class="c1"># convert to numpy arrays</span>
+        <span class="n">data_nparrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataarrays</span><span class="p">]</span>
+        <span class="n">concatenated_arrays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">data_nparrays</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">concatenated_arrays</span></div>
+
+    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concatenated_array</span><span class="p">,</span> <span class="n">return_np</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">split_arrays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+            <span class="n">concatenated_array</span><span class="p">,</span> <span class="n">indices_or_sections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">split_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="c1"># make a local copy</span>
+        <span class="n">dataarrays_local_</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">data_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataarrays_</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data_local_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataarrays_local_</span><span class="p">):</span>
+            <span class="n">data_local_</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">split_arrays</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">return_np</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">split_arrays</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dataarrays_local_</span>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concatenated_array</span><span class="p">,</span> <span class="n">return_np</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">concatenated_array</span><span class="p">,</span> <span class="n">return_np</span><span class="o">=</span><span class="n">return_np</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">StackDataArrays</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Alternative to Combine data arrays using the stack feature in xarray. Avoid having to convert to numpy arrays, but may be more inefficient.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TransformerMixin : _type_</span>
+<span class="sd">        _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">new_dim_name</span><span class="o">=</span><span class="s2">&quot;combined&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_dim_name</span> <span class="o">=</span> <span class="n">new_dim_name</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataarrays</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+        <span class="c1"># alternate to stacking</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">dataarrays</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dims_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="nb">vars</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coords_dict</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span><span class="o">.</span><span class="n">coords</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dims_dict</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataarrays</span><span class="p">):</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">dataarrays</span><span class="p">)</span>
+        <span class="n">data_stacked</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">to_stacked_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">new_dim_name</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data_stacked</span>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataarray</span><span class="p">):</span>
+        <span class="n">dim_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_dim_name</span>
+        <span class="n">data_unstacked</span> <span class="o">=</span> <span class="n">dataarray</span><span class="o">.</span><span class="n">to_unstacked_dataset</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim_name</span><span class="p">)</span>
+        <span class="n">data_arrays_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="nb">vars</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+            <span class="n">data_temp</span> <span class="o">=</span> <span class="n">data_unstacked</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim_name</span><span class="p">)</span>
+            <span class="n">data_temp</span> <span class="o">=</span> <span class="n">data_temp</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="n">dim_name</span><span class="p">)</span>  <span class="c1"># remove multindex</span>
+            <span class="n">data_temp</span> <span class="o">=</span> <span class="n">data_temp</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="n">dim_name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims_dict</span><span class="p">[</span><span class="nb">vars</span><span class="p">][</span><span class="mi">1</span><span class="p">]})</span>
+            <span class="n">data_temp</span> <span class="o">=</span> <span class="n">data_temp</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords_dict</span><span class="p">[</span><span class="nb">vars</span><span class="p">])</span>
+            <span class="n">data_arrays_dict</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_temp</span>
+        <span class="c1"># data_unstacked = xarray.Dataset(data_arrays_dict)</span>
+        <span class="k">return</span> <span class="n">data_arrays_dict</span>
+
+
+<span class="k">class</span> <span class="nc">MultiObjectiveUnion</span><span class="p">(</span><span class="n">TransformerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combine variables in a data set</span>
+
+<span class="sd">    At this point, this class has potential memory issues given that we keep a copy of the dataset internally.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    TransformerMixin : _type_</span>
+<span class="sd">        _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformer_list</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer_list</span> <span class="o">=</span> <span class="n">transformer_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inverse</span> <span class="o">=</span> <span class="n">inverse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds_</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ds_</span><span class="o">.</span><span class="n">dims</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">transformer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer_list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transformer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">variable</span><span class="p">)</span>
+            <span class="n">res_temp</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res_temp</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer_list</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">transformer</span>  <span class="c1"># update transformer list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_transform_results</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_check_transform_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform_results</span><span class="p">):</span>
+        <span class="n">size_along_dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transform_results</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">si</span> <span class="o">==</span> <span class="n">size_along_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">size_along_dim</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_</span> <span class="o">=</span> <span class="p">[</span><span class="n">ri</span> <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">]</span>
+        <span class="n">res_np</span> <span class="o">=</span> <span class="p">[</span><span class="n">ri</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">]</span>
+        <span class="n">col_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">rii</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">rii</span> <span class="ow">in</span> <span class="n">res_np</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">res_np</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">split_indices</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">res_np</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">split</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">split_indices</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">split_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">col_sizes</span><span class="p">[:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_np</span>
+
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_np</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;ds_&quot;</span><span class="p">),</span> <span class="s2">&quot;Must store the orignal dataset&quot;</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;split_indices&quot;</span><span class="p">),</span> <span class="s2">&quot;must run the transform function&quot;</span>
+        <span class="n">data_np_split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+            <span class="n">data_np</span><span class="p">,</span> <span class="n">indices_or_sections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">split_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_np_split</span> <span class="o">=</span> <span class="n">data_np_split</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">data_np</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_np_split</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res_</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">data_np</span>
+            <span class="n">ds_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res_</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="c1"># self.ds_ = self.transformer_list[-1][0].ds_original.copy(deep=True)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ds_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">ds_temp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ds_</span>
 </pre></div>
 
               </div>

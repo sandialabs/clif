@@ -1,3 +1,6 @@
+from attr import has
+from matplotlib.cbook import Stack
+from pyproj import transform
 from tqdm import tqdm
 import numpy as np
 import xarray
@@ -255,6 +258,29 @@ class MarginalizeOutTransform(TransformerMixin):
             assert (
                 data.sizes[dim] == size
             ), "lat and lon area weights must be the same size as the data lat lon sizes. names must also match."
+
+    def fit_lat_only_weights(self, data, y=None, **fit_params):
+        """For fitting only the latitude weights. Not integrated with fit_transform
+
+
+        Parameters
+        ----------
+        data : _type_
+            _description_
+        y : _type_, optional
+            _description_, by default None
+        """
+        if self.lat_lon_weights is not None:
+            # self._check_lat_lon_weights(data, self.lat_lon_weights)
+            # get normalized weights
+            self.weight_dims = self.lat_lon_weights.dims
+            weights = self.lat_lon_weights.copy()
+            weights /= np.sum(weights)  # normalize
+
+            # only one dimension
+            self.weight_dict = {
+                self.weight_dims[0]: weights,
+            }
 
     def fit(self, data, y=None, **fit_params):
         assert isinstance(
@@ -555,11 +581,13 @@ class SingleVariableSelector(TransformerMixin):
     >>> data = colselectT.fit_transform(ds)
     """
 
-    def __init__(self, variable):
+    def __init__(self, variable, inverse=False):
         self.variable = variable
+        self.inverse = inverse  # store ds for inversion
 
     def fit(self, dataset, y=None, **fit_params):
         assert self.variable in dataset.variables, "Variable is not in data set. "
+        self.ds_original = dataset.copy(deep=True)
         return self
 
     def transform(self, dataset):
@@ -568,3 +596,175 @@ class SingleVariableSelector(TransformerMixin):
             data, xarray.DataArray
         ), "Must be a single variable in order to return a data array object. "
         return data
+
+    def inverse_transform(self, data):
+        """Gives us back the data set"""
+        assert hasattr(
+            self, "ds_original"
+        ), "Choose inverse=True to save the original dataset. "
+        self.ds_original[self.variable] = data
+        return self.ds_original
+
+
+class CombineDataArrays(TransformerMixin):
+    """Combines or stacks data horizontally assuming that the first dimension of all arrays are the same
+
+    Parameters
+    ----------
+
+    """
+
+    def __init__(self, keep_meta=True):
+        self.keep_meta = keep_meta  # store data arrays
+
+    def _check_array_sizes(self, dataarrays):
+        for data in dataarrays:
+            assert data.ndim == 2, "For now, each data array must be two dimensional"
+        row_sizes = [data.shape[0] for data in dataarrays]
+        assert all(
+            [rs == row_sizes[0] for rs in row_sizes]
+        ), "The first dimension of each data array must be the same, since we stack relative to this axis."
+
+    def fit(self, dataarrays):
+        self.ndata = len(dataarrays)
+        self._check_array_sizes(dataarrays)
+        col_sizes = np.array([data.shape[1] for data in dataarrays])
+
+        split_indices = [None] * (len(col_sizes) - 1)
+        col_cumsum = np.cumsum(col_sizes)
+        for i, split in enumerate(split_indices):
+            split_indices[i] = int(col_cumsum[i])
+        self.split_indices = split_indices
+
+        if self.keep_meta:
+            self.dataarrays_ = [data.copy(deep=True) for data in dataarrays]
+            for data_ in self.dataarrays_:
+                data_.values *= 0
+        return self
+
+    def transform(self, dataarrays):
+        # convert to numpy arrays
+        data_nparrays = [data.values for data in dataarrays]
+        concatenated_arrays = np.concatenate(data_nparrays, axis=1)
+        return concatenated_arrays
+
+    def split(self, concatenated_array, return_np=False):
+        split_arrays = np.split(
+            concatenated_array, indices_or_sections=self.split_indices, axis=1
+        )
+        # make a local copy
+        dataarrays_local_ = [data_.copy(deep=True) for data_ in self.dataarrays_]
+        for i, data_local_ in enumerate(dataarrays_local_):
+            data_local_.values = split_arrays[i]
+        if return_np:
+            return split_arrays
+        else:
+            return dataarrays_local_
+
+    def inverse_transform(self, concatenated_array, return_np=False):
+        return self.split(concatenated_array, return_np=return_np)
+
+
+class StackDataArrays(TransformerMixin):
+    """Alternative to Combine data arrays using the stack feature in xarray. Avoid having to convert to numpy arrays, but may be more inefficient.
+
+    Parameters
+    ----------
+    TransformerMixin : _type_
+        _description_
+    """
+
+    def __init__(self, dim="time", new_dim_name="combined"):
+        self.dim = dim
+        self.new_dim_name = new_dim_name
+
+    def fit(self, dataarrays, y=None, **fit_params):
+        # alternate to stacking
+        ds = xarray.Dataset(dataarrays)
+        self.data_vars = set(ds.keys())
+        self.coords_dict = {}
+        self.dims_dict = {}
+        for vars in self.data_vars:
+            self.coords_dict[vars] = ds[vars].coords
+            self.dims_dict[vars] = ds[vars].dims
+        return self
+
+    def transform(self, dataarrays):
+        ds = xarray.Dataset(dataarrays)
+        data_stacked = ds.to_stacked_array(self.new_dim_name, [self.dim])
+        return data_stacked
+
+    def inverse_transform(self, dataarray):
+        dim_name = self.new_dim_name
+        data_unstacked = dataarray.to_unstacked_dataset(dim=dim_name)
+        data_arrays_dict = {}
+        for vars in self.data_vars:
+            data_temp = data_unstacked[vars].dropna(dim=dim_name)
+            data_temp = data_temp.drop_vars(dim_name)  # remove multindex
+            data_temp = data_temp.rename({dim_name: self.dims_dict[vars][1]})
+            data_temp = data_temp.assign_coords(self.coords_dict[vars])
+            data_arrays_dict[vars] = data_temp
+        # data_unstacked = xarray.Dataset(data_arrays_dict)
+        return data_arrays_dict
+
+
+class MultiObjectiveUnion(TransformerMixin):
+    """Combine variables in a data set
+
+    At this point, this class has potential memory issues given that we keep a copy of the dataset internally.
+
+    Parameters
+    ----------
+    TransformerMixin : _type_
+        _description_
+    """
+
+    def __init__(self, transformer_list, dim=None, n_jobs=None, inverse=True):
+        self.transformer_list = transformer_list
+        self.n_jobs = n_jobs
+        self.inverse = inverse
+        self.dim = dim
+
+    def fit(self, dataset, y=None, **fit_params):
+        if self.inverse:
+            self.ds_ = dataset.copy(deep=True)
+        if self.dim is None:
+            self.dim = list(self.ds_.dims)[0]
+        self.results = []
+        self.variables = []
+        for ii, transformer in enumerate(self.transformer_list):
+            self.variables.append(transformer[0].variable)
+            res_temp = transformer.fit_transform(dataset)
+            self.results.append(res_temp)
+            self.transformer_list[ii] = transformer  # update transformer list
+        self._check_transform_results(self.results)
+
+        return self
+
+    def _check_transform_results(self, transform_results):
+        size_along_dim = [t.sizes[self.dim] for t in transform_results]
+        assert all([si == size_along_dim[0] for si in size_along_dim])
+
+    def transform(self, dataset):
+        self.res_ = [ri for ri in self.results]
+        res_np = [ri.values for ri in self.results]
+        col_sizes = [rii.shape[1] for rii in res_np]
+        self.results_np = np.concatenate(res_np, axis=1)
+        self.split_indices = [None] * (len(res_np) - 1)
+        for i, split in enumerate(self.split_indices):
+            self.split_indices[i] = int(np.cumsum(col_sizes[: i + 1]))
+        return self.results_np
+
+    def inverse_transform(self, data_np):
+        assert hasattr(self, "ds_"), "Must store the orignal dataset"
+        assert hasattr(self, "split_indices"), "must run the transform function"
+        data_np_split = np.split(
+            data_np, indices_or_sections=self.split_indices, axis=1
+        )
+        self.data_np_split = data_np_split
+        for j, data_np in enumerate(data_np_split):
+            self.res_[j].values = data_np
+            ds_temp = self.transformer_list[j].inverse_transform(self.res_[j])
+            # self.ds_ = self.transformer_list[-1][0].ds_original.copy(deep=True)
+            self.ds_[self.variables[j]] = ds_temp[self.variables[j]]
+        return self.ds_

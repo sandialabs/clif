@@ -45,47 +45,8 @@ ds = deck_combined.mean(dim="x")
 lat_lon_weights = ds.area
 data = ds["T"]
 
-##################################################################
-## Preprocess data using new API
-##################################################################
-
-# clip latitude only for use in lat lon weighting
-clipLatT = clif.preprocessing.ClipTransform(dims=["lat"], bounds=[(-60.0, 60.0)])
-lat_lon_weights_new = clipLatT.fit_transform(lat_lon_weights)
-
-# First clip the data
-clipT = clif.preprocessing.ClipTransform(
-    dims=["lat", "plev"], bounds=[(-60.0, 60.0), (5000.0, np.inf)]
-)
-data_new = clipT.fit_transform(data)
-
-# detrend by month
-monthlydetrend = clif.preprocessing.SeasonalAnomalyTransform(cycle="month")
-data_new = monthlydetrend.fit_transform(data_new)
-
-# marginalize out lat and lon variables
-intoutT = clif.preprocessing.MarginalizeOutTransform(
-    dims=["lat", "lon"], lat_lon_weights=lat_lon_weights_new
-)
-data_new = intoutT.fit_transform(data_new)
-
-# linear detrend by time
-lindetrendT = clif.preprocessing.LinearDetrendTransform()
-data_new = lindetrendT.fit_transform(data_new)
-
-# flatten data for EOF analysis
-flattenT = clif.preprocessing.FlattenData(dims=["plev"])
-data_new = flattenT.fit_transform(data_new)
-
-# return data in specific order using the Transpose transform
-transformT = clif.preprocessing.Transpose(dims=["time", "plev"])
-data_new = transformT.fit_transform(data_new)
-
-# convert to numpy array
-X = data_new.values
-
 ################################################################
-# Try the same but with pipelining
+# Pipelining Transforms
 ################################################################
 
 clipT = clif.preprocessing.ClipTransform(
@@ -100,20 +61,6 @@ flattenT = clif.preprocessing.FlattenData(dims=["plev"])
 transformT = clif.preprocessing.Transpose(dims=["time", "plev"])
 
 from sklearn.pipeline import Pipeline
-
-pipe = Pipeline(
-    steps=[
-        ("clip", clipT),
-        ("anom", monthlydetrend),
-        ("marginalize", intoutT),
-        ("detrend", lindetrendT),
-        ("flatten", flattenT),
-        ("transpose", transformT),
-    ]
-)
-
-X_new = pipe.fit_transform(data).values
-print("Error in piping:", np.linalg.norm(X - X_new))
 
 # Pipelining with the EOF transform at the end
 fp = clif.fingerprints(n_eofs=8, varimax=False)
@@ -131,3 +78,4 @@ pipe_w_eof = Pipeline(
 pipe_w_eof.fit(data)
 eofs_ = pipe_w_eof.named_steps["fingerprint"].eofs_
 evr_ = pipe_w_eof.named_steps["fingerprint"].explained_variance_ratio_
+

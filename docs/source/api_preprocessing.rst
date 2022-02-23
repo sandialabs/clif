@@ -27,6 +27,8 @@ Here's a summary of the available transforms in clif. You can find the complete 
      - Scaling the data (helpful when combining different units)
    * - :ref:`Variable Selection Transform<Variable Select Transform>`
      - Selecting single variable from an xarray DataSet. Helpful for combining outputs. 
+   * - :ref:`Combining DataArrays<Combining DataArrays>`
+     - Combining multiple data arrays into a single object and splitting them as well. 
    * - :ref:`TransformerMixin<Custom Transform>`
      - Template for creating your own custom preprocessing transform.
 

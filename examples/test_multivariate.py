@@ -94,47 +94,74 @@ pipe2 = Pipeline(
 data_new2 = pipe2.fit_transform(ds)
 
 # test column selector with python dictionary of variables
+from sklearn.datasets import make_low_rank_matrix
 
+rn = np.random.RandomState(234)
+A = make_low_rank_matrix(
+    n_samples=144, n_features=37, effective_rank=8, random_state=rn
+)
+B = make_low_rank_matrix(
+    n_samples=144, n_features=24, effective_rank=6, random_state=rn
+)
 
-# ######################################################################
-# ## Begin fingerprinting and plotting EOF time-series scores
-# ######################################################################
-# # Now we can begin calculating the EOFs
-# # obtain fingerprints
-# n_components = 8
-# fp = clif.fingerprints(n_eofs=n_components, varimax=False)
-# fp.fit(data_new)
+C = make_low_rank_matrix(
+    n_samples=144, n_features=48, effective_rank=2, random_state=rn
+)
 
-# # extract pca fingerprints and convergence diagnostics
-# eofs_pca = fp.eofs_
-# explained_variance_ratio = fp.explained_variance_ratio_
-# eof_time_series = fp.projections_
-# print(
-#     "Explained variance ratios for first {0} components:\n".format(n_components),
-#     explained_variance_ratio,
-# )
+A_xr = xr.DataArray(
+    A,
+    dims=["time", "plev"],
+    coords={"time": np.linspace(1, 144, 144), "plev": np.linspace(0, 10000, 37)},
+)
+B_xr = xr.DataArray(
+    B,
+    dims=["time", "lat"],
+    coords={"time": np.linspace(1, 144, 144), "lat": np.linspace(-80, 80, 24)},
+)
+C_xr = xr.DataArray(
+    C,
+    dims=["time", "lon"],
+    coords={"time": np.linspace(1, 144, 144), "lon": np.linspace(-180, 180, 48)},
+)
 
-# # i conver tcftime series to datetime for plotting with matplotlib
-# times = data.indexes["time"].to_datetimeindex(unsafe=True)
+# create a transform for each data product separately
+ds = xr.Dataset({"A": A_xr, "B": B_xr, "C": C_xr})
 
-# # add trend lines to eofs
-# pinatubo_event = datetime.datetime(1991, 6, 15)
+from clif.preprocessing import *
 
-# # plot eof's with trend lines before and after event
-# # import nc_time_axis # to allow plotting of cftime datetime using matplotlib
-# fig, axes = plt.subplots(3, 2, figsize=(10, 8))
-# fig.suptitle("EOF scores for {0} using PCA".format(QOI), fontsize=20)
-# for i, ax in enumerate(axes.flatten()):
-#     eof_ts = eof_time_series[:, i]
-#     ax.plot(
-#         times,
-#         eof_ts,
-#         label="PC score {0}".format(i + 1),
-#         color="C{0}".format(i),
-#         alpha=0.6,
-#     )
-#     ax.axvline(pinatubo_event, color="k", linestyle="--", alpha=0.5)
-#     ax.legend(fancybox=True)
-#     ax.grid(True)
+pipeA = Pipeline(
+    steps=[
+        ("colselect", SingleVariableSelector(variable="A", inverse=True)),
+        ("scale", ScalerTransform()),
+    ]
+)
 
-# plt.show()
+pipeB = Pipeline(
+    steps=[
+        ("colselect", SingleVariableSelector(variable="B", inverse=True)),
+        ("scale", ScalerTransform()),
+    ]
+)
+
+pipeC = Pipeline(
+    steps=[
+        ("colselect", SingleVariableSelector(variable="C", inverse=True)),
+        ("scale", ScalerTransform()),
+    ]
+)
+
+Ahat = 1 + 0 * pipeA.fit_transform(ds)
+Bhat = 1.74 + 0 * pipeB.fit_transform(ds)
+Chat = 3.14 + 0 * pipeC.fit_transform(ds)
+dataarrays = [Ahat, Bhat, Chat]
+
+# Combine all the data arrays
+concatT = CombineDataArrays()
+Z_concat = concatT.fit_transform(dataarrays)
+Z_split = concatT.inverse_transform(Z_concat)
+
+# alternate to stacking
+da_dict = {"A": Ahat, "B": Bhat, "C": Chat}
+stackT = StackDataArrays()
+stacked_data = stackT.fit_transform(da_dict)
+unstacked_data = stackT.inverse_transform(stacked_data)

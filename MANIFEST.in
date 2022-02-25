@@ -1,2 +1,4 @@
 include README.rst
-include tesuract/tests/data/*.txt
+include clif/tests/data/*.txt
+include clif/tests/data/*.nc
+include clif/colormaps/*.rgb

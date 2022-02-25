@@ -9,8 +9,8 @@ import unittest
 import warnings
 import xarray as xr
 
-relpath = clif.__file__[:-11]  # ignore the __init__.py specification
-print("relpath:", relpath)
+relpath, _ = os.path.split(clif.__file__)  # ignore the /__init__.py specification
+print("\nrelative path:", relpath)
 
 
 def mse(a, b):

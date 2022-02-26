@@ -65,7 +65,7 @@ def determine_tick_step(degrees_covered):
 
 
 # add cyclic point to longitude
-def add_cyclic(data):
-    lat, lon = data["lat"], data["lon"]
+def add_cyclic(data, lat_name="lat", lon_name="lon"):
+    lat, lon = data[lat_name], data[lon_name]
     data, lon = add_cyclic_point(data, coord=lon)
     return data, lat, lon

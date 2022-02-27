@@ -9,8 +9,8 @@ import unittest
 import clif
 import os, sys
 
-relpath = clif.__file__[:-11]  # ignore the __init__.py specification
-print("relpath:", relpath)
+relpath, _ = os.path.split(clif.__file__)  # ignore the /__init__.py specification
+print("\nrelative path:", relpath)
 
 
 class TestSeasonalDetrending(unittest.TestCase):
@@ -118,7 +118,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data_transformed = mot.fit_transform(data)
         error = data_transformed.values - data.mean(dim="lon").values
         assert (
-            np.sum(error**2) == 0
+            np.sum(error ** 2) == 0
         ), "marginalization over longitude, unweighted not working."
 
     def test_marginalize_out_unweighted_check_lat(self):
@@ -127,7 +127,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data_transformed = mot.fit_transform(data)
         error = data_transformed.values - data.mean(dim="lat").values
         assert (
-            np.sum(error**2) == 0
+            np.sum(error ** 2) == 0
         ), "marginalization over latitude, unweighted not working."
 
     def test_marginalize_out_unweighted_check_lat_lon(self):
@@ -135,7 +135,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data = self.ds_T["T"]
         data_transformed = mot.fit_transform(data)
         error = data_transformed.values - data.mean(dim=["lat", "lon"]).values
-        relerror = np.sum(error**2) / np.sum(
+        relerror = np.sum(error ** 2) / np.sum(
             data.mean(dim=["lat", "lon"]).values ** 2
         )
         assert (
@@ -153,7 +153,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data_transformed = mot.fit_transform(data)
         ref = (data * area_weight_norm).sum(dim=["lat", "lon"])
         error = np.sum((data_transformed.values - ref.values) ** 2)
-        relerror = error / np.sum(ref.values**2)
+        relerror = error / np.sum(ref.values ** 2)
         assert (
             relerror <= 1e-14
         ), "Check method. We integrate out each dimension at a time."
@@ -168,7 +168,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data_transformed = mot.fit_transform(data)
         ref = (data * area_weight).sum(dim=["lat", "lon"])
         error = np.sum((data_transformed.values - ref.values) ** 2)
-        relerror = error / np.sum(ref.values**2)
+        relerror = error / np.sum(ref.values ** 2)
         assert (
             relerror <= 1e-14
         ), "Check method. We integrate out each dimension at a time."
@@ -185,7 +185,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data_t = mot.fit_transform(data)
         ref = (data * area_weight_lat).sum(dim=["lat"])
         error = np.sum((data_t.values - ref.values) ** 2)
-        relerror = error / np.sum(ref.values**2)
+        relerror = error / np.sum(ref.values ** 2)
         assert (
             relerror <= 1e-14
         ), "Marginalizating out latitude with weights not working as expected."
@@ -203,7 +203,7 @@ class TestMarginalizeTransform(unittest.TestCase):
         data_t = mot.fit_transform(data)
         ref = data.mean(dim=["lon"])
         error = np.sum((data_t.values - ref.values) ** 2)
-        relerror = error / np.sum(ref.values**2)
+        relerror = error / np.sum(ref.values ** 2)
         print(relerror)
         assert (
             relerror <= 1e-14

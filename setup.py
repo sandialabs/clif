@@ -1,5 +1,7 @@
 from setuptools import setup
+from setuptools import find_packages
 
+PACKAGES = find_packages(where=".")
 
 setup(
     name="clif",
@@ -10,7 +12,8 @@ setup(
     author=["Kenny Chowdhary", "Jake Nichol"],
     author_email="kchowdh@sandia.gov",
     license="BSD3",
-    packages=["clif"],
+    packages=PACKAGES,
+    package_data={"clif": ["folder/*.txt"]},
     test_suite="nose.collector",
     tests_required=["nose"],
     install_requires=["numpy", "sklearn", "tqdm", "xarray", "netCDF4", "statsmodels"],

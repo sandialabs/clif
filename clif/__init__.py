@@ -1,3 +1,4 @@
 from .eof import fingerprints
-import clif.preprocessing
-import clif.statistics
+from . import preprocessing
+from . import statistics
+from . import visualization

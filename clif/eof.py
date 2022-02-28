@@ -170,74 +170,71 @@ class fingerprints:
 
         return np.dot(componentsT, rotation_matrix).T
 
+    def plot_field(
+        self,
+        eof_to_print: int,
+        lats: list,
+        lons: list,
+        cmap: matplotlib.colors.Colormap = plt.get_cmap("cividis"),
+        ax: matplotlib.pyplot.axes = None,
+        title: str = "",
+        grid: bool = False,
+        colorbar_title: bool = "",
+        grid_kwargs: dict = {},
+    ) -> tuple:
+        """Plots a given fingerprint's EOFs as a 2-dimensional field on a latitude by longitude grid.
 
-def plot_EOF_field(
-    EOFs: np.ndarray,
-    eof_to_print: int,
-    lats: list,
-    lons: list,
-    cmap: matplotlib.colors.Colormap = plt.get_cmap("cividis"),
-    ax: matplotlib.pyplot.axes = None,
-    title: str = "",
-    grid: bool = False,
-    colorbar_title: bool = "",
-    grid_kwargs: dict = {},
-) -> tuple:
-    """Plots a given fingerprint's EOFs as a 2-dimensional field on a latitude by longitude grid.
+        Parameters
+        ----------
+        eof_to_print : int
+            The specific EOF to print in order of variance explained in the un-rotated set.
+        lats : list
+            List of latitude values.
+        lons : list
+            List of longitude values.
+        cmap : matplotlib.pyplot.cmap, optional
+            A given colormap, by default plt.get_cmap("jet")
+        ax : matplotlib.pyplot.axes, optional
+            Given matplotlib axes, by default None
+        title : str, optional
+            Title of plot, by default ""
+        grid : bool, optional
+            Select whether a lattitude by longtiude grid is plotted, by default False
+        colorbar_title : str, optional
+            Title of colorbar, by default ""
+        grid_kwargs : dict, optional
+            Alternative arguments for the grid layout, by default {}
 
-    Parameters
-    ----------
-    EOFs : np.ndarray
-        An array of EOFs
-    eof_to_print : int
-        The specific EOF to print in order of variance explained in the un-rotated set.
-    lats : list
-        List of latitude values.
-    lons : list
-        List of longitude values.
-    cmap : matplotlib.pyplot.cmap, optional
-        A given colormap, by default plt.get_cmap("jet")
-    ax : matplotlib.pyplot.axes, optional
-        Given matplotlib axes, by default None
-    title : str, optional
-        Title of plot, by default ""
-    grid : bool, optional
-        Select whether a lattitude by longtiude grid is plotted, by default False
-    colorbar_title : str, optional
-        Title of colorbar, by default ""
-    grid_kwargs : dict, optional
-        Alternative arguments for the grid layout, by default {}
+        Returns
+        -------
+        tuple
+            A tuple of the plot's figure, axes, and colorbar objects.
+        """
+        EOF_recons = np.reshape(self.eofs_[eof_to_print], (len(lats), len(lons)))
+        data = EOF_recons  # [eof_to_print, :, :]
 
-    Returns
-    -------
-    tuple
-        A tuple of the plot's figure, axes, and colorbar objects.
-    """
-    EOF_recons = np.reshape(EOFs, (len(EOFs), len(lats), len(lons)))
-    data = EOF_recons[eof_to_print, :, :]
+        if not ax:
+            f = plt.figure(figsize=(8, (data.shape[0] / float(data.shape[1])) * 8))
+            ax = plt.axes(projection=ccrs.PlateCarree())
 
-    if not ax:
-        f = plt.figure(figsize=(8, (data.shape[0] / float(data.shape[1])) * 8))
-        ax = plt.axes(projection=ccrs.PlateCarree())
+        data, lons = add_cyclic_point(data, coord=lons)
+        pl = plt.contourf(
+            lons, lats, data, cmap=cmap, extend="both", transform=ccrs.PlateCarree()
+        )
+        ax.coastlines()
+        _colorbar = plt.colorbar(pl, label=colorbar_title)
+        if grid:
+            if grid_kwargs:
+                ax.gridlines(**grid_kwargs)
+            else:
+                ax.gridlines(
+                    draw_labels=True,
+                    dms=True,
+                    x_inline=False,
+                    y_inline=False,
+                    linestyle="--",
+                    color="black",
+                )
+        ax.set_title(title, fontsize=16)
 
-    data, lons = add_cyclic_point(data, coord=lons)
-    pl = plt.contourf(
-        lons, lats, data, cmap=cmap, extend="both", transform=ccrs.PlateCarree()
-    )
-    ax.coastlines()
-    _colorbar = plt.colorbar(pl, label=colorbar_title)
-    if grid:
-        if grid_kwargs:
-            ax.gridlines(**grid_kwargs)
-        else:
-            ax.gridlines(
-                draw_labels=True,
-                dms=True,
-                x_inline=False,
-                y_inline=False,
-                linestyle="--",
-                color="black",
-            )
-    ax.set_title(title, fontsize=16)
-
-    return f, ax, _colorbar
+        return f, ax, _colorbar

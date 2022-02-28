@@ -170,7 +170,7 @@ class fingerprints:
 
         return np.dot(componentsT, rotation_matrix).T
 
-    def plot(
+    def plot_field(
         self,
         eof_to_print: int,
         lats: list,

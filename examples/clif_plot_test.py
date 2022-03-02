@@ -55,7 +55,7 @@ plotfield4 = clif.visualization.plot_plev_time(
     title="T",
     rhs_title=u"\u00b0" + "K",
 )
-plotfield4.show(T_plev_time)
+# plotfield4.show(T_plev_time)
 
 weights = xr.open_dataarray("lat_lon_weights.nc")
 pipe = Pipeline(
@@ -78,4 +78,11 @@ plotfield5 = clif.visualization.plot_plev_time(
     log_plevs=True,
     nlevels=30,
 )
-plotfield5.show(T_new)
+# plotfield5.show(T_new)
+
+
+# compute frequency/ period plots using fft
+Ts = T_new.isel(plev=0)
+time_index = Ts.indexes["time"]
+time_diff_days = time_index[1:] - time_index[:-1]
+avg_dt = np.mean([dti.days for dti in time_diff_days])

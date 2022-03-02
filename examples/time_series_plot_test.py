@@ -54,8 +54,14 @@ def monthly_fft_analysis():
 # def hourly_fft_analysis():
 DATA_DIR = "../../e3sm_data/fingerprint/"
 freq = "hourly"
-Ts = xr.open_dataarray(os.path.join(DATA_DIR, f"T_{freq}.nc"), chunks={"time": 1})[:]
+Ts = xr.open_dataarray(os.path.join(DATA_DIR, f"T_{freq}.nc"))[:]
 
+fourier = clif.FourierTimeSeriesAnalysis(base_unit="month")
+fourier.fit(data=Ts)
+fourier.plot_power_spectrum(xaxis="frequency")
+y_filtered = fourier.transform(period_cutoff=1.1)
+
+raise SystemExit(0)
 time_index = Ts.indexes["time"]
 time_diff = time_index[1:] - time_index[:-1]
 avg_dt_hours = np.mean([dti / np.timedelta64(1, "h") for dti in time_diff])
@@ -81,6 +87,7 @@ maxfreq = sampling_rate / 2  # shannon nyquist
 freq = np.arange(1, nhalf + 1) / (nhalf + 1) * maxfreq
 period = 1.0 / freq
 
+raise SystemExit(0)
 # filter the signal
 thresh_period = 0.9  # filter out any period < thresh
 thresh_freq = 1.0 / thresh_period  # filter out any freq > 1./thresh_period

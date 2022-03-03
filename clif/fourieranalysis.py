@@ -3,6 +3,7 @@ import cftime
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as ticker
+import autocorr
 
 
 class FourierTimeSeriesAnalysis:
@@ -24,7 +25,7 @@ class FourierTimeSeriesAnalysis:
     def __init__(self, base_unit="year"):
         self.base_unit = base_unit
 
-    def compute_sampling_rate(self, data):
+    def _compute_sampling_rate(self, data):
         # compute sampling rate
         time_index_ = data.indexes["time"]
         time_diff_ = time_index_[1:] - time_index_[:-1]
@@ -55,7 +56,7 @@ class FourierTimeSeriesAnalysis:
         assert "time" in data.dims, "time must be a dimension in the data array"
 
         # compute sampling frequence per base_unit (month or year)
-        self.compute_sampling_rate(data)
+        self._compute_sampling_rate(data)
 
         if isinstance(data.indexes["time"][0], cftime._cftime.DatetimeNoLeap):
             x = data.indexes["time"].to_datetimeindex(unsafe=True)
@@ -82,7 +83,8 @@ class FourierTimeSeriesAnalysis:
         yhat_filt = self.yhat_.copy()
         yhat_filt[np.where(np.abs(self.freq_full_) >= thresh_freq)] = 0.0
         y_filt = np.fft.ifft(yhat_filt).real
-        return y_filt
+        y_filt_xr = xarray.DataArray(y_filt, dims=["time"], coords={"time": self.t_})
+        return y_filt_xr
 
     def compute_power_spectrum(self):
         freq_index = np.where(self.freq_full_ > 0)
@@ -90,7 +92,7 @@ class FourierTimeSeriesAnalysis:
         self.period_ = 1.0 / self.freq_
         self.power_ = np.abs(self.yhat_[freq_index]) ** 2
 
-    def plot_power_spectrum(self, xaxis="frequency", logscale=False):
+    def plot_power_spectrum(self, xaxis="frequency", logscale=False, xtickmultiple=2):
         fig, ax = plt.subplots(figsize=(8.5, 4.0))
         if xaxis == "frequency":
             x = self.freq_
@@ -104,12 +106,56 @@ class FourierTimeSeriesAnalysis:
         # set x-axis properties
         ax.set_xlabel(xlabel)
         ax.set_xlim([x.min(), x.max() / 2])
-        ax.xaxis.set_minor_locator(ticker.MultipleLocator(2))
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(xtickmultiple))
         # set y-axis properties
         ax.set_ylabel("power")
-        ax.set_ylim([0, y.max()])
         if logscale:
             ax.set_yscale("log")
+        else:
+            ax.set_ylim([0, y.max()])
         # misc axis properties
         ax.grid(True, alpha=0.5)
+        return fig, ax
+
+
+class AutocorrelationAnalysis(FourierTimeSeriesAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def fit(self, data):
+        self._compute_sampling_rate(data)
+        yt = data.values
+        self.ds_ = 1.0 / self.sampling_freq_per_unit_
+        self.tlag_per_base_unit_ = self.ds_ * np.arange(len(yt))
+        # compute autocorrelation function
+        self.acor_func_ = autocorr.function_1d(yt)
+        # get location where autocorrelation drops to zero
+        self.tlag0_ = (self.tlag_per_base_unit_[self.acor_func_ < 0][:2]).mean()
+        # Compute integrated autocorrelation time
+        try:
+            self.acor_integrated_ = autocorr.integrated_time(
+                yt, c=5, tol=50, quiet=False
+            )
+        except:
+            self.acor_integrated_ = self.ds_ * autocorr.integrated_time(
+                yt, c=5, tol=0, quiet=False
+            )
+        self.acor_integrated_ = self.tlag_per_base_unit_[int(self.acor_integrated_[0])]
+
+    def plot(self, ylabel="", xtickmultiple=2, show_integrated_acor=False):
+        fig, ax = plt.subplots()
+        ax.plot(self.tlag_per_base_unit_, self.acor_func_)
+        ax.set_xlabel(self.base_unit + "s")
+
+        # x axis properties
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(xtickmultiple))
+        # set y-axis properties
+        ax.set_ylabel(ylabel)
+        # misc axis properties
+        ax.grid(True, alpha=0.5)
+        ax.axvline(x=self.tlag0_, alpha=0.5, linestyle="dashed")
+        if show_integrated_acor:
+            ax.axvline(
+                x=self.acor_integrated_, alpha=0.5, color="r", linestyle="dashed"
+            )
         return fig, ax

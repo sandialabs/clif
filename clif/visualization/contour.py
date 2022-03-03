@@ -329,7 +329,7 @@ class BaseContourPlot:
         axis = which_axis
         ax = self.ax_
 
-        getattr(ax, f"set_{axis}label")("pressure (hPa)")
+        getattr(ax, f"set_{axis}label")("pressure (Pa)")
         if self.log_plevs:
             getattr(ax, f"set_{axis}scale")("log")
         getattr(ax, f"invert_{axis}axis")()

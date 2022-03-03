@@ -20,6 +20,7 @@ except:
 # import visualization tools and functions
 import clif.visualization as cviz
 import clif.preprocessing as cpp
+import autocorr
 
 
 def monthly_fft_analysis():
@@ -58,8 +59,21 @@ Ts = xr.open_dataarray(os.path.join(DATA_DIR, f"T_{freq}.nc"))[:]
 
 fourier = clif.FourierTimeSeriesAnalysis(base_unit="month")
 fourier.fit(data=Ts)
-fourier.plot_power_spectrum(xaxis="frequency")
+# fig, ax = fourier.plot_power_spectrum(xaxis="frequency", logscale=False)
 y_filtered = fourier.transform(period_cutoff=1.1)
+# y_filtered = Ts.copy()
+
+# autocorrelation analysis
+# y = Ts.values.copy()
+yt = y_filtered.values
+ds = 1.0 / fourier.sampling_freq_per_unit_
+tlag_per_base_unit = ds * np.arange(len(yt))
+acor_func = autocorr.function_1d(yt)
+acor = autocorr.integrated_time(yt, c=5, tol=50, quiet=False)
+
+acorT = clif.AutocorrelationAnalysis(base_unit="month")
+acorT.fit(y_filtered)
+acorT.plot("T", show_integrated_acor=False)
 
 raise SystemExit(0)
 time_index = Ts.indexes["time"]

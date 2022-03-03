@@ -75,13 +75,18 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Usage Guide
+  Tutorials
  </span>
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../introduction.html">
-   Main features
+  <a class="reference internal" href="../../tutorials/getting_started.html">
+   Getting started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/first_look.html">
+   First look at the data
   </a>
  </li>
 </ul>
@@ -199,7 +204,11 @@
               <div>
                 
   <h1>Source code for clif.eof</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">cartopy.util</span> <span class="kn">import</span> <span class="n">add_cyclic_point</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
@@ -353,10 +362,10 @@
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
             <span class="n">comp_rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">componentsT</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;varimax&quot;</span><span class="p">:</span>
-                <span class="n">tmp</span> <span class="o">=</span> <span class="n">comp_rot</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="n">comp_rot</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">nrow</span><span class="p">)</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">comp_rot</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="n">comp_rot</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">nrow</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;quartimax&quot;</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">componentsT</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">comp_rot</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="n">tmp</span><span class="p">))</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">componentsT</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">comp_rot</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">tmp</span><span class="p">))</span>
             <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
             <span class="n">var_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">var</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">var_new</span> <span class="o">&lt;</span> <span class="n">var</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">tol</span><span class="p">):</span>
@@ -365,79 +374,76 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">rotation_matrix</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">componentsT</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">componentsT</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
+<div class="viewcode-block" id="fingerprints.plot_field"><a class="viewcode-back" href="../../api_fingerprints.html#clif.fingerprints.plot_field">[docs]</a>    <span class="k">def</span> <span class="nf">plot_field</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">eof_to_print</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">lats</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">lons</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Colormap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;cividis&quot;</span><span class="p">),</span>
+        <span class="n">ax</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">pyplot</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">grid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">colorbar_title</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">grid_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Plots a given fingerprint&#39;s EOFs as a 2-dimensional field on a latitude by longitude grid.</span>
 
-<span class="k">def</span> <span class="nf">plot_EOF_field</span><span class="p">(</span>
-    <span class="n">EOFs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">eof_to_print</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">lats</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-    <span class="n">lons</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;jet&quot;</span><span class="p">),</span>
-    <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">grid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">colorbar_title</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="n">grid_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Plots a given fingerprint&#39;s EOFs as a 2-dimensional field on a latitude by longitude grid.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eof_to_print : int</span>
+<span class="sd">            The specific EOF to print in order of variance explained in the un-rotated set.</span>
+<span class="sd">        lats : list</span>
+<span class="sd">            List of latitude values.</span>
+<span class="sd">        lons : list</span>
+<span class="sd">            List of longitude values.</span>
+<span class="sd">        cmap : matplotlib.pyplot.cmap, optional</span>
+<span class="sd">            A given colormap, by default plt.get_cmap(&quot;jet&quot;)</span>
+<span class="sd">        ax : matplotlib.pyplot.axes, optional</span>
+<span class="sd">            Given matplotlib axes, by default None</span>
+<span class="sd">        title : str, optional</span>
+<span class="sd">            Title of plot, by default &quot;&quot;</span>
+<span class="sd">        grid : bool, optional</span>
+<span class="sd">            Select whether a lattitude by longtiude grid is plotted, by default False</span>
+<span class="sd">        colorbar_title : str, optional</span>
+<span class="sd">            Title of colorbar, by default &quot;&quot;</span>
+<span class="sd">        grid_kwargs : dict, optional</span>
+<span class="sd">            Alternative arguments for the grid layout, by default {}</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    EOFs : np.ndarray</span>
-<span class="sd">        An array of EOFs</span>
-<span class="sd">    eof_to_print : int</span>
-<span class="sd">        The specific EOF to print in order of variance explained in the un-rotated set.</span>
-<span class="sd">    lats : list</span>
-<span class="sd">        List of latitude values.</span>
-<span class="sd">    lons : list</span>
-<span class="sd">        List of longitude values.</span>
-<span class="sd">    cmap : matplotlib.pyplot.cmap, optional</span>
-<span class="sd">        A given colormap, by default plt.get_cmap(&quot;jet&quot;)</span>
-<span class="sd">    ax : matplotlib.pyplot.axes, optional</span>
-<span class="sd">        Given matplotlib axes, by default None</span>
-<span class="sd">    title : str, optional</span>
-<span class="sd">        Title of plot, by default &quot;&quot;</span>
-<span class="sd">    grid : bool, optional</span>
-<span class="sd">        Select whether a lattitude by longtiude grid is plotted, by default False</span>
-<span class="sd">    colorbar_title : str, optional</span>
-<span class="sd">        Title of colorbar, by default &quot;&quot;</span>
-<span class="sd">    grid_kwargs : dict, optional</span>
-<span class="sd">        Alternative arguments for the grid layout, by default {}</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A tuple of the plot&#39;s figure, axes, and colorbar objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">EOF_recons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eofs_</span><span class="p">[</span><span class="n">eof_to_print</span><span class="p">],</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">)))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">EOF_recons</span>  <span class="c1"># [eof_to_print, :, :]</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    tuple</span>
-<span class="sd">        A tuple of the plot&#39;s figure, axes, and colorbar objects.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">EOF_recons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">EOFs</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">EOFs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">)))</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">EOF_recons</span><span class="p">[</span><span class="n">eof_to_print</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">add_cyclic_point</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="n">lons</span><span class="p">)</span>
+        <span class="n">pl</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+            <span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+        <span class="n">_colorbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">colorbar_title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">grid</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">grid_kwargs</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="o">**</span><span class="n">grid_kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
+                    <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">dms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">x_inline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">y_inline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 
-    <span class="n">data</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">add_cyclic_point</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="n">lons</span><span class="p">)</span>
-    <span class="n">pl</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
-        <span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
-    <span class="n">_colorbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">colorbar_title</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">grid</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">grid_kwargs</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="o">**</span><span class="n">grid_kwargs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
-                <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">dms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">x_inline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">y_inline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
-                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">_colorbar</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">_colorbar</span></div></div>
 </pre></div>
 
               </div>

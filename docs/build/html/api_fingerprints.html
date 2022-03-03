@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Preprocessing" href="api_preprocessing.html" />
-    <link rel="prev" title="Main features" href="introduction.html" />
+    <link rel="prev" title="First look at the data" href="tutorials/first_look.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -77,13 +77,18 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Usage Guide
+  Tutorials
  </span>
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="introduction.html">
-   Main features
+  <a class="reference internal" href="tutorials/getting_started.html">
+   Getting started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/first_look.html">
+   First look at the data
   </a>
  </li>
 </ul>
@@ -269,6 +274,42 @@
 <dd><p>Perform EOF decomposition for a numpy array</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="clif.fingerprints.plot_field">
+<span class="sig-name descname"><span class="pre">plot_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eof_to_print:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lats:</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lons:</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap:</span> <span class="pre">matplotlib.colors.Colormap</span> <span class="pre">=</span> <span class="pre">&lt;matplotlib.colors.ListedColormap</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax:</span> <span class="pre">typing.Optional[matplotlib.pyplot.axes]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar_title:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_kwargs:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/clif/eof.html#fingerprints.plot_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clif.fingerprints.plot_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a given fingerprint’s EOFs as a 2-dimensional field on a latitude by longitude grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>eof_to_print</strong><span class="classifier">int</span></dt><dd><p>The specific EOF to print in order of variance explained in the un-rotated set.</p>
+</dd>
+<dt><strong>lats</strong><span class="classifier">list</span></dt><dd><p>List of latitude values.</p>
+</dd>
+<dt><strong>lons</strong><span class="classifier">list</span></dt><dd><p>List of longitude values.</p>
+</dd>
+<dt><strong>cmap</strong><span class="classifier">matplotlib.pyplot.cmap, optional</span></dt><dd><p>A given colormap, by default plt.get_cmap(“jet”)</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">matplotlib.pyplot.axes, optional</span></dt><dd><p>Given matplotlib axes, by default None</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">str, optional</span></dt><dd><p>Title of plot, by default “”</p>
+</dd>
+<dt><strong>grid</strong><span class="classifier">bool, optional</span></dt><dd><p>Select whether a lattitude by longtiude grid is plotted, by default False</p>
+</dd>
+<dt><strong>colorbar_title</strong><span class="classifier">str, optional</span></dt><dd><p>Title of colorbar, by default “”</p>
+</dd>
+<dt><strong>grid_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Alternative arguments for the grid layout, by default {}</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>A tuple of the plot’s figure, axes, and colorbar objects.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -279,11 +320,11 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="introduction.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="tutorials/first_look.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Main features</p>
+            <p class="prev-next-title">First look at the data</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="api_preprocessing.html" title="next page">

@@ -37,7 +37,7 @@
     <script src="_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Main features" href="introduction.html" />
+    <link rel="next" title="Getting started" href="tutorials/getting_started.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -76,13 +76,18 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Usage Guide
+  Tutorials
  </span>
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="introduction.html">
-   Main features
+  <a class="reference internal" href="tutorials/getting_started.html">
+   Getting started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="tutorials/first_look.html">
+   First look at the data
   </a>
  </li>
 </ul>
@@ -282,7 +287,8 @@
                 
   <div class="section" id="clif">
 <span id="main"></span><h1>clif<a class="headerlink" href="#clif" title="Permalink to this headline">¶</a></h1>
-<p><em>clif</em> is a CLImate Fingerprinting library that calculates empirical orthogonal functions for mainly climate data.</p>
+<p><em>clif</em> contains code to perform climate fingerprinting, i.e. principal component analysis of climate data, a collection of preprocessing scripts for xarray DataArrays, and some time series statistical tools. We use a templated OOP approach so that all classes can be seamlessly integrated with the transform operator in scikit-learn. <a class="footnote-reference brackets" href="#id2" id="id1">1</a></p>
+<p>For a guide on how to use the EOF class and the preprocessing transforms see the <a class="reference internal" href="api_fingerprints.html#api-fp"><span class="std std-ref">EOF API</span></a> and <a class="reference internal" href="api_preprocessing.html#preprocessing-transforms-table"><span class="std std-ref">Preprocessing API</span></a></p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The code is super easy to install with <code class="docutils literal notranslate"><span class="pre">pip</span></code>. Make sure you have <code class="docutils literal notranslate"><span class="pre">numpy</span></code>,
@@ -317,9 +323,10 @@
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Guide</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Main features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/first_look.html">First look at the data</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -342,6 +349,11 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.</p>
+</dd>
+</dl>
 </div>
 
 
@@ -350,10 +362,10 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="introduction.html" title="next page">
+    <a class='right-next' id="next-link" href="tutorials/getting_started.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Main features</p>
+        <p class="prev-next-title">Getting started</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

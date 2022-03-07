@@ -133,5 +133,36 @@ time for this data set.
 
 
 
-It is easy to customize any new plots as well. See the API (to be
-added).
+Template for new plotting functions (API)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is easy to customize any new plots as well. There are helper and base
+classes in the contour.py module, but in general, any new plot just
+needs the following template.
+
+.. code:: python
+
+   from abc import ABC, abstractmethod
+
+   class BasePlot(ABC):
+       @abstractmethod
+       def draw(self, *args, **kwargs):
+           pass
+
+       @abstractmethod
+       def set_yaxis_properties(self, *args, **kwargs):
+           pass
+
+       @abstractmethod
+       def set_xaxis_properties(self, *args, **kwargs):
+           pass
+
+       @abstractmethod
+       def finish(self, *args, **kwargs):
+           pass
+
+       @abstractmethod
+       def show(self, *args, **kwargs):
+           pass
+
+

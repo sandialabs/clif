@@ -98,7 +98,32 @@ def plot_field(
     return f, ax, _colorbar
 
 
-class BaseContourPlot:
+from abc import ABC, abstractmethod
+
+
+class BasePlot(ABC):
+    @abstractmethod
+    def draw(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def set_yaxis_properties(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def set_xaxis_properties(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def finish(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def show(self, *args, **kwargs):
+        pass
+
+
+class BaseContourPlot(BasePlot):
     def __init__(
         self,
         cmap_name="e3sm_default",

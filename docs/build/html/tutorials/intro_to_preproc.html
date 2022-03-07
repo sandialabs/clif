@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The preprocessing transforms &#8212; clif 1.0 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Fourier Analysis of time series data" href="time_series_analysis.html" />
+    <link rel="prev" title="First look at the data" href="first_look.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">clif 1.0 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="getting_started.html">
+   Getting started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="first_look.html">
+   First look at the data
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   The preprocessing transforms
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="time_series_analysis.html">
+   Fourier Analysis of time series data
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../api_fingerprints.html">
+   EOF Class
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../api_preprocessing.html">
+   Preprocessing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../transforms.html">
+     Transforms
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../api_statistics.html">
+   Statistical Tests
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+                
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+                
+            </div>
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/tutorials/intro_to_preproc.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/kennychowdhary/clif"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>The preprocessing transforms</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="section" id="the-preprocessing-transforms">
+<h1>The preprocessing transforms<a class="headerlink" href="#the-preprocessing-transforms" title="Permalink to this headline">¶</a></h1>
+<p>We will now take a look at some of the preprocessing transforms. We will
+use the temperature data in the last tutorial to show how it works and
+what it can do. We may not use all of the preprocessing transforms, but
+because they all use the same interface/API, once you know how to use
+one, you know how to use them all!</p>
+<p>Let’s load the temperature data again.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Location of the data for loading</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">DATADIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;HOME&quot;</span><span class="p">),</span><span class="s2">&quot;Research/e3sm_data/fingerprint&quot;</span><span class="p">)</span>
+<span class="n">DATAFILE</span> <span class="o">=</span> <span class="s2">&quot;Temperature.nc&quot;</span>
+
+<span class="c1"># Load the data from the data directory, using dask to help manage the memory (optional)</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataarray</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATADIR</span><span class="p">,</span> <span class="n">DATAFILE</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span> <span class="s1">&#39;T&#39;</span> <span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="mi">144</span><span class="p">,</span> <span class="n">plev</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="mi">48</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="p">[</span><span class="mi">6137856</span> <span class="n">values</span> <span class="k">with</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float32</span><span class="p">]</span>
+<span class="n">Coordinates</span><span class="p">:</span>
+  <span class="o">*</span> <span class="n">lat</span>      <span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="n">float64</span> <span class="o">-</span><span class="mf">84.38</span> <span class="o">-</span><span class="mf">77.09</span> <span class="o">-</span><span class="mf">69.76</span> <span class="o">-</span><span class="mf">62.43</span> <span class="o">...</span> <span class="mf">69.76</span> <span class="mf">77.09</span> <span class="mf">84.38</span>
+  <span class="o">*</span> <span class="n">lon</span>      <span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="n">float64</span> <span class="mf">0.0</span> <span class="mf">7.5</span> <span class="mf">15.0</span> <span class="mf">22.5</span> <span class="mf">30.0</span> <span class="o">...</span> <span class="mf">330.0</span> <span class="mf">337.5</span> <span class="mf">345.0</span> <span class="mf">352.5</span>
+  <span class="o">*</span> <span class="n">plev</span>     <span class="p">(</span><span class="n">plev</span><span class="p">)</span> <span class="n">float64</span> <span class="mf">1e+05</span> <span class="mf">9.75e+04</span> <span class="mf">9.5e+04</span> <span class="o">...</span> <span class="mf">300.0</span> <span class="mf">200.0</span> <span class="mf">100.0</span>
+  <span class="o">*</span> <span class="n">time</span>     <span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="nb">object</span> <span class="mi">1985</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span> <span class="o">...</span> <span class="mi">1997</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</pre></div>
+</div>
+<p>Now, let us import the preprocessing module. We will preprocess the data
+using 2 ways: (1) Calling each transform separately and (2) pipeing them
+together into a single transform using the sklearn Pipeline feature. The
+latter has the added benefit of being more compact and reduces
+redundancy in method calls.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import the preprocessing module</span>
+<span class="kn">import</span> <span class="nn">clif.preprocessing</span> <span class="k">as</span> <span class="nn">cpp</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s remove the seasonal/ monthly cycles</span>
+<span class="n">anomalyTransform</span> <span class="o">=</span> <span class="n">cpp</span><span class="o">.</span><span class="n">SeasonalAnomalyTransform</span><span class="p">(</span><span class="n">cycle</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">)</span>
+<span class="n">data_transformed</span> <span class="o">=</span> <span class="n">anomalyTransform</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_transformed</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">144</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">48</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the data is still the same shape since we essentially
+re-centered the data to highlight the anomalies. Let’s see what the
+temperature data looks like now that we removed the monthly trends.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># To plot the plev vs time view, we need to marginalize out the lat lon coordinate, which we can do with a transform!</span>
+<span class="n">marginalTransform</span> <span class="o">=</span> <span class="n">cpp</span><span class="o">.</span><span class="n">MarginalizeOutTransform</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_time_plev</span> <span class="o">=</span> <span class="n">marginalTransform</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_transformed</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_time_plev</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">144</span><span class="p">,</span> <span class="mi">37</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now let&#39;s plot the lat lon transformed data</span>
+<span class="kn">import</span> <span class="nn">clif.visualization</span> <span class="k">as</span> <span class="nn">cviz</span>
+
+<span class="c1"># Initialize the contout.plot_lat_lon class with some parameters like the color map and titles</span>
+<span class="c1"># We use a difference color map recommended from e3sm diags</span>
+<span class="n">clifplot</span> <span class="o">=</span> <span class="n">cviz</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">plot_plev_time</span><span class="p">(</span>
+    <span class="n">cmap_name</span><span class="o">=</span><span class="s2">&quot;e3sm_default_diff&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Temperature Anomalies&quot;</span><span class="p">,</span>
+    <span class="n">rhs_title</span><span class="o">=</span><span class="sa">u</span><span class="s2">&quot;</span><span class="se">\u00b0</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+    <span class="n">lhs_title</span><span class="o">=</span><span class="s2">&quot;E3SMv1 DECK avg ne30np4&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show the temperature anomalies on a time vs log(plev) plot</span>
+<span class="n">clifplot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">data_time_plev</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/intro_to_preproc_10_0.png" src="../_images/intro_to_preproc_10_0.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">clif</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">plot_plev_time</span> <span class="n">at</span> <span class="mh">0x14aa2d490</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>One odd effect is that the top of the atmosphere looks stretched or
+distorted. That’s because when we averaged over latitude and longitude
+we did a uniform averaging and did not incorporate proper latitude
+longitude weights. Luckily E3SM output data comes with area weighting
+tensors. We already did the leg work to extract this into an xarray
+DataArray so now we just have to load it from the file system</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the lat lon weights</span>
+<span class="n">WEIGHTFILE</span><span class="o">=</span><span class="s2">&quot;lat_lon_weights.nc&quot;</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataarray</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATADIR</span><span class="p">,</span> <span class="n">WEIGHTFILE</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span> <span class="s1">&#39;area&#39;</span> <span class="p">(</span><span class="n">lat</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="mi">48</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="n">array</span><span class="p">([[</span><span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">],</span>
+       <span class="p">[</span><span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">],</span>
+       <span class="p">[</span><span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">],</span>
+       <span class="o">...</span><span class="p">,</span>
+       <span class="p">[</span><span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">,</span> <span class="mf">0.005796</span><span class="p">],</span>
+       <span class="p">[</span><span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">,</span> <span class="mf">0.003735</span><span class="p">],</span>
+       <span class="p">[</span><span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">,</span> <span class="mf">0.001615</span><span class="p">]])</span>
+<span class="n">Coordinates</span><span class="p">:</span>
+  <span class="o">*</span> <span class="n">lat</span>      <span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="n">float64</span> <span class="o">-</span><span class="mf">84.38</span> <span class="o">-</span><span class="mf">77.09</span> <span class="o">-</span><span class="mf">69.76</span> <span class="o">-</span><span class="mf">62.43</span> <span class="o">...</span> <span class="mf">69.76</span> <span class="mf">77.09</span> <span class="mf">84.38</span>
+  <span class="o">*</span> <span class="n">lon</span>      <span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="n">float64</span> <span class="mf">0.0</span> <span class="mf">7.5</span> <span class="mf">15.0</span> <span class="mf">22.5</span> <span class="mf">30.0</span> <span class="o">...</span> <span class="mf">330.0</span> <span class="mf">337.5</span> <span class="mf">345.0</span> <span class="mf">352.5</span>
+</pre></div>
+</div>
+<p>Now, let us repeat the plotting, but with marginalization using the lat/
+lon weights</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create new marginalization transform with the weight tensor</span>
+<span class="n">marginalTransform2</span> <span class="o">=</span> <span class="n">cpp</span><span class="o">.</span><span class="n">MarginalizeOutTransform</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span><span class="n">lat_lon_weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+<span class="n">data_time_plev2</span> <span class="o">=</span> <span class="n">marginalTransform2</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_transformed</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show the temperature anomalies on a time vs log(plev) plot</span>
+<span class="n">clifplot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">data_time_plev2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/intro_to_preproc_15_0.png" src="../_images/intro_to_preproc_15_0.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">clif</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">plot_plev_time</span> <span class="n">at</span> <span class="mh">0x14aa2d490</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Much better! Now, for the above example, we performed a marginalization,
+seasonal anomaly transform, and a transpose, with three separate
+operation calls. We can <em>compose</em> all of them into a single transform
+using sklearn’s pipeline.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the pipeline functionality</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+
+<span class="c1"># Create the transform pipeline</span>
+<span class="n">data_transform_pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+    <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;anomaly&quot;</span><span class="p">,</span> <span class="n">cpp</span><span class="o">.</span><span class="n">SeasonalAnomalyTransform</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;marginalize&quot;</span><span class="p">,</span> <span class="n">cpp</span><span class="o">.</span><span class="n">MarginalizeOutTransform</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">],</span> <span class="n">lat_lon_weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;transpose&quot;</span><span class="p">,</span> <span class="n">cpp</span><span class="o">.</span><span class="n">Transpose</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;plev&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">])),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now we can call the fit_transform method once to get our transformed data set</span>
+<span class="n">data_new</span> <span class="o">=</span> <span class="n">data_transform_pipe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Check that the size is the same</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_new</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">37</span><span class="p">,</span> <span class="mi">144</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sanity check comparing pipeline transform to previous method</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error is &quot;</span><span class="p">,(</span><span class="n">data_new</span> <span class="o">-</span> <span class="n">data_time_plev2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span> <span class="ow">is</span>  <span class="mf">0.0</span>
+</pre></div>
+</div>
+</div>
+
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="first_look.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">First look at the data</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="time_series_analysis.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Fourier Analysis of time series data</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By K. Chowdhary<br/>
+    
+        &copy; Copyright 2022, K. Chowdhary.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

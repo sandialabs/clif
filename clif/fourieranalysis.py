@@ -92,7 +92,9 @@ class FourierTimeSeriesAnalysis:
         self.period_ = 1.0 / self.freq_
         self.power_ = np.abs(self.yhat_[freq_index]) ** 2
 
-    def plot_power_spectrum(self, xaxis="frequency", logscale=False, xtickmultiple=2):
+    def plot_power_spectrum(
+        self, xaxis="frequency", logscale=False, xtickmultiple=2, xlim=None
+    ):
         fig, ax = plt.subplots(figsize=(8.5, 4.0))
         if xaxis == "frequency":
             x = self.freq_
@@ -105,7 +107,8 @@ class FourierTimeSeriesAnalysis:
         ax.plot(x, y)
         # set x-axis properties
         ax.set_xlabel(xlabel)
-        ax.set_xlim([x.min(), x.max() / 2])
+        if xlim is not None:
+            ax.set_xlim([x.min(), xlim])
         ax.xaxis.set_minor_locator(ticker.MultipleLocator(xtickmultiple))
         # set y-axis properties
         ax.set_ylabel("power")

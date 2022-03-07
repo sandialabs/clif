@@ -58,6 +58,8 @@ clif also has a bunch of **preprocessing** transforms useful for manipulating xa
    
    tutorials/getting_started
    tutorials/first_look
+   tutorials/intro_to_preproc
+   tutorials/time_series_analysis
 
 .. toctree::
    :maxdepth: 2

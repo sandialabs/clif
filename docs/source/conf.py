@@ -56,6 +56,12 @@ exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+html_static_path = ["_static"]
+html_short_title = "clif"
+
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # pygments_style = "monokai"
@@ -63,16 +69,11 @@ exclude_patterns = []
 
 # book theme
 html_theme = "sphinx_book_theme"
-
+html_logo = "_static/clif_logo.png"
 html_theme_options = {
     "collapse_navigation": False,
     "repository_url": "https://github.com/kennychowdhary/clif",
     "use_repository_button": True,
 }
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
 
-html_short_title = "clif"

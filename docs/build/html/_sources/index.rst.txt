@@ -54,9 +54,15 @@ clif also has a bunch of **preprocessing** transforms useful for manipulating xa
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tutorials
+   :caption: Introduction
    
    tutorials/getting_started
+   overview
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+
    tutorials/first_look
    tutorials/intro_to_preproc
    tutorials/time_series_analysis
@@ -68,6 +74,8 @@ clif also has a bunch of **preprocessing** transforms useful for manipulating xa
    api_fingerprints
    api_preprocessing
    api_statistics
+   api_plotting
+   api_fourier
 
 
 Indices and tables

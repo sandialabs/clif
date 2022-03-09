@@ -1,14 +1,14 @@
 Getting started
 ===============
 
-The repo is on cee-gitlab and will soon be migrated to gitlab-ex. But
-for now, to clone the repo simple type
+The repo is now on gitlab-ex. You download from here
+``https://gitlab-ex.sandia.gov/kchowdh/clif`` or simply cloning the repo
 
 ::
 
-   git clone git@cee-gitlab.sandia.gov:kchowdh/clif.git
+   git clone git@gitlab-ex.sandia.gov:kchowdh/clif.git
 
-After cloning the repo, simply cd into the source folder and run
+Then, cd into the source folder and install:
 
 ::
 

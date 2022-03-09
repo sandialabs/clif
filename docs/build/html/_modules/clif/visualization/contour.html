@@ -1,0 +1,877 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>clif.visualization.contour &#8212; clif 1.0 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/clif_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">clif 1.0 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tutorials/getting_started.html">
+   Getting started
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../overview.html">
+   Main features
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tutorials/first_look.html">
+   First look at the data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tutorials/intro_to_preproc.html">
+   The preprocessing transforms
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../tutorials/time_series_analysis.html">
+   Fourier Analysis of time series data
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../api_fingerprints.html">
+   EOF Class
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../api_preprocessing.html">
+   Preprocessing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../transforms.html">
+     Transforms
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../api_statistics.html">
+   Statistical Tests
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../api_plotting.html">
+   Plotting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../api_fourier.html">
+   Time Series Analysis
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+                
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+                
+            </div>
+            
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/kennychowdhary/clif"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <h1>Source code for clif.visualization.contour</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">email.mime</span> <span class="kn">import</span> <span class="n">base</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">which</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">add_cyclic</span><span class="p">,</span> <span class="n">get_colormap</span><span class="p">,</span> <span class="n">determine_tick_step</span><span class="p">,</span> <span class="n">get_ax_size</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">cartopy.util</span> <span class="kn">import</span> <span class="n">add_cyclic_point</span>
+    <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+    <span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeature</span>
+    <span class="kn">from</span> <span class="nn">cartopy.mpl.ticker</span> <span class="kn">import</span> <span class="n">LatitudeFormatter</span><span class="p">,</span> <span class="n">LongitudeFormatter</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;To access the plotting functions, you must have cartopy installed.&quot;</span><span class="p">)</span>
+
+<span class="c1"># (left, bottom, width, height) for plotting map</span>
+<span class="n">panel</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+
+<span class="c1"># range of lat and lon coords</span>
+<span class="n">lon_west</span><span class="p">,</span> <span class="n">lon_east</span><span class="p">,</span> <span class="n">lat_south</span><span class="p">,</span> <span class="n">lat_north</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mi">360</span><span class="p">,</span>
+    <span class="o">-</span><span class="mi">90</span><span class="p">,</span>
+    <span class="mi">90</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">### Jake&#39;s plotting script</span>
+<span class="k">def</span> <span class="nf">plot_field</span><span class="p">(</span>
+    <span class="n">EOFs</span><span class="p">,</span>
+    <span class="n">eof_to_print</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">lats</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">lons</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Colormap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;cividis&quot;</span><span class="p">),</span>
+    <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">colorbar_title</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">grid_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Plots a given fingerprint&#39;s EOFs as a 2-dimensional field on a latitude by longitude grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eof_to_print : int</span>
+<span class="sd">        The specific EOF to print in order of variance explained in the un-rotated set.</span>
+<span class="sd">    lats : list</span>
+<span class="sd">        List of latitude values.</span>
+<span class="sd">    lons : list</span>
+<span class="sd">        List of longitude values.</span>
+<span class="sd">    cmap : matplotlib.pyplot.cmap, optional</span>
+<span class="sd">        A given colormap, by default plt.get_cmap(&quot;jet&quot;)</span>
+<span class="sd">    ax : matplotlib.pyplot.axes, optional</span>
+<span class="sd">        Given matplotlib axes, by default None</span>
+<span class="sd">    title : str, optional</span>
+<span class="sd">        Title of plot, by default &quot;&quot;</span>
+<span class="sd">    grid : bool, optional</span>
+<span class="sd">        Select whether a lattitude by longtiude grid is plotted, by default False</span>
+<span class="sd">    colorbar_title : str, optional</span>
+<span class="sd">        Title of colorbar, by default &quot;&quot;</span>
+<span class="sd">    grid_kwargs : dict, optional</span>
+<span class="sd">        Alternative arguments for the grid layout, by default {}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple of the plot&#39;s figure, axes, and colorbar objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">EOF_recons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">EOFs_</span><span class="p">[</span><span class="n">eof_to_print</span><span class="p">],</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">)))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">EOF_recons</span>  <span class="c1"># [eof_to_print, :, :]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ax</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+
+    <span class="n">data</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">add_cyclic_point</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="n">lons</span><span class="p">)</span>
+    <span class="n">pl</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+        <span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+    <span class="n">_colorbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pl</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">colorbar_title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">grid_kwargs</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="o">**</span><span class="n">grid_kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
+                <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">dms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">x_inline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">y_inline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">_colorbar</span>
+
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+
+<div class="viewcode-block" id="BasePlot"><a class="viewcode-back" href="../../../api_plotting.html#clif.visualization.contour.BasePlot">[docs]</a><span class="k">class</span> <span class="nc">BasePlot</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">set_yaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">set_xaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="BaseContourPlot"><a class="viewcode-back" href="../../../api_plotting.html#clif.visualization.contour.BaseContourPlot">[docs]</a><span class="k">class</span> <span class="nc">BaseContourPlot</span><span class="p">(</span><span class="n">BasePlot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cmap_name</span><span class="o">=</span><span class="s2">&quot;e3sm_default&quot;</span><span class="p">,</span>
+        <span class="n">proj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">8.5</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span>
+        <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+        <span class="n">print_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">nlevels</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">panel</span><span class="o">=</span><span class="n">panel</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">rhs_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">lhs_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">show_full</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">title_fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="mf">14.0</span><span class="p">},</span>
+        <span class="n">sidetitle_fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="mf">7.5</span><span class="p">},</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmap_name</span> <span class="o">=</span> <span class="n">cmap_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">proj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figsize</span> <span class="o">=</span> <span class="n">figsize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="n">dpi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_stats</span> <span class="o">=</span> <span class="n">print_stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlevels</span> <span class="o">=</span> <span class="n">nlevels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span> <span class="o">=</span> <span class="n">panel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rhs_title</span> <span class="o">=</span> <span class="n">rhs_title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lhs_title</span> <span class="o">=</span> <span class="n">lhs_title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_full</span> <span class="o">=</span> <span class="n">show_full</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotTitle</span> <span class="o">=</span> <span class="n">title_fontdict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotSideTitle</span> <span class="o">=</span> <span class="n">sidetitle_fontdict</span>
+
+    <span class="k">def</span> <span class="nf">get_coords_from_data_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+            <span class="c1"># return a datetime array instead of cftime</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">indexes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetimeindex</span><span class="p">(</span><span class="n">unsafe</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="s2">&quot;lon&quot;</span> <span class="ow">or</span> <span class="n">dim</span> <span class="o">==</span> <span class="s2">&quot;longitude&quot;</span><span class="p">:</span>
+            <span class="n">data_ma</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">add_cyclic_point</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">lat_dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">dim</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">data_temp</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_ma</span><span class="p">),</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="n">lat_dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">])</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data_temp</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">({</span><span class="n">lat_dim</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">lat_dim</span><span class="p">],</span> <span class="n">dim</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># lat, plev, etc., no need for custom data extraction</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">compute_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Min&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="s2">&quot;Mean&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">&quot;Max&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">stats</span>
+
+    <span class="k">def</span> <span class="nf">compute_contour_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+            <span class="n">data_np</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">levels_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlevels</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">levels_</span>
+
+    <span class="k">def</span> <span class="nf">show_titles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;ax_&quot;</span><span class="p">),</span> <span class="s2">&quot;Must draw object first.&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhs_title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs_title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plotSideTitle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plotTitle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs_title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs_title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plotSideTitle</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+        <span class="n">x_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">y_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">draw_params</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="c1"># retrieve coordinate data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_</span><span class="p">,</span> <span class="n">data_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coords_from_data_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">x_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">,</span> <span class="n">data_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coords_from_data_array</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">y_name</span><span class="p">)</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_</span><span class="p">,</span> <span class="n">data_</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_dict_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_stats</span><span class="p">(</span><span class="n">data_</span><span class="p">)</span>
+
+        <span class="c1"># Contour levels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_contour_levels</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;Create figure if none is given&quot;&quot;&quot;</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Add a map projection</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">)</span>
+
+        <span class="c1"># get cmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmap_</span> <span class="o">=</span> <span class="n">get_colormap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmap_name</span><span class="p">)</span>
+
+        <span class="c1"># plot contour map</span>
+        <span class="n">cplt</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">var</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">,</span>
+            <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">levels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cmap_</span><span class="p">,</span>
+            <span class="n">extend</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cplt_</span> <span class="o">=</span> <span class="n">cplt</span>
+
+<div class="viewcode-block" id="BaseContourPlot.add_colorbar"><a class="viewcode-back" href="../../../api_plotting.html#clif.visualization.contour.BaseContourPlot.add_colorbar">[docs]</a>    <span class="k">def</span> <span class="nf">add_colorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">(</span><span class="mf">0.89</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">,</span> <span class="mf">0.0326</span><span class="p">,</span> <span class="n">panel</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.08</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;draw color bar relative to location of map graph</span>
+
+<span class="sd">        rect = (left, bottom, width, height)</span>
+<span class="sd">        see self.panel for reference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_stats</span><span class="p">:</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="mf">0.89</span><span class="p">,</span>
+                <span class="mf">0.12</span><span class="p">,</span>
+                <span class="mf">0.0326</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;cplt_&quot;</span><span class="p">),</span> <span class="s2">&quot;Must run draw() to generate a contour plot&quot;</span>
+
+        <span class="c1"># Color bar</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_</span>
+        <span class="n">cbax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cplt_</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbax</span><span class="p">,</span> <span class="n">drawedges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">dividers</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="c1"># cbar.solids.set_edgecolor(&quot;k&quot;, alpha=0.2)</span>
+        <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">get_ax_size</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cbax</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmap_thin</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">maxval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">maxval</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span>
+                <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%5.2f</span><span class="s2">&quot;</span>
+                <span class="n">pad</span> <span class="o">=</span> <span class="mi">26</span>
+            <span class="k">elif</span> <span class="n">maxval</span> <span class="o">&lt;</span> <span class="mf">100.0</span><span class="p">:</span>
+                <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%5.2f</span><span class="s2">&quot;</span>
+                <span class="n">pad</span> <span class="o">=</span> <span class="mi">29</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%6.2f</span><span class="s2">&quot;</span>
+                <span class="n">pad</span> <span class="o">=</span> <span class="mi">34</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">cmap_thin</span><span class="p">])</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">fmt</span> <span class="o">%</span> <span class="n">level</span> <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">cmap_thin</span><span class="p">]]</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">finish_params</span><span class="p">):</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span>
+
+        <span class="c1"># print titles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_titles</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_stats</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">custom</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_xaxis_properties</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_yaxis_properties</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_yaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">set_xaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">set_axis_to_longitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">which_axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">proj</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span>
+        <span class="c1"># set lon axis</span>
+        <span class="n">lon_covered</span> <span class="o">=</span> <span class="n">lon_east</span> <span class="o">-</span> <span class="n">lon_west</span>
+        <span class="n">lon_step</span> <span class="o">=</span> <span class="n">determine_tick_step</span><span class="p">(</span><span class="n">lon_covered</span><span class="p">)</span>
+        <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lon_west</span><span class="p">,</span> <span class="n">lon_east</span><span class="p">,</span> <span class="n">lon_step</span><span class="p">)</span>
+        <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">lon_east</span> <span class="o">-</span> <span class="mf">0.50</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">proj</span><span class="p">)</span>
+        <span class="n">lon_formatter</span> <span class="o">=</span> <span class="n">LongitudeFormatter</span><span class="p">(</span>
+            <span class="n">zero_direction_label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">number_format</span><span class="o">=</span><span class="s2">&quot;.0f&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lon_formatter</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lon_formatter</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_axis_to_latitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">which_axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">proj</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span>
+        <span class="k">if</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_</span>
+        <span class="k">elif</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span>
+        <span class="n">lat_covered</span> <span class="o">=</span> <span class="n">lat_north</span> <span class="o">-</span> <span class="n">lat_south</span>
+        <span class="n">lat_step</span> <span class="o">=</span> <span class="n">determine_tick_step</span><span class="p">(</span><span class="n">lat_covered</span><span class="p">)</span>
+        <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lat_south</span><span class="p">,</span> <span class="n">lat_north</span><span class="p">,</span> <span class="n">lat_step</span><span class="p">)</span>
+        <span class="n">ticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">lat_north</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_full</span><span class="p">:</span>
+            <span class="n">ticks</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ticks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">lat_formatter</span> <span class="o">=</span> <span class="n">LatitudeFormatter</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">proj</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lat_formatter</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">proj</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">lat_formatter</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticks_position</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">set_axis_to_plev</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">which_axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">which_axis</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span>
+
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;set_</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">label&quot;</span><span class="p">)(</span><span class="s2">&quot;pressure (Pa)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_plevs</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;set_</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">scale&quot;</span><span class="p">)(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;invert_</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">axis&quot;</span><span class="p">)()</span>
+
+    <span class="k">def</span> <span class="nf">set_axis_to_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">which_axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">which_axis</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">dates</span><span class="o">.</span><span class="n">YearLocator</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">dates</span><span class="o">.</span><span class="n">MonthLocator</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">show_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># add stats on top of colorbar</span>
+        <span class="c1"># colorbar panel for reference:</span>
+        <span class="c1">#   colorbar_rect=(0.89, 0.12, 0.0326, 0.66)</span>
+        <span class="n">stat_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">stat_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_dict_</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="n">stat_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_dict_</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="n">stat_values</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{0:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stat_values</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_stats</span><span class="p">:</span>
+            <span class="c1"># Min, Mean, Max</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fig_</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="mf">0.88</span><span class="p">,</span>
+                <span class="n">panel</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.08</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stat_names</span><span class="p">),</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="n">fontdict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plotSideTitle</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fig_</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="mf">0.97</span><span class="p">,</span>
+                <span class="n">panel</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.08</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stat_values</span><span class="p">),</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+                <span class="n">fontdict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plotSideTitle</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">draw_params</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">colorbar_params</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">finish_params</span><span class="o">=</span><span class="p">{},</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="o">**</span><span class="n">draw_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_colorbar</span><span class="p">(</span><span class="o">**</span><span class="n">colorbar_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="o">**</span><span class="n">finish_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must provide a valid file name&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fig_</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<span class="k">class</span> <span class="nc">plot_lat_lon</span><span class="p">(</span><span class="n">BaseContourPlot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">proj</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">180.0</span><span class="p">),</span>
+        <span class="n">region</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">proj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="n">y_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_yaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_latitude</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_xaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_longitude</span><span class="p">(</span><span class="n">proj</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">custom</span><span class="o">=</span><span class="n">custom</span><span class="p">)</span>
+
+        <span class="n">gridliner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
+            <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span>
+        <span class="p">)</span>
+        <span class="n">gridliner</span><span class="o">.</span><span class="n">top_labels</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">gridliner</span><span class="o">.</span><span class="n">right_labels</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">class</span> <span class="nc">plot_plev_lat</span><span class="p">(</span><span class="n">BaseContourPlot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_full</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">log_plevs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">proj</span><span class="o">=</span><span class="n">proj</span><span class="p">,</span> <span class="n">show_full</span><span class="o">=</span><span class="n">show_full</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_plevs</span> <span class="o">=</span> <span class="n">log_plevs</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="s2">&quot;plev&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="n">y_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_yaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_plev</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_xaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_latitude</span><span class="p">(</span><span class="n">which_axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">plot_lat_time</span><span class="p">(</span><span class="n">BaseContourPlot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">proj</span>
+
+    <span class="k">def</span> <span class="nf">set_yaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_latitude</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_xaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_time</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="n">y_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">plot_plev_time</span><span class="p">(</span><span class="n">BaseContourPlot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_plevs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">proj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_plevs</span> <span class="o">=</span> <span class="n">log_plevs</span>
+
+    <span class="k">def</span> <span class="nf">set_yaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_plev</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_xaxis_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_axis_to_time</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="s2">&quot;plev&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="o">=</span><span class="n">y_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax_</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># class plot_time_plev(plot_lat_plev):</span>
+<span class="c1">#     def __init__(self, log_plevs=False, panel=(0.1, 0.12, 0.75, 0.8), *args, **kwargs):</span>
+<span class="c1">#         super().__init__(panel=panel, log_plevs=log_plevs, *args, **kwargs)</span>
+
+<span class="c1">#     def _get_coords(</span>
+<span class="c1">#         self, data: xarray.DataArray, fig=None, x_name=&quot;time&quot;, y_name=&quot;plev&quot;</span>
+<span class="c1">#     ):</span>
+<span class="c1">#         # data, x, y = data, data[x_name], data[y_name]</span>
+<span class="c1">#         x = data.indexes[x_name].to_datetimeindex(unsafe=True)</span>
+<span class="c1">#         y = data[y_name].values</span>
+<span class="c1">#         return x, y</span>
+
+<span class="c1">#     def draw(self, data: xarray.DataArray, fig=None) -&gt; None:</span>
+
+<span class="c1">#         self.lat_, self.plev_ = self._get_coords(data)</span>
+<span class="c1">#         var = np.ma.squeeze(data.values)</span>
+
+<span class="c1">#         if self.print_stats:</span>
+<span class="c1">#             self.stats_ = [var.min(), var.mean(), var.max()]</span>
+
+<span class="c1">#         # Contour levels</span>
+<span class="c1">#         self.levels_ = var.min() + (var.max() - var.min()) * np.linspace(</span>
+<span class="c1">#             0, 1, self.nlevels</span>
+<span class="c1">#         )</span>
+<span class="c1">#         norm = colors.BoundaryNorm(boundaries=self.levels_, ncolors=256)</span>
+
+<span class="c1">#         if fig is None:</span>
+<span class="c1">#             &quot;&quot;&quot;Create figure if none is given&quot;&quot;&quot;</span>
+<span class="c1">#             fig = plt.figure(figsize=self.figsize, dpi=self.dpi)</span>
+<span class="c1">#         # Add a map projection</span>
+<span class="c1">#         ax = fig.add_axes(self.panel, projection=self.proj)</span>
+
+<span class="c1">#         # get cmap</span>
+<span class="c1">#         self.cmap_ = get_colormap(self.cmap_name)</span>
+
+<span class="c1">#         # plot contour map</span>
+<span class="c1">#         p1 = ax.contourf(</span>
+<span class="c1">#             self.lat_,</span>
+<span class="c1">#             self.plev_,</span>
+<span class="c1">#             var,</span>
+<span class="c1">#             transform=self.proj,</span>
+<span class="c1">#             # norm=norm,</span>
+<span class="c1">#             levels=self.levels_,</span>
+<span class="c1">#             cmap=self.cmap_,</span>
+<span class="c1">#             extend=&quot;both&quot;,</span>
+<span class="c1">#         )</span>
+
+<span class="c1">#         # Full world would be aspect 360/(2*180) = 1</span>
+<span class="c1">#         # ax.set_aspect((lon_east - lon_west) / (2 * (lat_north - lat_south)))</span>
+<span class="c1">#         # ax.set_aspect(&quot;auto&quot;)</span>
+<span class="c1">#         # ax.coastlines(lw=0.35)</span>
+<span class="c1">#         self.ax_, self.fig_ = ax, fig</span>
+<span class="c1">#         self.contour_plot_ = p1</span>
+
+<span class="c1">#     def finish(self, plotTitle={&quot;fontsize&quot;: 14.0}, plotSideTitle={&quot;fontsize&quot;: 7.5}):</span>
+<span class="c1">#         ax, fig = self.ax_, self.fig_</span>
+<span class="c1">#         lat, plev = self.lat_, self.plev_</span>
+
+<span class="c1">#         # Add title</span>
+<span class="c1">#         if self.lhs_title is not None:</span>
+<span class="c1">#             ax.set_title(self.lhs_title, loc=&quot;left&quot;, fontdict=plotSideTitle)</span>
+<span class="c1">#         if self.title is not None:</span>
+<span class="c1">#             ax.set_title(self.title, fontdict=plotTitle)</span>
+<span class="c1">#         if self.rhs_title is not None:</span>
+<span class="c1">#             ax.set_title(self.rhs_title, loc=&quot;right&quot;, fontdict=plotSideTitle)</span>
+
+<span class="c1">#         # plev_ticks = np.array([i * 20000 for i in range(6)])</span>
+<span class="c1">#         # self.ax_.set_yticks(plev_ticks)</span>
+<span class="c1">#         # self.ax_.set_ylabel(&quot;pressure (hPa)&quot;)</span>
+<span class="c1">#         # if self.log_plevs:</span>
+<span class="c1">#         #     ax.set_yscale(&quot;log&quot;)</span>
+
+<span class="c1">#         self.ax_.set_xlabel(&quot;year&quot;)</span>
+<span class="c1">#         self.ax_.set_yscale(&quot;log&quot;)</span>
+<span class="c1">#         self.ax_.invert_yaxis()</span>
+
+<span class="c1">#         # add stats on top of colorbar</span>
+<span class="c1">#         # colorbar panel for reference:</span>
+<span class="c1">#         #   colorbar_rect=(0.89, 0.12, 0.0326, 0.66)</span>
+<span class="c1">#         if self.print_stats:</span>
+<span class="c1">#             # Min, Mean, Max</span>
+<span class="c1">#             fig.text(</span>
+<span class="c1">#                 0.88,</span>
+<span class="c1">#                 panel[3] + 0.08,</span>
+<span class="c1">#                 &quot;Max\nMean\nMin&quot;,</span>
+<span class="c1">#                 ha=&quot;left&quot;,</span>
+<span class="c1">#                 fontdict=plotSideTitle,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             fig.text(</span>
+<span class="c1">#                 0.97,</span>
+<span class="c1">#                 panel[3] + 0.08,</span>
+<span class="c1">#                 &quot;{0:.2f}\n{1:.2f}\n{2:.2f}&quot;.format(*self.stats_),</span>
+<span class="c1">#                 ha=&quot;right&quot;,</span>
+<span class="c1">#                 fontdict=plotSideTitle,</span>
+<span class="c1">#             )</span>
+
+<span class="c1">#         return None</span>
+</pre></div>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By K. Chowdhary<br/>
+    
+        &copy; Copyright 2022, K. Chowdhary.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

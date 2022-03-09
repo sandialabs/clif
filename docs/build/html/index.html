@@ -64,6 +64,11 @@
         <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="#">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/clif_logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">clif 1.0 documentation</h1>
@@ -76,7 +81,7 @@
     <div class="bd-toc-item active">
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Tutorials
+  Introduction
  </span>
 </p>
 <ul class="nav bd-sidenav">
@@ -85,6 +90,18 @@
    Getting started
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="overview.html">
+   Main features
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="tutorials/first_look.html">
    First look at the data
@@ -132,6 +149,16 @@
  <li class="toctree-l1">
   <a class="reference internal" href="api_statistics.html">
    Statistical Tests
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api_plotting.html">
+   Plotting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="api_fourier.html">
+   Time Series Analysis
   </a>
  </li>
 </ul>
@@ -333,9 +360,15 @@
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Main features</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/first_look.html">First look at the data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/first_look.html#template-for-new-plotting-functions-api">Template for new plotting functions (API)</a></li>
 </ul>
@@ -353,6 +386,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_statistics.html">Statistical Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_fourier.html">Time Series Analysis</a></li>
 </ul>
 </div>
 </div>

@@ -16,7 +16,7 @@ copyright = "2022, K. Chowdhary"
 author = "K. Chowdhary"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0"
+release = "0.2.0"
 
 # add path
 sys.path.append(os.path.abspath("../../"))
@@ -75,5 +75,3 @@ html_theme_options = {
     "repository_url": "https://github.com/kennychowdhary/clif",
     "use_repository_button": True,
 }
-
-

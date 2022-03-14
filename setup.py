@@ -16,7 +16,17 @@ setup(
     package_data={"clif": ["folder/*.txt"]},
     test_suite="nose.collector",
     tests_required=["nose"],
-    install_requires=["numpy", "sklearn", "tqdm", "xarray", "netCDF4", "statsmodels"],
+    install_requires=[
+        "numpy",
+        "sklearn",
+        "tqdm",
+        "xarray",
+        "netCDF4",
+        "statsmodels",
+        "cftime",
+        "matplotlib",
+        "dask",
+    ],
     include_package_data=True,
     zip_safe=False,
 )

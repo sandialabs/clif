@@ -8,13 +8,10 @@ import xarray
 
 from .utils import add_cyclic, get_colormap, determine_tick_step, get_ax_size
 
-try:
-    from cartopy.util import add_cyclic_point
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
-except:
-    print("To access the plotting functions, you must have cartopy installed.")
+from cartopy.util import add_cyclic_point
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
 
 # (left, bottom, width, height) for plotting map
 panel = (0.1, 0.1, 0.75, 0.8)

@@ -3,13 +3,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from .e3sm_cmap_colors import cet_rainbow, diverging_bwr, WBGYR
 
-try:
-    from cartopy.util import add_cyclic_point
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
-except:
-    print("To access the plotting functions, you must have cartopy installed.")
+from cartopy.util import add_cyclic_point
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
 
 ####################################################
 # Get colormaps

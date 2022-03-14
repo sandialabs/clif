@@ -1,11 +1,15 @@
-import cartopy.crs as ccrs
 import matplotlib
 import numpy as np
-from cartopy.util import add_cyclic_point
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import xarray as xr
+
+try:
+    import cartopy.crs as ccrs
+    from cartopy.util import add_cyclic_point
+except:
+    print("Cartopy is not installed so EOF plotting may not work.")
 
 
 class fingerprints:

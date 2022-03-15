@@ -21,9 +21,9 @@ class TestSeasonalDetrending(unittest.TestCase):
         QRL_FILE = os.path.join(relpath, "tests/data/QRL.nc")
         T_FILE = os.path.join(relpath, "tests/data/Temp.nc")
         AREA_FILE = os.path.join(relpath, "tests/data/area_weights.nc")
-        self.ds_AERO = xr.open_dataset(AERO_FILE, chunks={"time": 1})
-        self.ds_QRL = xr.open_dataset(QRL_FILE, chunks={"time": 1})
-        self.ds_T = xr.open_dataset(T_FILE, chunks={"time": 1})
+        self.ds_AERO = xr.open_dataset(AERO_FILE)
+        self.ds_QRL = xr.open_dataset(QRL_FILE)
+        self.ds_T = xr.open_dataset(T_FILE)
         self.area_weights = xr.open_dataset(AREA_FILE)["area"]
 
     def test_seasonal_anomaly_detrending_fails_for_xarray_datasets(self):
@@ -92,9 +92,9 @@ class TestMarginalizeTransform(unittest.TestCase):
         QRL_FILE = os.path.join(relpath, "tests/data/QRL.nc")
         T_FILE = os.path.join(relpath, "tests/data/Temp.nc")
         AREA_FILE = os.path.join(relpath, "tests/data/area_weights.nc")
-        self.ds_AERO = xr.open_dataset(AERO_FILE, chunks={"time": 1})
-        self.ds_QRL = xr.open_dataset(QRL_FILE, chunks={"time": 1})
-        self.ds_T = xr.open_dataset(T_FILE, chunks={"time": 1})
+        self.ds_AERO = xr.open_dataset(AERO_FILE)
+        self.ds_QRL = xr.open_dataset(QRL_FILE)
+        self.ds_T = xr.open_dataset(T_FILE)
         self.area_weights = xr.open_dataset(AREA_FILE)["area"]
 
     def test_marginalize_fails_for_xarray_datasets(self):
@@ -310,7 +310,7 @@ class TestEOFSnapshot(unittest.TestCase):
         data_new = transformT.fit_transform(data_new)
         error = np.sum((data_new.values - data_transformed.values) ** 2)
         assert (
-            error == 0.0
+            error <= 1e-16
         ), "Transform operations may have changed so snapshot tests do not align. Doesn't mean it's wrong though."
 
     def test_full_eof_analysis_with_preprocessing_transforms(self):

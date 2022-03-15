@@ -24,7 +24,7 @@ class TestPreprocessing(unittest.TestCase):
         nc_file = relpath + "/tests/data/t2m_1991_monthly.nc"
         nc_file2 = relpath + "/tests/data/AEROD_v_198501_199612.nc"
         self.xarray_dataset = xr.open_dataset(nc_file)
-        self.ds = xr.open_mfdataset(nc_file2, chunks={"time": 1})
+        self.ds = xr.open_dataset(nc_file2)
 
     def test_removing_monthly_cylcal_trend(self):
         # default constructor
@@ -94,7 +94,7 @@ class TestPreprocessing2(unittest.TestCase):
     def setUpClass(self):
         # load data sets
         nc_file2 = relpath + "/tests/data/AEROD_v_198501_199612.nc"
-        self.ds = xr.open_mfdataset(nc_file2, chunks={"time": 1})
+        self.ds = xr.open_dataset(nc_file2)
         self.QOI = "AEROD_v"
         assert hasattr(
             self.ds, self.QOI

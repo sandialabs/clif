@@ -12,7 +12,7 @@ try:
 except:
     import sys
 
-    sys.path.append("../")
+    sys.path.append("../../")
     # from eof import fingerprints
     import clif
 
@@ -43,50 +43,42 @@ for ii, fi in enumerate(QOI_FILE_PATH):
 deck_combined = xr.concat([val for key, val in deck_runs.items()], "x")
 ds = deck_combined.mean(dim="x")
 lat_lon_weights = ds.area
-data = ds["T"]
+data_all = ds["T"]
 
-data_before = data.sel(time=slice("1985-01-01", "1991-06-20"))
-mu0 = data_before.groupby("time.month").mean("time")
-data_after = data.sel(time=slice("1991-06-20", "1997-12-31"))
+data_before = data_all.sel(time=slice("1985-01-01", "1991-06-20"))
+mu_before = data_before.groupby("time.month").mean("time")
+data_after = data_all.sel(time=slice("1991-06-20", "1997-12-31"))
 
+# data = data_before.copy()
+data = data_after.copy()
 ##################################################################
 ## Preprocess data using new API
 ##################################################################
 
-# clip latitude only for use in lat lon weighting
-clipLatT = clif.preprocessing.ClipTransform(dims=["lat"], bounds=[(-60.0, 60.0)])
-lat_lon_weights_new = clipLatT.fit_transform(lat_lon_weights)
-
-# First clip the data
-clipT = clif.preprocessing.ClipTransform(
-    dims=["lat", "plev"], bounds=[(-60.0, 60.0), (5000.0, np.inf)]
+monthlydetrend = clif.preprocessing.SeasonalAnomalyTransform(
+    cycle="month", group_mean=mu_before
 )
-data_new = clipT.fit_transform(data)
-
-# detrend by month
-monthlydetrend = clif.preprocessing.SeasonalAnomalyTransform(cycle="month")
-data_new = monthlydetrend.fit_transform(data_new)
-
-# marginalize out lat and lon variables
-intoutT = clif.preprocessing.MarginalizeOutTransform(
-    coords=["lat", "lon"], lat_lon_weights=lat_lon_weights_new
-)
-data_new = intoutT.fit_transform(data_new)
-
-# linear detrend by time
+intoutT = clif.preprocessing.MarginalizeOutTransform(dims=["lat", "lon"])
 lindetrendT = clif.preprocessing.LinearDetrendTransform()
-data_new = lindetrendT.fit_transform(data_new)
-
-# flatten data for EOF analysis
 flattenT = clif.preprocessing.FlattenData(dims=["plev"])
-data_new = flattenT.fit_transform(data_new)
-
-# return data in specific order using the Transpose transform
 transformT = clif.preprocessing.Transpose(dims=["time", "plev"])
-data_new = transformT.fit_transform(data_new)
+scaleT = clif.preprocessing.ScalerTransform(scale_type="variance")
 
-# convert to numpy array
-X = data_new.values
+from sklearn.pipeline import Pipeline
+
+pipe = Pipeline(
+    steps=[
+        ("anom", monthlydetrend),
+        ("marginalize", intoutT),
+        ("detrend", lindetrendT),
+        ("flatten", flattenT),
+        ("transpose", transformT),
+        ("scale", scaleT),
+    ]
+)
+data = pipe.fit_transform(data)
+data_all_transformed = pipe.fit_transform(data_all)
+X = data.values
 
 ######################################################################
 ## Begin fingerprinting and plotting EOF time-series scores
@@ -95,19 +87,29 @@ X = data_new.values
 # obtain fingerprints
 n_components = 8
 fp = clif.fingerprints(n_eofs=n_components, varimax=False)
-fp.fit(data_new)
+fp.fit(data)
 
 # extract pca fingerprints and convergence diagnostics
 eofs_pca = fp.eofs_
+
+# plot eofs:
+fig, ax = plt.subplots(1, figsize=[10, 4])
+ax.plot(data["plev"].values, eofs_pca[0])
+ax.grid(True)
+ax.set_xscale("log")
+ax.set_xlabel("hPa")
+ax.set_ylabel("Scaled \n principal \ncomponent", rotation=0, labelpad=26)
+ax.invert_xaxis()
+
 explained_variance_ratio = fp.explained_variance_ratio_
-eof_time_series = fp.projections_
+eof_time_series = fp.transform(data_all_transformed.values)
 print(
     "Explained variance ratios for first {0} components:\n".format(n_components),
     explained_variance_ratio,
 )
 
 # i conver tcftime series to datetime for plotting with matplotlib
-times = data.indexes["time"].to_datetimeindex(unsafe=True)
+times = data_all.indexes["time"].to_datetimeindex(unsafe=True)
 
 # add trend lines to eofs
 pinatubo_event = datetime.datetime(1991, 6, 15)
@@ -115,7 +117,7 @@ pinatubo_event = datetime.datetime(1991, 6, 15)
 # plot eof's with trend lines before and after event
 # import nc_time_axis # to allow plotting of cftime datetime using matplotlib
 fig, axes = plt.subplots(3, 2, figsize=(10, 8))
-fig.suptitle("EOF scores for {0} using PCA".format(QOI), fontsize=20)
+fig.suptitle("EOF scores/ loadings", fontsize=20)
 for i, ax in enumerate(axes.flatten()):
     eof_ts = eof_time_series[:, i]
     ax.plot(

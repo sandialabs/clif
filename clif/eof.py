@@ -146,6 +146,15 @@ class fingerprints:
         else:
             pass  # use projection computed above
 
+    def transform(self, X):
+        X0 = X - np.mean(X, axis=0)
+        projection_ = np.dot(X0, self.eofs_.T)
+        if "whiten" in self.method_opts:
+            if self.method_opts["whiten"] == True:
+                sigma = np.sqrt(self.explained_variance_)
+                projection_ = np.dot(projection_, np.diag(1.0 / sigma))
+        return projection_
+
     def _ortho_rotation(self, componentsT, method="varimax", tol=1e-8, max_iter=1000):
         """Return rotated components (transpose).
         Here, componentsT are the transpose of the PCA components

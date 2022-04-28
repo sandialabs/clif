@@ -88,7 +88,7 @@ class SeasonalAnomalyTransform(TransformerMixin):
 
     """
 
-    def __init__(self, cycle="month"):
+    def __init__(self, cycle="month", group_mean=None):
         """
         Parameters
         ----------
@@ -96,6 +96,7 @@ class SeasonalAnomalyTransform(TransformerMixin):
                 string representing the seasonal detrending resolution, e.g., month, day, hour, year, etc.
         """
         self.cycle = cycle
+        self.group_mean = group_mean
 
     def fit(self, data, y=None, **fit_params):
         """
@@ -108,7 +109,10 @@ class SeasonalAnomalyTransform(TransformerMixin):
             data, xarray.DataArray
         ), "Input must be an xarray DataArray object."
         # Compute the mean by grouping times
-        self.mu_by_group_ = data.groupby("time." + self.cycle).mean(dim="time")
+        if self.group_mean is None:
+            self.mu_by_group_ = data.groupby("time." + self.cycle).mean(dim="time")
+        else:
+            self.mu_by_group_ = self.group_mean.copy()
         return self
 
     def transform(self, data):

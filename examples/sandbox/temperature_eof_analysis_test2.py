@@ -66,24 +66,41 @@ era5_data = xr.open_dataset(ERA5_FILE, chunks={"time": 1})[ERA5_QOI]
 PI_FILE = os.path.join(PI_SOURCE_DIR, "T_020001_027912.nc")
 pi_data = xr.open_dataset(PI_FILE, chunks={"time": 1})[PI_QOI]
 
+# split up pre-industrial data into groups of 12 years
+nyears = 12
+pi_data_split = []
+for i in range(int(pi_data.shape[0] / 12 / 12)):
+    pi_data_temp = pi_data[-12 * nyears * (i + 1) :][: 12 * nyears]
+    pi_data_split.append(pi_data_temp)
+
 # data = data_before.copy()
 data = data_all.copy()
+
 ##################################################################
 ## Preprocess data using new API
 ##################################################################
 
+clipT = clif.preprocessing.ClipTransform(dims=["lat"], bounds=[(-60.0, 60.0)])
+lat_lon_weights_clipped = clipT.fit_transform(lat_lon_weights)
+
 monthlydetrend = clif.preprocessing.SeasonalAnomalyTransform(cycle="month")
-intoutT = clif.preprocessing.MarginalizeOutTransform(dims=["lat", "lon"])
+
+intoutT = clif.preprocessing.MarginalizeOutTransform(
+    dims=["lat", "lon"], lat_lon_weights=lat_lon_weights
+)
+
 lindetrendT = clif.preprocessing.LinearDetrendTransform()
+
 transformT = clif.preprocessing.Transpose(dims=["time", "plev"])
 
 from sklearn.pipeline import Pipeline
 
 pipe = Pipeline(
     steps=[
+        # ("clip", clipT),
         ("anom", monthlydetrend),
         ("marginalize", intoutT),
-        ("detrend", lindetrendT),
+        # ("detrend", lindetrendT),
         ("transpose", transformT),
     ]
 )
@@ -101,9 +118,12 @@ for key, val in deck_runs.items():
 # transform the era 5 data
 print("Transforming era and pre-industrial data sets...")
 data_era5_trfm = pipe.fit_transform(era5_data)
-data_pi_trfm = pipe.fit_transform(pi_data)
 
-raise SystemExit(0)
+pi_data_split_t = []
+for pi_data_i in pi_data_split:
+    data_pi_trfm_temp = pipe.fit_transform(pi_data_i)
+    pi_data_split_t.append(data_pi_trfm_temp)
+
 ######################################################################
 ## Begin fingerprinting and plotting EOF time-series scores
 ######################################################################
@@ -113,6 +133,7 @@ n_components = 2
 fp = clif.fingerprints(n_eofs=n_components, varimax=False)
 
 # Fit EOF to deck avg data
+print("Computing fingerprints...")
 fp.fit(data_H_avg_trfm)
 
 # extract pca fingerprints and convergence diagnostics
@@ -127,13 +148,24 @@ ax.set_xlabel("hPa")
 ax.set_ylabel("Scaled \n principal \ncomponent", rotation=0, labelpad=26)
 ax.invert_xaxis()
 
+print("Transforming data...")
 explained_variance_ratio = fp.explained_variance_ratio_
 eof_time_series_H_avg = fp.transform(data_H_avg_trfm.values)
 eof_time_series_era5 = fp.transform(data_era5_trfm.values)
+
 eof_time_series_H_data = []
 for data_H_temp in data_H_trfm_all:
     eof_time_series_temp = fp.transform(data_H_temp.values)
     eof_time_series_H_data.append(eof_time_series_temp)
+
+eof_time_series_pi_data = []
+data_pi_avg = np.mean(
+    np.array([data_pi_temp.values for data_pi_temp in pi_data_split_t]), axis=0
+)
+eof_time_series_pi_avg = fp.transform(data_pi_avg)
+for data_pi_temp in pi_data_split_t:
+    eof_time_series_temp = fp.transform(data_pi_temp.values)
+    eof_time_series_pi_data.append(eof_time_series_temp)
 
 print(
     "Explained variance ratios for first {0} components:\n".format(n_components),
@@ -148,14 +180,21 @@ pinatubo_event = datetime.datetime(1991, 6, 15)
 
 # plot eof's with trend lines before and after event
 # import nc_time_axis # to allow plotting of cftime datetime using matplotlib
-fig, axes = plt.subplots(int(n_components / 2), 2, figsize=(10, 8))
+fig, axes = plt.subplots(2, int(n_components / 2), figsize=(11, 5))
 fig.suptitle("EOF scores/ loadings", fontsize=20)
 for i, ax in enumerate(axes.flatten()):
     eof_ts = eof_time_series_H_avg[:, i]
     eof_ts_H_deck = np.array(
         [eof_time_series_H_data[ii][:, i] for ii in range(len(data_H_trfm_all))]
     ).T
+    eof_ts_PI = np.array(
+        [
+            eof_time_series_pi_data[ii][:, i]
+            for ii in range(len(eof_time_series_pi_data))
+        ]
+    ).T
     eof_ts_H_quantiles = np.quantile(eof_ts_H_deck, [0.025, 0.975], axis=1)
+    eof_ts_PI_quantiles = np.quantile(eof_ts_PI, [0.025, 0.975], axis=1)
     ax.plot(
         times,
         eof_ts,
@@ -169,6 +208,22 @@ for i, ax in enumerate(axes.flatten()):
         y1=eof_ts_H_quantiles[0],
         y2=eof_ts_H_quantiles[1],
         color="C{0}".format(i),
+        alpha=0.2,
+    )
+    ax.plot(
+        times,
+        eof_time_series_pi_avg[:, i],
+        color=f"C{i+1}",
+        alpha=0.7,
+        linestyle="-",
+        linewidth=1,
+        label="pre-industrial score",
+    )
+    ax.fill_between(
+        x=times,
+        y1=eof_ts_PI_quantiles[0],
+        y2=eof_ts_PI_quantiles[1],
+        color="C{0}".format(i + 1),
         alpha=0.2,
     )
     ax.plot(
@@ -190,13 +245,17 @@ for i, ax in enumerate(axes.flatten()):
 t = np.arange(len(times)) / 12.0
 eof_ts = eof_time_series_H_avg[:, 0].copy()
 
+eof_ts_PI = np.array(
+    [eof_time_series_pi_data[ii][:, i] for ii in range(len(eof_time_series_pi_data))]
+).T
+
 from sklearn.linear_model import LinearRegression
 
 
 def compute_trend_coef(X, y, return_pred=True):
     if X.ndim == 1:
-        X = t_L[:, np.newaxis]
-    linreg = LinearRegression()
+        X = X[:, np.newaxis]
+    linreg = LinearRegression(fit_intercept=True)
     linreg.fit(X, y)
     if return_pred:
         return linreg.coef_, linreg.predict(X)
@@ -205,7 +264,9 @@ def compute_trend_coef(X, y, return_pred=True):
 
 linreg = LinearRegression()
 tot_years = 12
+pi_samples = eof_ts_PI.shape[1]
 beta_L = np.zeros(tot_years)
+beta_L_pi = np.zeros((tot_years, pi_samples))
 for L in range(tot_years):
     L_index = range(12 * (L + 1))
     t_L = t[L_index]
@@ -213,4 +274,18 @@ for L in range(tot_years):
     beta_temp, y_pred = compute_trend_coef(t_L, y_L)
     beta_L[L] = beta_temp
 
-    # compute normalizing factor
+for j in range(pi_samples):
+    eof_ts_temp = eof_ts_PI[:, j]
+    for L in range(tot_years):
+        L_index = range(12 * (L + 1))
+        t_L = t[L_index]
+        y_L = eof_ts_temp[L_index]
+        beta_temp, y_pred = compute_trend_coef(t_L, y_L)
+        beta_L_pi[L, j] = beta_temp
+
+N_L = beta_L_pi.var(axis=1)
+fig, ax = plt.subplots(1, 1, figsize=[8, 5])
+ax.plot(range(1986, 1996), beta_L[1:-1] / N_L[1:-1])
+ax.set_xlabel("year")
+ax.set_ylabel(r"$\beta(y)/N(y)$")
+ax.grid(True)

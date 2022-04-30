@@ -249,7 +249,7 @@ class MarginalizeOutTransform(TransformerMixin):
         self.lat_lon_weights = lat_lon_weights
 
     def _check_lat_lon_weights(self, data, lat_lon_weights):
-        assert set(lat_lon_weights.dims) < set(
+        assert set(lat_lon_weights.dims) <= set(
             data.dims
         ), "Area weight dimensions are not a subset of the data dimensions"
         assert (

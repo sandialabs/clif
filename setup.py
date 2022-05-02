@@ -5,7 +5,7 @@ PACKAGES = find_packages(where=".")
 
 setup(
     name="clif",
-    version="0.2.1",
+    version="0.2.2",
     description="CLImate Fingerprinting methods",
     long_description="",
     url="",

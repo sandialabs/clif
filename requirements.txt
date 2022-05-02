@@ -1,0 +1,13 @@
+h5py
+netcdf4
+h5netcdf
+cftime
+dask
+matplotlib
+numpy
+scikit_learn
+scipy
+statsmodels
+tqdm
+xarray
+

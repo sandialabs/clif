@@ -62,7 +62,7 @@ class TestFingerprintClass(unittest.TestCase):
         fp.fit(self.X)
         n_samples, n_dim = self.X.shape
         assert (
-            np.sum((fp.V_ - fp.eofs_) ** 2) == 0
+            np.sum((fp.V_ - fp.eofs_) ** 2) <= 1e-16
         ), "EOFs should be n_dim by n_components"
         return
 
@@ -91,7 +91,7 @@ class TestFingerprintClass(unittest.TestCase):
             X0.shape[1] == V_pca.shape[1]
         ), "eofs_ number of columns must be the same as X."
         U_pca = np.dot(X0, V_pca.T)  # project data
-        pca_explained_variance = np.sum(U_pca ** 2, axis=0) / (n_samples - 1)
+        pca_explained_variance = np.sum(U_pca**2, axis=0) / (n_samples - 1)
         relerror = np.linalg.norm(
             pca_explained_variance - fp.explained_variance_
         ) / np.linalg.norm(fp.explained_variance_)
@@ -149,7 +149,7 @@ class TestFingerprintClass(unittest.TestCase):
         # calculate pca explained variance just to double check
         X0 = self.X - np.mean(self.X, axis=0)  # center data
         U_pca = np.dot(X0, V_pca.T)  # project data
-        pca_explained_variance = np.sum(U_pca ** 2, axis=0) / (n_samples - 1)
+        pca_explained_variance = np.sum(U_pca**2, axis=0) / (n_samples - 1)
         U_varimax = np.dot(X0, V_varimax.T)  # project data
         varimax_explained_variance = np.var(U_varimax, axis=0)
         error = np.abs(

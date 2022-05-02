@@ -284,8 +284,9 @@ for j in range(pi_samples):
         beta_L_pi[L, j] = beta_temp
 
 N_L = beta_L_pi.var(axis=1)
+beta_L_mu = beta_L_pi.mean(axis=1)
 fig, ax = plt.subplots(1, 1, figsize=[8, 5])
-ax.plot(range(1986, 1996), beta_L[1:-1] / N_L[1:-1])
+ax.plot(range(1986, 1996), (beta_L - beta_L_mu)[1:-1] / np.sqrt(N_L[1:-1]))
 ax.set_xlabel("year")
-ax.set_ylabel(r"$\beta(y)/N(y)$")
+ax.set_ylabel(r"$\frac{(\beta(y)-\mu)}{N(y)}$",rotation=0,labelpad=20)
 ax.grid(True)

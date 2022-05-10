@@ -189,6 +189,7 @@ class fingerprints:
         lats: list,
         lons: list,
         cmap: matplotlib.colors.Colormap = plt.get_cmap("cividis"),
+        extend_cmap="neither",
         ax: matplotlib.pyplot.axes = None,
         title: str = "",
         grid: bool = False,
@@ -207,6 +208,8 @@ class fingerprints:
             List of longitude values.
         cmap : matplotlib.pyplot.cmap, optional
             A given colormap, by default plt.get_cmap("jet")
+        extend_cmap : string, optional
+            How to extend the colormap, see pyplot.contourf's extend, by default "neither"
         ax : matplotlib.pyplot.axes, optional
             Given matplotlib axes, by default None
         title : str, optional
@@ -232,7 +235,7 @@ class fingerprints:
 
         data, lons = add_cyclic_point(data, coord=lons)
         pl = plt.contourf(
-            lons, lats, data, cmap=cmap, extend="both", transform=ccrs.PlateCarree()
+            lons, lats, data, cmap=cmap, extend=extend_cmap, transform=ccrs.PlateCarree()
         )
         ax.coastlines()
         _colorbar = plt.colorbar(pl, label=colorbar_title)

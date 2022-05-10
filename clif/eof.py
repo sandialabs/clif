@@ -253,4 +253,4 @@ class fingerprints:
                 )
         ax.set_title(title, fontsize=16)
 
-        return f, ax, _colorbar
+        return ax, _colorbar

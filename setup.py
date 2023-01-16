@@ -18,7 +18,7 @@ setup(
     tests_required=["nose"],
     install_requires=[
         "numpy",
-        "sklearn",
+        "scikit-learn",
         "tqdm",
         "xarray",
         "netCDF4",

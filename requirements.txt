@@ -5,7 +5,7 @@ cftime
 dask
 matplotlib
 numpy
-scikit_learn
+scikit-learn
 scipy
 statsmodels
 tqdm

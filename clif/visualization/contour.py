@@ -73,9 +73,7 @@ def plot_field(
         ax = plt.axes(projection=ccrs.PlateCarree())
 
     data, lons = add_cyclic_point(data, coord=lons)
-    pl = plt.contourf(
-        lons, lats, data, cmap=cmap, extend="both", transform=ccrs.PlateCarree()
-    )
+    pl = plt.contourf(lons, lats, data, cmap=cmap, extend="both", transform=ccrs.PlateCarree())
     ax.coastlines()
     _colorbar = plt.colorbar(pl, label=colorbar_title)
     if grid:
@@ -179,9 +177,7 @@ class BaseContourPlot(BasePlot):
     def compute_contour_levels(self, data):
         if isinstance(data, xarray.DataArray):
             data_np = data.values
-        levels_ = data.min() + (data.max() - data.min()) * np.linspace(
-            0, 1, self.nlevels
-        )
+        levels_ = data.min() + (data.max() - data.min()) * np.linspace(0, 1, self.nlevels)
         return levels_
 
     def show_titles(self):
@@ -311,9 +307,7 @@ class BaseContourPlot(BasePlot):
         ticks = np.append(ticks, lon_east - 0.50)
 
         ax.set_xticks(ticks, crs=proj)
-        lon_formatter = LongitudeFormatter(
-            zero_direction_label=True, number_format=".0f"
-        )
+        lon_formatter = LongitudeFormatter(zero_direction_label=True, number_format=".0f")
         if which_axis == "x":
             ax.xaxis.set_major_formatter(lon_formatter)
             ax.xaxis.set_ticks_position("bottom")
@@ -423,9 +417,7 @@ class plot_lat_lon(BaseContourPlot):
         self.proj = proj
         self.region = region
 
-    def draw(
-        self, data: xarray.DataArray, x_name="lon", y_name="lat", fig=None, ax=None
-    ):
+    def draw(self, data: xarray.DataArray, x_name="lon", y_name="lat", fig=None, ax=None):
         super().draw(data, x_name=x_name, y_name=y_name)
         self.ax_.coastlines(lw=0.35)
 
@@ -439,9 +431,7 @@ class plot_lat_lon(BaseContourPlot):
 
         super().finish(custom=custom)
 
-        gridliner = self.ax_.gridlines(
-            crs=ccrs.PlateCarree(), draw_labels=True, alpha=0.2
-        )
+        gridliner = self.ax_.gridlines(crs=ccrs.PlateCarree(), draw_labels=True, alpha=0.2)
         gridliner.top_labels = False
         gridliner.right_labels = False
 
@@ -453,9 +443,7 @@ class plot_plev_lat(BaseContourPlot):
         super().__init__(proj=proj, show_full=show_full, *args, **kwargs)
         self.log_plevs = log_plevs
 
-    def draw(
-        self, data: xarray.DataArray, x_name="lat", y_name="plev", fig=None, ax=None
-    ):
+    def draw(self, data: xarray.DataArray, x_name="lat", y_name="plev", fig=None, ax=None):
         super().draw(data, x_name=x_name, y_name=y_name)
         self.ax_.set_aspect("auto")
 
@@ -477,9 +465,7 @@ class plot_lat_time(BaseContourPlot):
     def set_xaxis_properties(self):
         self.set_axis_to_time(label=None)
 
-    def draw(
-        self, data: xarray.DataArray, x_name="time", y_name="lat", fig=None, ax=None
-    ):
+    def draw(self, data: xarray.DataArray, x_name="time", y_name="lat", fig=None, ax=None):
         super().draw(data, x_name=x_name, y_name=y_name)
         self.ax_.set_aspect("auto")
 
@@ -496,10 +482,56 @@ class plot_plev_time(BaseContourPlot):
     def set_xaxis_properties(self):
         self.set_axis_to_time(label=None)
 
-    def draw(
-        self, data: xarray.DataArray, x_name="time", y_name="plev", fig=None, ax=None
-    ):
+    def draw(self, data: xarray.DataArray, x_name="time", y_name="plev", fig=None, ax=None):
         super().draw(data, x_name=x_name, y_name=y_name)
+        self.ax_.set_aspect("auto")
+
+
+class plot_lev_time(BaseContourPlot):
+    def __init__(self, proj=None, log_plevs=True, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.proj = proj
+        self.log_plevs = log_plevs
+
+    def set_yaxis_properties(self):
+        axis = "y"
+        ax = self.ax_
+
+        getattr(ax, f"set_{axis}label")("pressure (hPa)")
+        if self.log_plevs:
+            getattr(ax, f"set_{axis}scale")("log")
+        getattr(ax, f"invert_{axis}axis")()
+
+    def set_xaxis_properties(self):
+        self.set_axis_to_time(label="Time")
+
+    def draw(self, data: xarray.DataArray, x_name="time", y_name="lev", fig=None, ax=None):
+        super().draw(data, x_name=x_name, y_name=y_name)
+        self.ax_.set_aspect("auto")
+
+
+class plot_dim_time(BaseContourPlot):
+    def __init__(self, dim, proj=None, dim_label=None, log_dims=True, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.dim = dim
+        self.proj = proj
+        self.dim_label = dim_label
+        self.log_dims = log_dims
+
+    def set_yaxis_properties(self):
+        axis = "y"
+        ax = self.ax_
+
+        getattr(ax, f"set_{axis}label")(self.dim_label)
+        if self.log_dims:
+            getattr(ax, f"set_{axis}scale")("log")
+        getattr(ax, f"invert_{axis}axis")()
+
+    def set_xaxis_properties(self):
+        self.set_axis_to_time(label="Time")
+
+    def draw(self, data: xarray.DataArray, x_name="time", fig=None, ax=None):
+        super().draw(data, x_name=x_name, y_name=self.dim)
         self.ax_.set_aspect("auto")
 
 

@@ -580,6 +580,8 @@ class fingerprints:
         grid: bool = False,
         colorbar_title: str = "",
         grid_kwargs: dict = {},
+        colorbar_orientation: str = "vertical",
+        colorbar_kwargs: dict = {},
     ) -> Tuple[matplotlib.pyplot.axes, matplotlib.pyplot.colorbar]:
         """Plot a given EOF as a 2D field on a latitude-longitude grid.
         
@@ -608,6 +610,10 @@ class fingerprints:
             Title for the colorbar
         grid_kwargs : dict, default = {}
             Additional arguments for grid lines
+        colorbar_orientation : str, default = "vertical"
+            Orientation of the colorbar. Options: "vertical", "horizontal"
+        colorbar_kwargs : dict, default = {}
+            Additional arguments for colorbar formatting
             
         Returns
         -------
@@ -620,18 +626,33 @@ class fingerprints:
         The EOF pattern is reshaped to the lat/lon grid before plotting.
         """
         EOF_recons = np.reshape(self.eofs_[eof_to_print], (len(lats), len(lons)))
-        data = EOF_recons  # [eof_to_print, :, :]
-
+        data = EOF_recons
+        
         if not ax:
             f = plt.figure(figsize=(8, (data.shape[0] / float(data.shape[1])) * 8))
             ax = plt.axes(projection=ccrs.PlateCarree())
-
+        
         data, lons = add_cyclic_point(data, coord=lons)
         pl = plt.contourf(
             lons, lats, data, cmap=cmap, extend=extend_cmap, transform=ccrs.PlateCarree()
         )
         ax.coastlines()
-        _colorbar = plt.colorbar(pl, label=colorbar_title)
+        
+        # Adjust colorbar based on orientation
+        colorbar_params = {"label": colorbar_title}
+        colorbar_params.update(colorbar_kwargs)
+        
+        if colorbar_orientation == "horizontal":
+            _colorbar = plt.colorbar(pl, ax=ax, orientation="horizontal", **colorbar_params)
+            # Optionally adjust colorbar position for horizontal orientation
+            if 'pad' not in colorbar_kwargs:
+                _colorbar.ax.set_position([ax.get_position().x0, 
+                                        ax.get_position().y0 - 0.10,  # Move below the map
+                                        ax.get_position().width, 
+                                        0.03])  # Height of colorbar
+        else:
+            _colorbar = plt.colorbar(pl, ax=ax, **colorbar_params)
+        
         if grid:
             if grid_kwargs:
                 ax.gridlines(**grid_kwargs)
@@ -644,6 +665,6 @@ class fingerprints:
                     linestyle="--",
                     color="black",
                 )
+        
         ax.set_title(title, fontsize=16)
-
         return ax, _colorbar

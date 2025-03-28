@@ -62,6 +62,91 @@ class TransformerMixin(ABC):
         return self.fit(data, **fit_params).transform(data)
 
 
+class AnomalyTransform(TransformerMixin):
+    """Removes cyclical trends from xarray time-series data
+
+    Parameters
+    ----------
+    data:
+
+    climatology:
+
+    Methods
+    -------
+    fit:
+        Perform calculations for the preprocessing, e.g. mean computation.
+    transform:
+        transform the data
+
+    Examples
+    --------
+    >>> import xarray
+    >>> from clif.preprocessing import AnomalyTransform
+    >>> X = xarray.open_dataarray('Temperature.nc')
+    >>> anomalyT = AnomalyTransform(cycle='month')
+    >>> anomalyT.fit(X)
+    >>> X_transformed = anomalyT.transform(X)
+
+    """
+
+    def __init__(self):
+        """
+        Parameters
+        ----------
+        None
+        """
+        pass
+
+    def fit(self, climatology, time_domain_name, dim=None, **fit_params):
+        """
+        Parameters
+        ----------
+        data: xarray.DataArray
+                data array object holding the time-series data
+        """
+        # assert isinstance(
+        #     climatology, xarray.DataArray
+        # ), "Input must be an xarray DataArray object."
+        self.time_domain_name = time_domain_name
+        if dim:
+            self.dim = dim
+            self.climatology = climatology[dim]
+        else:
+            self.climatology = climatology
+        if len(self.climatology[time_domain_name]) <= 1:
+            self.climatology = self.climatology.mean(dim=time_domain_name)
+            self.temporally_aggregated_climatology = True
+        return self
+
+    def transform(self, data):
+        """
+        Parameters
+        ----------
+        data: xarray.DataArray
+                data array object holding the time-series data
+        """
+        assert hasattr(self, "climatology"), "Must run self.fit() first."
+        if not self.temporally_aggregated_climatology:
+            assert len(self.climatology[self.time_domain_name]) == len(
+                data[self.time_domain_name]
+            ), "Since the climatology has more than one time sample, its length must match the data's length in time."
+        if self.dim:
+            data_transformed = data[self.dim] - self.climatology
+        else:
+            data_transformed = data - self.climatology
+        return data_transformed
+
+    def fit_transform(self, data, climatology, time_domain_name, dim=None, **fit_params):
+        """
+        Runs the fit and transform methods in one call (not required)
+        """
+        return self.fit(climatology, time_domain_name, dim=dim, **fit_params).transform(data)
+
+    def inverse_transform(self, data):
+        assert hasattr(self, "climatology"), "Must run self.fit() first."
+        return data + self.climatology
+
+
 class SeasonalAnomalyTransform(TransformerMixin):
     """Removes cyclical trends from xarray time-series data
 
@@ -105,9 +190,7 @@ class SeasonalAnomalyTransform(TransformerMixin):
         data: xarray.DataArray
                 data array object holding the time-series data
         """
-        assert isinstance(
-            data, xarray.DataArray
-        ), "Input must be an xarray DataArray object."
+        assert isinstance(data, xarray.DataArray), "Input must be an xarray DataArray object."
         # Compute the mean by grouping times
         if self.group_mean is None:
             self.mu_by_group_ = data.groupby("time." + self.cycle).mean(dim="time")
@@ -169,16 +252,12 @@ class ClipTransform(TransformerMixin):
     def _check(self, data):
         # check to make sure dimensions are indeed in the data array
         assert isinstance(data, xarray.DataArray), "Input must be a data array"
-        assert isinstance(
-            self.dims, list
-        ), "dimensions must be provided as a list of strings"
+        assert isinstance(self.dims, list), "dimensions must be provided as a list of strings"
         assert len(self.dims) == len(
             self.bounds
         ), "List of dimensions and bounds must match in length."
         for dim in self.dims:
-            assert hasattr(data, dim), "DataArray does not have {0} dimension".format(
-                dim
-            )
+            assert hasattr(data, dim), "DataArray does not have {0} dimension".format(dim)
 
     def fit(self, data, y=None, **fit_params):
         """
@@ -194,9 +273,7 @@ class ClipTransform(TransformerMixin):
             if isinstance(bnds, (int, float, complex)):
                 bnds_index[i] = data[self.dims[i]] == bnds
             elif isinstance(bnds, tuple):
-                bnds_index[i] = (data[self.dims[i]] >= bnds[0]) & (
-                    data[self.dims[i]] < bnds[1]
-                )
+                bnds_index[i] = (data[self.dims[i]] >= bnds[0]) & (data[self.dims[i]] < bnds[1])
             else:
                 raise TypeError("bounds must be a list of numbers or tuples of size 2.")
         self.mask = bnds_index[0]
@@ -284,9 +361,7 @@ class MarginalizeOutTransform(TransformerMixin):
             }
 
     def fit(self, data, y=None, **fit_params):
-        assert isinstance(
-            data, xarray.DataArray
-        ), "Input must be an xarray DataArray object."
+        assert isinstance(data, xarray.DataArray), "Input must be an xarray DataArray object."
         # get lat lon weights if possible
         if self.lat_lon_weights is not None:
             # check lat lon weights
@@ -297,13 +372,9 @@ class MarginalizeOutTransform(TransformerMixin):
             weights /= np.sum(weights)  # normalize
 
             # weight dims are lat and lon, but not necessarily by that name
-            weights_d1 = weights.mean(
-                dim=self.weight_dims[1]
-            )  # latitude weights (non-uniform)
+            weights_d1 = weights.mean(dim=self.weight_dims[1])  # latitude weights (non-uniform)
             weights_d1 /= np.sum(weights_d1)
-            weights_d2 = weights.mean(
-                dim=self.weight_dims[0]
-            )  # longitude weights (uniform)
+            weights_d2 = weights.mean(dim=self.weight_dims[0])  # longitude weights (uniform)
             weights_d2 /= np.sum(weights_d2)
             self.weight_dict = {
                 self.weight_dims[0]: weights_d1,
@@ -600,9 +671,7 @@ class SingleVariableSelector(TransformerMixin):
 
     def inverse_transform(self, data):
         """Gives us back the data set"""
-        assert hasattr(
-            self, "ds_original"
-        ), "Choose inverse=True to save the original dataset. "
+        assert hasattr(self, "ds_original"), "Choose inverse=True to save the original dataset. "
         self.ds_original[self.variable] = data
         return self.ds_original
 
@@ -650,9 +719,7 @@ class CombineDataArrays(TransformerMixin):
         return concatenated_arrays
 
     def split(self, concatenated_array, return_np=False):
-        split_arrays = np.split(
-            concatenated_array, indices_or_sections=self.split_indices, axis=1
-        )
+        split_arrays = np.split(concatenated_array, indices_or_sections=self.split_indices, axis=1)
         # make a local copy
         dataarrays_local_ = [data_.copy(deep=True) for data_ in self.dataarrays_]
         for i, data_local_ in enumerate(dataarrays_local_):
@@ -759,9 +826,7 @@ class MultiObjectiveUnion(TransformerMixin):
     def inverse_transform(self, data_np):
         assert hasattr(self, "ds_"), "Must store the orignal dataset"
         assert hasattr(self, "split_indices"), "must run the transform function"
-        data_np_split = np.split(
-            data_np, indices_or_sections=self.split_indices, axis=1
-        )
+        data_np_split = np.split(data_np, indices_or_sections=self.split_indices, axis=1)
         self.data_np_split = data_np_split
         for j, data_np in enumerate(data_np_split):
             self.res_[j].values = data_np
